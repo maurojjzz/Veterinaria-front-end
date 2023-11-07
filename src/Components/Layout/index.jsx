@@ -4,6 +4,7 @@ import styles from "./layout.module.css";
 import Prueba from "../DePrueba";
 import Header from "../Header";
 import Home from "../Home";
+import Cliente from "../Cliente";
 
 const Layout = () => {
   return (
@@ -13,6 +14,7 @@ const Layout = () => {
         <Switch>
           <Route exact path="/prueba" component={Prueba} />
           <Route exact path="/home" component={Home} />
+          <Route exact path="/usuarios" component={Cliente} />
           <Redirect from="/" to="/home" />
         </Switch>
       </Router>

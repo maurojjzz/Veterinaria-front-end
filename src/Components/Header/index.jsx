@@ -22,7 +22,7 @@ const Header = () => {
         alt={`dog entering a door simulating login icon`}
         className={`d-md-none ${styles.logo}`}
       />
-      <div className={`d-none d-md-flex gap-3`}>
+      <div className={`d-none d-md-flex gap-5`}>
         <div className={`${styles.linkAccount}`}>
           <h2>Login</h2>
         </div>
