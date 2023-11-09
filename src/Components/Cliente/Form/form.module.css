@@ -1,0 +1,6 @@
+.formContainer{
+    border: 1px solid orange;
+    max-width: 800px;
+    min-width: 230px;
+    width: 90%;
+}

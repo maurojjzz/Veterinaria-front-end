@@ -1,10 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect  } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import styles from "./layout.module.css";
 import Prueba from "../DePrueba";
 import Header from "../Header";
 import Home from "../Home";
 import Cliente from "../Cliente";
+import FormClient from "../Cliente/Form";
 
 const Layout = () => {
   return (
@@ -15,6 +16,7 @@ const Layout = () => {
           <Route exact path="/prueba" component={Prueba} />
           <Route exact path="/home" component={Home} />
           <Route exact path="/usuarios" component={Cliente} />
+          <Route path="/usuarios/form/:id?" component={FormClient} />
           <Redirect from="/" to="/home" />
         </Switch>
       </Router>

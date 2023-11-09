@@ -1,0 +1,31 @@
+.formInput{
+    min-width: 180px;
+    max-width: 300px;
+    height: 45px;
+    border: 1px solid #1BBCB6;   
+    box-shadow: 10px 7px 15px 0px rgba(27, 188, 182, 0.18);
+}
+
+.formInput:focus{
+    border: 3px solid #1BBCB6; 
+    box-shadow: none;  
+}
+
+.formLoginLabel,
+.goodCont .formInput:focus ~ .formLoginLabel{
+    color: #1BBCB6;
+    font-weight: 500;
+}
+
+
+.form-inputs.is-invalid:focus{
+    border: 2px solid #f72222ed;
+}
+.form-inputs.is-invalid{ 
+    box-shadow: 10px 7px 15px 0px rgba(188, 27, 27, 0.18);
+}
+.invalidLabel,
+.form-floating .form-control.is-invalid ~ label,
+.form-floating .form-control.is-invalid:focus ~ label{
+    color: #f72222ed ;
+}
