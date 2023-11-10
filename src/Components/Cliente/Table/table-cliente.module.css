@@ -1,12 +1,12 @@
+.tablaContainer{
+  max-width: 950px;
+  overflow-x: scroll;
+}
+
 .tabla {
     border-collapse: collapse;
     overflow: hidden;
-    box-shadow: 0px 6px 30px -7px rgba(0, 0, 0, 0.75);
-  }
-  .oxi {
-    width: 20px;
-    height: 20px;
-    border: 1px solid blue;
+    box-shadow: 0px 6px 20px -7px rgba(0, 0, 0, 0.75);
   }
   
   .tabla tr td,
@@ -15,10 +15,10 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 80px;
+    max-width: 170px;
     transition: all 0.1s;
   }
-  
+
   .tabla tr th:nth-last-child(-n + 2) {
     width: 15px;
   }
@@ -27,6 +27,33 @@
   .tabla tr th:nth-child(2) {
     display: none;
   }
+  .iconCont{
+    border-radius: 30px;
+    width: 35px;
+    height: 35px;
+    transition: all ease-out 0.5s;
+  }
+
+  .tableIcon {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    transition: all ease-out 0.5s;
+    padding: 4px;
+  }
+
+  .tableIcon:hover{
+    transform: scale(1.1);
+  }
+  .iconCont:hover{
+    background-color: #a9c3b896;
+  }
+
+  .fila{
+    cursor: pointer;
+  }
+
+ 
   
   @media screen and (min-width: 370px) {
     .tabla tr td:nth-child(2),
