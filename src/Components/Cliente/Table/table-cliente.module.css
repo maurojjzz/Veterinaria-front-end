@@ -1,6 +1,6 @@
 .tablaContainer{
   max-width: 950px;
-  overflow: hidden;
+  overflow-x: scroll;
 }
 
 .tabla {
