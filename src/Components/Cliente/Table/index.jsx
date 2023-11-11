@@ -1,12 +1,14 @@
 import React from "react";
 import styles from "./table-cliente.module.css";
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+
 
 const TablaCliente = ({ data }) => {
-  console.log(data, "desde tabla componente");
+  const history = useHistory();
 
 
-  const handleEdit = (id) => {
-    console.log("Se va a editar", id);
+  const handleEdit = (user) => {
+    history.push(`/usuarios/form/${user.id}`, {params: {...user}})
   };
 
   const handleDelete = async (id)=>{
@@ -48,9 +50,6 @@ const TablaCliente = ({ data }) => {
               <tr
                 key={index}
                 className={`${styles.fila}`}
-                onClick={() => {
-                  console.log(use);
-                }}
               >
                 <td>{use.email}</td>
                 <td>{use.nombre}</td>
@@ -61,7 +60,7 @@ const TablaCliente = ({ data }) => {
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={() => handleEdit(use.id)}
+                      onClick={() => handleEdit(use)}
                       className={`${styles.tableIcon}`}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                       alt="update icon button"
