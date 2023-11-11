@@ -62,8 +62,6 @@ const veterinarioSchema = Joi.object({
       "string.pattern.base":
         "La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número",
     }),
-
-  // Otros campos según tus necesidades para los veterinarios
 });
 
 export default veterinarioSchema;
