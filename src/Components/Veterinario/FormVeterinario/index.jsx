@@ -1,15 +1,14 @@
-// Cliente/Veterinario/FormVeterinario/index.jsx
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "../../Shared";
-import styles from './formVeterinario.module.css'; // Puedes crear un archivo de estilos específico si es necesario
+import styles from './formVeterinario.module.css';
 import { veterinarioSchema } from "../../../Validations";
 import { joiResolver } from '@hookform/resolvers/joi';
 
 const FormVeterinario = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     mode: 'onBlur',
-    resolver: joiResolver(veterinarioSchema) // Asegúrate de tener un esquema de validación para veterinarios
+    resolver: joiResolver(veterinarioSchema) 
   });
 
   const onSubmit = (data) => {
