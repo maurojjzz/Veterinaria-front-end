@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./table-cliente.module.css";
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory} from 'react-router-dom';
 
 
 const TablaCliente = ({ data }) => {
