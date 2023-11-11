@@ -6,6 +6,8 @@ import Header from "../Header";
 import Home from "../Home";
 import Cliente from "../Cliente";
 import FormClient from "../Cliente/Form";
+import Veterinario from "../Veterinario"
+import FormVeterinario from "../Veterinario/FormVeterinario"
 
 const Layout = () => {
   return (
@@ -15,8 +17,10 @@ const Layout = () => {
         <Switch>
           <Route exact path="/prueba" component={Prueba} />
           <Route exact path="/home" component={Home} />
-          <Route exact path="/usuarios" component={Cliente} />
           <Route path="/usuarios/form/:id?" component={FormClient} />
+          <Route path="/usuarios" component={Cliente} />
+          <Route path="/veterinarios/form/:id?" component={FormVeterinario} />
+          <Route path="/veterinarios" component={Veterinario} />
           <Redirect from="/" to="/home" />
         </Switch>
       </Router>
@@ -25,3 +29,4 @@ const Layout = () => {
 };
 
 export default Layout;
+
