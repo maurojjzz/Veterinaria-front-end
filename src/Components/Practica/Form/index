@@ -70,7 +70,7 @@ const FormPractica = () => {
         console.log("Se actualizo correctamente");
         goBackToTable();
       } else {
-        console.log("no se actualizar crear la practica");
+        console.log("no se actualizó la practica");
       }
     } catch (error) {
       console.error("Error al actualizar practica", error);

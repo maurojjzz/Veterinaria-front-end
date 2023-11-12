@@ -15,4 +15,4 @@ const userSchema = Joi.object({
    .required
 });
 
-export default userSchema;
+export default practicaSchema;
