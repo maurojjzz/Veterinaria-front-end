@@ -27,7 +27,6 @@ const Cliente = () => {
   }, []);
 
   const handleUser = () =>{
-    console.log('para agregar un nuevo user')
     history.push('/usuarios/form')
   }
 
