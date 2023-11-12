@@ -34,8 +34,8 @@ const FormVeterinario = () => {
           <Input labelText={`Nro Documento`} placeholder={`Nro Documento`} type={`text`} name={'nro_doc'} register={register} />
           </div>
           <div className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}>
-          <Input labelText={`Rol`} placeholder={`Rol`} type={`text`} name={'rol'} register={register} />
           <Input labelText={`Contraseña`} placeholder={`Contraseña`} type={`Password`} name={'password'} register={register} />
+          <Input labelText={`Confirmar Contraseña`} placeholder={`Contraseña`} type={`Password`} name={'password'} register={register} />
         </div>
         <button className="btn btn-primary" type='submit'>Enviar</button>
       </form>

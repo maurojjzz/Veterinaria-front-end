@@ -9,20 +9,20 @@ const TablaVeterinario = ({ data }) => {
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
       });
       if (!response.ok) {
-        console.log('Error al eliminar veterinario');
+        console.log("Error al eliminar veterinario");
       } else {
-        console.log('Eliminado correctamente');
+        console.log("Eliminado correctamente");
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className={`d-flex justify-content-center`}>
@@ -33,10 +33,10 @@ const TablaVeterinario = ({ data }) => {
               <th>Matrícula</th>
               <th>Nombre</th>
               <th>Apellido</th>
-              <th>Teléfono</th>
-              <th>Email</th>
-              <th>DNI</th>
-              <th>Rol</th>
+              <th className={`d-none d-sm-table-cell `}>Teléfono</th>
+              <th className={`d-none d-md-table-cell `}>Email</th>
+              <th className={`d-none d-md-table-cell `}>DNI</th>
+              <th className={`d-none d-lg-table-cell `}>Rol</th>
               <th></th>
               <th></th>
             </tr>
@@ -53,10 +53,10 @@ const TablaVeterinario = ({ data }) => {
                 <td>{vet.matricula}</td>
                 <td>{vet.nombre}</td>
                 <td>{vet.apellido}</td>
-                <td>{vet.telefono}</td>
-                <td>{vet.email}</td>
-                <td>{vet.nro_doc}</td>
-                <td>{vet.rol.descripcion}</td>
+                <td className={`d-none d-sm-table-cell `}>{vet.telefono}</td>
+                <td className={`d-none d-md-table-cell `}>{vet.email}</td>
+                <td className={`d-none d-md-table-cell `}>{vet.nro_doc}</td>
+                <td className={`d-none d-lg-table-cell `}>{vet.rol.descripcion}</td>
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
