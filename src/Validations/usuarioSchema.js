@@ -27,11 +27,14 @@ const userSchema = Joi.object({
     })
     .required(),
 
-  email: Joi.string().email({ tlds: { allow: false } }).required().messages({
-    "string.base": "email debe ser una cadena de texto",
-    "string.empty": "Este campo no puede estar vacio",
-    "string.email": "Debe ser un email valido",
-  }),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .required()
+    .messages({
+      "string.base": "email debe ser una cadena de texto",
+      "string.empty": "Este campo no puede estar vacio",
+      "string.email": "Debe ser un email valido",
+    }),
 
   direccion: Joi.string().required().min(3).max(55).messages({
     "string.base": "Direccion debe ser una cadena de texto",
@@ -71,6 +74,11 @@ const userSchema = Joi.object({
       "string.pattern.base":
         "La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número",
     }),
+  repeatPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+    "string.base": "La contraseña debe ser una cadena de texto",
+    "string.empty": "La contraseña es un campo requerido",
+    "any.only": "Passwords don't match"
+  }),
   mascotas: Joi.array()
     .items(
       Joi.object({
@@ -79,7 +87,7 @@ const userSchema = Joi.object({
         sexo: Joi.string().required(),
         fecha_nacimiento: Joi.date(),
         owner: Joi.string().required(),
-        raza:Joi.string().required(),
+        raza: Joi.string().required(),
       })
     )
     .optional()
@@ -87,6 +95,13 @@ const userSchema = Joi.object({
       "array.base": 'El campo "mascotas" debe ser un arreglo',
       "array.includes": 'El arreglo "mascotas" debe contener elementos válidos',
     }),
+  rol: Joi.alternatives().try(
+    Joi.object({
+      id: Joi.string().required(),
+      descripcion: Joi.string().required(),
+    }).required(),
+    Joi.string().required()
+  ),
 });
 
 export default userSchema;
