@@ -32,7 +32,7 @@ const FormPractica = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/practicas/tabla");  // Ajusta la ruta según la estructura de tus rutas
+      history.push("/practicas/tabla");  
     }, 2000);
   };
   
@@ -102,7 +102,7 @@ const FormPractica = () => {
             type={`text`}
             name={"descripcion"}
             register={register}
-            error={errors.descripcion?.message}  // Ajusta el nombre del campo
+            error={errors.descripcion?.message}  
         />
         </div>
         <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />

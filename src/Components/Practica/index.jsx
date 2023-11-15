@@ -16,7 +16,7 @@ const Practica = () => {
           throw new Error("Error en la solicitud");
         }
         const data = await response.json();
-        setPracticas(data); // Corregido aquí
+        setPracticas(data); 
       } catch (error) {
         console.log(error);
       }
