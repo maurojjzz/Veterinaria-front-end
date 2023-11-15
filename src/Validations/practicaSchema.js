@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const userSchema = Joi.object({
+const practicaSchema = Joi.object({
   descripcion: Joi.string()
     .min(3)
     .max(25)

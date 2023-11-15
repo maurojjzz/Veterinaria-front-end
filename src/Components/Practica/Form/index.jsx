@@ -32,9 +32,10 @@ const FormPractica = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/Practica/Tabla");
+      history.push("/practicas/tabla");  // Ajusta la ruta según la estructura de tus rutas
     }, 2000);
   };
+  
 
   const addPractica = async (data) => {
     try {
@@ -95,14 +96,14 @@ const FormPractica = () => {
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
-          <Input
+         <Input
             labelText={`Descripcion`}
             placeholder={`Castracion`}
             type={`text`}
             name={"descripcion"}
             register={register}
-            error={errors.nombre?.message}
-          />
+            error={errors.descripcion?.message}  // Ajusta el nombre del campo
+        />
         </div>
         <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />
       </form>

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./table-cliente.module.css";
+import styles from "./table-practica.module.css";
 import { useHistory} from 'react-router-dom';
 
 
