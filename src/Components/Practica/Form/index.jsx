@@ -32,7 +32,7 @@ const FormPractica = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/practicas/tabla");  
+      history.push("/Practica/tabla/");  
     }, 2000);
   };
   
@@ -46,7 +46,7 @@ const FormPractica = () => {
         },
         body: JSON.stringify(data),
       });
-      if (response.ok) {
+      if (response) {
         console.log("Se creo correctamente");
         goBackToTable();
       } else {
@@ -66,7 +66,7 @@ const FormPractica = () => {
         },
         body: JSON.stringify(data),
       });
-      if (response.ok) {
+      if (response) {
         console.log("response", response);
         console.log("Se actualizo correctamente");
         goBackToTable();
@@ -97,7 +97,7 @@ const FormPractica = () => {
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
          <Input
-            labelText={`Descripcion`}
+            labelText={`descripcion`}
             placeholder={`Castracion`}
             type={`text`}
             name={"descripcion"}

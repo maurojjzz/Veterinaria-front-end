@@ -12,7 +12,7 @@ const practicaSchema = Joi.object({
       "string.max": "Nombre como maximo 25 caracteres",
       "string.pattern.base": "Nombre solo debe contener letras",
     })
-   .required
+   .required()
 });
 
 export default practicaSchema;
