@@ -6,6 +6,10 @@ import Header from "../Header";
 import Home from "../Home";
 import Cliente from "../Cliente";
 import FormClient from "../Cliente/Form";
+import FormVeterinario from "../Veterinario/FormVeterinario"
+import Veterinario from "../Veterinario"
+import Practica from "../Practica"
+import FormPractica from "../Practica/Form";
 
 const Layout = () => {
   return (
@@ -20,7 +24,7 @@ const Layout = () => {
           <Route path="/veterinarios/form/:id?" component={FormVeterinario} />
           <Route path="/veterinarios" component={Veterinario} />
           <Route exact path="/practica" component={Practica} />
-          <Route exact path="/practica/form" component={FormPractica} />
+          <Route exact path="/practica/form/:id?" component={FormPractica} />
           <Redirect from="/" to="/home" />
         </Switch>
       </Router>
