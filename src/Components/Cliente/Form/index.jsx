@@ -88,7 +88,6 @@ const FormClient = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("Datita", data);
     if (!id) {
       addUser(data);
     } else {
