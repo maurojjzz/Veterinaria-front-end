@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./tabla-veterinarios.module.css";
-import { useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
-const TablaVeterinario = ({ data }) => {
+const TablaVeterinario = ({ data, setData }) => {
+  const [filteredData, setFilteredData] = useState([...data]);
   const history = useHistory();
   
   const handleEdit = (veterinario) => {
     history.push(`/admin/veterinarios/form/${veterinario.id}`, { params: { ...veterinario } });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, event) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`, {
         method: "DELETE",
@@ -17,15 +18,27 @@ const TablaVeterinario = ({ data }) => {
           "Content-Type": "application/json",
         },
       });
-      if (!response.ok) {
-        console.log("Error al eliminar veterinario");
-      } else {
+  
+      if (response.ok) {
+        const updatedData = data.filter((vet) => vet.id !== id);
+        console.log("updatedData después de la eliminación:", updatedData);
+        setData(updatedData);
+        setFilteredData(updatedData);
         console.log("Eliminado correctamente");
+      } else {
+        console.log("Error al eliminar veterinario");
       }
     } catch (error) {
       console.log(error);
     }
+  
+    if (event) {
+      event.preventDefault();
+    }
   };
+
+  console.log("data en TablaVeterinario:", data);
+  console.log("filteredData en TablaVeterinario:", filteredData);
 
   return (
     <div className={`d-flex justify-content-center`}>
@@ -71,7 +84,7 @@ const TablaVeterinario = ({ data }) => {
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={() => handleDelete(vet.id)}
+                      onClick={(event) => handleDelete(vet.id, event)}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
                     />

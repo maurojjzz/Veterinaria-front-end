@@ -1,33 +1,13 @@
 import React from "react";
 import styles from "./table-practica.module.css";
-import { useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
-
-const TablaPractica = ({ data }) => {
+const TablaPractica = ({ data, handleDelete }) => {
   const history = useHistory();
 
-
-  const handleEdit = (user) => {
-    history.push(`/admin/practicas/form/${user.id}`, {params: {...user}})
+  const handleEdit = (practica) => {
+    history.push(`/admin/practicas/form/${practica.id}`, {params: {...practica}})
   };
-
-  const handleDelete = async (id)=>{
-    try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas/${id}`,{
-            method: 'DELETE',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-        });
-        if (!response.ok) {
-          console.log('Error al eliminar practica')
-        } else{
-            console.log('Eliminada correctamente')
-        }
-      } catch (error) {
-        console.log(error);
-      }
-  }
 
   return (
     <div className={`d-flex justify-content-center`}>
@@ -36,19 +16,18 @@ const TablaPractica = ({ data }) => {
           <thead>
             <tr>
               <th>Descripcion</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.map((use, index) => (
-              <tr
-                key={index}
-                className={`${styles.fila}`}
-              >
-                <td>{use.descripcion}</td>
+            {data.map((practica, index) => (
+              <tr key={index} className={`${styles.fila}`}>
+                <td>{practica.descripcion}</td>
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={() => handleEdit(use)}
+                      onClick={() => handleEdit(practica)}
                       className={`${styles.tableIcon}`}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                       alt="update icon button"
@@ -59,7 +38,7 @@ const TablaPractica = ({ data }) => {
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={() => handleDelete(use.id)}
+                      onClick={() => handleDelete(practica.id)}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
                     />
@@ -75,3 +54,4 @@ const TablaPractica = ({ data }) => {
 };
 
 export default TablaPractica;
+
