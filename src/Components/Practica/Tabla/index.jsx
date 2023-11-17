@@ -11,9 +11,9 @@ const TablaPractica = ({ data }) => {
     history.push(`/practica/form/${user.id}`, {params: {...user}})
   };
 
-  const handleDelete = async ()=>{
+  const handleDelete = async (id)=>{
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas/`,{
+        const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas/${id}`,{
             method: 'DELETE',
             headers:{
                 'Content-Type': 'application/json'

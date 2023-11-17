@@ -4,10 +4,10 @@ import TablaPracticas from "./Tabla";
 import styles from "./practica.module.css"
 
 const Practica = () => {
-  const [practicas, setPracticas] = useState([]); // Cambié el nombre de la variable para evitar confusiones
+  const [practicas, setPracticas] = useState([]); 
 
   const history = useHistory();
-
+  console.log(practicas)
   useEffect(() => {
     const fetchPracticas = async () => {
       try {
@@ -16,7 +16,7 @@ const Practica = () => {
           throw new Error("Error en la solicitud");
         }
         const data = await response.json();
-        setPracticas(data); 
+        setPracticas(data.data); 
       } catch (error) {
         console.log(error);
       }

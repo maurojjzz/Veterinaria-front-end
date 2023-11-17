@@ -3,7 +3,7 @@ import Joi from "joi";
 const practicaSchema = Joi.object({
   descripcion: Joi.string()
     .min(3)
-    .max(25)
+    .max(80)
     .regex(/^[a-zA-Z ]+$/)
     .messages({
       "string.base": "Descripcion debe ser una cadena de texto",
