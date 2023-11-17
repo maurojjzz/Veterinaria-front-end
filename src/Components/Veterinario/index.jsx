@@ -15,8 +15,7 @@ const Veterinario = () => {
           throw new Error("Error en la solicitud");
         }
         const data = await response.json();
-        const veterinarios = await data.data.filter((u) => u.rol.descripcion === "Veterinario");
-        setVeterinarios(veterinarios);
+        setVeterinarios(data.data);
       } catch (error) {
         console.log(error);
       }
@@ -26,8 +25,7 @@ const Veterinario = () => {
   }, []);
 
   const handleVeterinario = () => {
-    console.log('para agregar un nuevo veterinario');
-    history.push('/veterinarios/form');
+    history.push('/admin/veterinarios/form');
   }
 
   return (

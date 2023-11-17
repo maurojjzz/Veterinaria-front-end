@@ -38,7 +38,7 @@ const FormVeterinario = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/veterinarios");
+      history.push("/admin/veterinarios");
     }, 2000);
   };
 

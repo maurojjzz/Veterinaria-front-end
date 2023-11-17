@@ -8,7 +8,7 @@ const TablaPractica = ({ data }) => {
 
 
   const handleEdit = (user) => {
-    history.push(`/practica/form/${user.id}`, {params: {...user}})
+    history.push(`/admin/practicas/form/${user.id}`, {params: {...user}})
   };
 
   const handleDelete = async (id)=>{

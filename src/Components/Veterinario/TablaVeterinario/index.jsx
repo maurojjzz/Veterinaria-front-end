@@ -6,7 +6,7 @@ const TablaVeterinario = ({ data }) => {
   const history = useHistory();
   
   const handleEdit = (veterinario) => {
-    history.push(`/veterinarios/form/${veterinario.id}`, { params: { ...veterinario } });
+    history.push(`/admin/veterinarios/form/${veterinario.id}`, { params: { ...veterinario } });
   };
 
   const handleDelete = async (id) => {

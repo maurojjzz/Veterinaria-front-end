@@ -32,7 +32,7 @@ const FormPractica = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/Practica/tabla/");  
+      history.push("/admin/practicas/");  
     }, 2000);
   };
   

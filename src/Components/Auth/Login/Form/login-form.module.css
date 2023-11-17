@@ -1,0 +1,16 @@
+.loginFormContainer{
+    width: 100%;
+}
+
+.tituloForm{
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.forgotPass{
+    color: #f08125e6;
+}
+
+.cursor{
+    cursor: pointer;
+}

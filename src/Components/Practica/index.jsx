@@ -26,7 +26,7 @@ const Practica = () => {
   }, []);
 
   const handlePractica = () => {
-    history.push('/practica/form');
+    history.push('/admin/practicas/form');
   };
 
   return (

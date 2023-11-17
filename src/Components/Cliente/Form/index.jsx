@@ -39,7 +39,7 @@ const FormClient = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/usuarios");
+      history.push("/admin");
     }, 2000);
   };
 
@@ -88,7 +88,6 @@ const FormClient = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("Datita", data);
     if (!id) {
       addUser(data);
     } else {
