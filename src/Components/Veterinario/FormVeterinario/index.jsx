@@ -20,7 +20,8 @@ const FormVeterinario = () => {
     telefono: dataForm?.telefono,
     email: dataForm?.email,
     nro_doc: dataForm?.nro_doc,
-    rol: dataForm?.rol || "65334d8d48ec52ff5e08c85a",
+    password: dataForm?.password,
+    rol: dataForm?.rol || "65334db548ec52ff5e08c85b",
   };
 
   const {
@@ -50,11 +51,13 @@ const FormVeterinario = () => {
         },
         body: JSON.stringify(data),
       });
+  
       if (response.ok) {
         console.log("Se creó correctamente");
         goBackToTable();
       } else {
         console.log("No se pudo crear el veterinario");
+        console.error(await response.text());
       }
     } catch (error) {
       console.error("Error al crear veterinario", error);
@@ -75,6 +78,7 @@ const FormVeterinario = () => {
         goBackToTable();
       } else {
         console.log("No se pudo actualizar el veterinario");
+        console.error(await response.text());
       }
     } catch (error) {
       console.error("Error al actualizar veterinario", error);
@@ -86,6 +90,7 @@ const FormVeterinario = () => {
     if (!id) {
       addVeterinario(data);
     } else {
+      data.id = id;
       updateVeterinario(data);
     }
   };
@@ -184,3 +189,5 @@ const FormVeterinario = () => {
 };
 
 export default FormVeterinario;
+
+

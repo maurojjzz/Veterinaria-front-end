@@ -4,12 +4,12 @@ const veterinarioSchema = Joi.object({
   matricula: Joi.string()
     .required()
     .length(8)
-    .alphanum()
+    .regex(/^[A-Z0-9 ]+$/)
     .messages({
       "string.base": "Matrícula debe ser una cadena de texto",
       "string.empty": "Este es un campo requerido",
       "string.length": "La matrícula debe tener exactamente 8 caracteres",
-      "string.alphanum": "La matrícula solo debe contener números y letras",
+      "string.pattern.base": "La matrícula solo debe contener números y letras mayusculas",
     }),
 
     nombre: Joi.string()
@@ -83,6 +83,13 @@ const veterinarioSchema = Joi.object({
     "string.empty": "La contraseña es un campo requerido",
     "any.only": "Las contraseñas no son iguales"
   }),
+  rol: Joi.alternatives().try(
+    Joi.object({
+      id: Joi.string().required(),
+      descripcion: Joi.string().required(),
+    }).required(),
+    Joi.string().required()
+  ),
 });
 
 export default veterinarioSchema;

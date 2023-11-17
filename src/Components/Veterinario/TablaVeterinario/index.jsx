@@ -1,9 +1,12 @@
 import React from "react";
 import styles from "./tabla-veterinarios.module.css";
+import { useHistory} from 'react-router-dom';
 
 const TablaVeterinario = ({ data }) => {
-  const handleEdit = (id) => {
-    console.log("Se va a editar", id);
+  const history = useHistory();
+  
+  const handleEdit = (veterinario) => {
+    history.push(`/veterinarios/form/${veterinario.id}`, { params: { ...veterinario } });
   };
 
   const handleDelete = async (id) => {
@@ -46,9 +49,6 @@ const TablaVeterinario = ({ data }) => {
               <tr
                 key={index}
                 className={`${styles.fila}`}
-                onClick={() => {
-                  console.log(vet);
-                }}
               >
                 <td>{vet.matricula}</td>
                 <td>{vet.nombre}</td>
@@ -60,7 +60,7 @@ const TablaVeterinario = ({ data }) => {
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={() => handleEdit(vet.id)}
+                      onClick={() => handleEdit(vet)}
                       className={`${styles.tableIcon}`}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                       alt="update icon button"

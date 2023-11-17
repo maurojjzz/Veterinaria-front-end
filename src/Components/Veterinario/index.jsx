@@ -5,7 +5,6 @@ import TablaVeterinario from "./TablaVeterinario";
 
 const Veterinario = () => {
   const [veterinarios, setVeterinarios] = useState([]);
-
   const history = useHistory();
 
   useEffect(() => {
@@ -16,7 +15,8 @@ const Veterinario = () => {
           throw new Error("Error en la solicitud");
         }
         const data = await response.json();
-        setVeterinarios(data.data);
+        const veterinarios = await data.data.filter((u) => u.rol.descripcion === "Veterinario");
+        setVeterinarios(veterinarios);
       } catch (error) {
         console.log(error);
       }
