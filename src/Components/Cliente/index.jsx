@@ -33,7 +33,7 @@ const Cliente = () => {
   }, []);
 
   const handleUser = () => {
-    history.push("/usuarios/form");
+    history.push("/admin/usuarios/form");
   };
 
   return (

@@ -7,7 +7,6 @@ const Header = () => {
 
   const history = useHistory();
 
-
   return (
     <div className={`d-flex justify-content-evenly align-items-center text-light ${styles.headerContainer}`}>
       <img
@@ -27,13 +26,13 @@ const Header = () => {
         src={`${process.env.PUBLIC_URL}/assets/icons/dog-login.png`}
         alt={`dog entering a door simulating login icon`}
         className={`d-md-none ${styles.logo}`}
-        onClick={()=>{history.push('/login')}}
+        onClick={()=>{history.push('/auth/login')}}
       />
       <div className={`d-none d-md-flex gap-5`}>
-        <div className={`${styles.linkAccount}`} onClick={()=>{history.push('/login')}}>
+        <div className={`${styles.linkAccount}`} onClick={()=>{history.push('/auth/login')}}>
           <h2>Login</h2>
         </div>
-        <div className={`${styles.linkAccount}`} onClick={()=>{history.push('/sign-up')}}>
+        <div className={`${styles.linkAccount}`} onClick={()=>{history.push('/auth/sign-up')}}>
           <h2>Sign Up</h2>
         </div>
       </div>

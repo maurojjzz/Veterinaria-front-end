@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { Input, ButtonSubmit } from "../../../Shared";
 import styles from "./login-form.module.css";
@@ -18,9 +18,32 @@ const LoginForm = () => {
     resolver: joiResolver(loginSchema),
   });
 
+  useEffect(() => {
+    const role = localStorage.getItem('role');
+    switch (role) {
+      case 'Admin':
+        history.push('/admin');
+        break;
+      case 'Usuario':
+        // history.push('/user');
+        history.push('/auth');
+
+        break;
+      case 'Veterinario':
+        // history.push('/vet');
+        history.push('/auth');
+
+        break;
+      default: {
+        break;
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/auth/auth`, {
+      const response = await fetch(`${process.env.REACT_APP_API_KEY}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,16 +53,34 @@ const LoginForm = () => {
 
       if (response.ok) {
         const dataRes = await response.json();
-        console.log(dataRes)
-        localStorage.setItem("token", dataRes.token);
-        localStorage.setItem("role", dataRes.role)
-        history.push('/usuarios')
+        console.log(dataRes) //Borrar los clg xd dx
+        await localStorage.setItem("token", dataRes.token);
+        await localStorage.setItem("role", dataRes.role);
+
+        switch (dataRes.role) {
+          case 'Admin':
+            history.push('/admin');
+            break;
+          case 'Usuario':
+            // history.push('/user');
+            history.push('/auth');
+            break;
+          case 'Veterinario':
+            // history.push('/vet');
+            history.push('/auth');
+
+            break;
+          default: {
+            console.log('Error con el rol del user')
+            break;
+          }
+        }
       } else {
-        throw new Error("Error en token");
+        throw new Error("Error al intentar logearse ");
       }
 
     } catch (error) {
-      console.error("Error al intentar logearse ", error);
+      console.error(error);
     }
   };
 
@@ -70,7 +111,7 @@ const LoginForm = () => {
         <p
           className={`${styles.cursor}  fw-normal text-center`}
           onClick={() => {
-            history.push("/sign-up");
+            history.push("/auth/sign-up");
           }}
         >
           Don't have an account? <span className={`forgotPass fw-medium ${styles.forgotPass}`}>Sign Up</span>

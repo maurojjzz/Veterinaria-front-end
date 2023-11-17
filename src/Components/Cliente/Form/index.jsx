@@ -39,7 +39,7 @@ const FormClient = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/usuarios");
+      history.push("/admin");
     }, 2000);
   };
 

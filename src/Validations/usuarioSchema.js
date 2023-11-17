@@ -77,7 +77,7 @@ const userSchema = Joi.object({
   repeatPassword: Joi.string().valid(Joi.ref("password")).required().messages({
     "string.base": "La contraseña debe ser una cadena de texto",
     "string.empty": "La contraseña es un campo requerido",
-    "any.only": "Passwords don't match"
+    "any.only": "Las contraseñas no coinciden"
   }),
   mascotas: Joi.array()
     .items(
