@@ -15,7 +15,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 170px;
+      width: 600px;
+      max-width: 60%;
       transition: all 0.1s;
     }
   
@@ -39,7 +40,6 @@
       width: 30px;
       height: 30px;
       transition: all ease-out 0.5s;
-      padding: 4px;
     }
   
     .tableIcon:hover{
@@ -56,13 +56,10 @@
     @media screen and (min-width: 313px) {
       .tablaContainer{
         overflow-x: hidden;
-      } 
-    }
-    
-    @media screen and (min-width: 370px) {
-      .tabla tr td:nth-child(2),
+        .tabla tr td:nth-child(2),
       .tabla tr th:nth-child(2) {
         display: table-cell;
-      }
+      } 
     }
+  }
     
