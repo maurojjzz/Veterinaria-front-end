@@ -35,7 +35,7 @@ const Veterinario = () => {
         <div onClick={() => { handleVeterinario() }} className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}>
           <h3>+ veterinario</h3>
         </div>
-        <TablaVeterinario data={veterinarios} />
+        <TablaVeterinario data={veterinarios} setData={setVeterinarios} />
       </div>
     </div>
   );
