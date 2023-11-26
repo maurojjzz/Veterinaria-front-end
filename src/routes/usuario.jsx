@@ -1,8 +1,9 @@
 import React from 'react';
 import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 import Layout from '../Components/Layout';
-import DasboardUser from '../Components/Users/User/';
-import NotAllowed from '../Components/Auth/Not-Allowed'
+import DasboardUser from '../Components/Users/User';
+import NotAllowed from '../Components/Auth/Not-Allowed';
+import Atencion from '../Components/Atencion';
 
 
 const UsuarioRoutes = () => {
@@ -12,6 +13,7 @@ const UsuarioRoutes = () => {
     <Layout>
       <Switch>
         <Route exact path={`${url}/dash`} component={DasboardUser} />
+        <Route exact path={`${url}/atencion`} component={Atencion} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/dash`} />
       </Switch>

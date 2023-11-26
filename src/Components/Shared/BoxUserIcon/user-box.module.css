@@ -1,0 +1,9 @@
+.container{
+    display: flex;
+    align-items: flex-end;
+    height: min-content;
+    width: fit-content;
+    background-color: rgb(233, 153, 78);
+    border: 1px solid rgba(0, 0, 0, 0.144);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.12);
+}

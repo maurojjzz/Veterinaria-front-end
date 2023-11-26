@@ -1,0 +1,60 @@
+.tablaContainer {
+  max-width: 1050px;
+  overflow-x: scroll;
+}
+
+.tabla {
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0px 6px 20px -7px rgba(0, 0, 0, 0.75);
+}
+
+.tabla tr td,
+.tabla tr th {
+  text-align: left;
+  max-width: 170px;
+  transition: all 0.1s;
+}
+
+.tabla tr th:nth-last-child(-n + 2) {
+  width: 15px;
+}
+
+.iconCont {
+  border-radius: 30px;
+  width: 35px;
+  height: 35px;
+  transition: all ease-out 0.5s;
+}
+
+.tableIcon {
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  transition: all ease-out 0.5s;
+  padding: 4px;
+}
+
+.tableIcon:hover {
+  transform: scale(1.1);
+}
+.iconCont:hover {
+  background-color: #a9c3b896;
+}
+
+.fila {
+  cursor: pointer;
+}
+.practicas {
+  white-space: nowrap;
+  height: 65px;
+}
+.masPracticas {
+  font-weight: bolder;
+}
+
+@media screen and (min-width: 313px) {
+  .tablaContainer {
+    overflow-x: hidden;
+  }
+}
