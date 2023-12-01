@@ -57,8 +57,14 @@
   flex-direction: column;
 }
 
-.cursor{
+
+
+.tableIcon{
   cursor: pointer;
+  width: 30px;
+  height: 30px;
+  transition: all ease-out 0.5s;
+  padding: 4px;
 }
 
 @media screen and (min-width: 410px) {

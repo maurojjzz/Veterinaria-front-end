@@ -30,16 +30,21 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
 
   return (
     <div className={`${styles.wholeContainer}`}>
-      <div className={`d-flex flex-column align-items-center bg-light pb-4 pt-2 ${styles.container}`}>
-        <div
-          className={`d-flex justify-content-end  w-100 pe-2 fw-bold ${styles.cursor}`}
-          onClick={() => {
-            setDataFilaAtencion({});
-            setModal(false);
-          }}
-        >
-          X
+      <div className={`d-flex flex-column align-items-center rounded-2 bg-light pb-4 pt-2 ${styles.container}`}>
+        
+
+        <div className={`d-flex justify-content-end  w-100 pe-2`}>
+          <img
+            onClick={() => {
+              setDataFilaAtencion({});
+              setModal(false);
+            }}
+            className={`${styles.tableIcon}`}
+            src={`${process.env.PUBLIC_URL}/assets/icons/cerrar.png`}
+            alt="update icon button"
+          />
         </div>
+
         <h4>Atencion</h4>
         <div className={`d-flex flex-column align-items-center text-center rounded-3 border ${styles.boxUser}`}>
           <div>
@@ -132,8 +137,8 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
               className={`d-flex flex-column align-items-center justify-content-center gap-2 p-3  border-end border-2`}
             >
               <BoxVetIcon
-                nombre={dataFilaAtencion.veterinario.nombre.trim()}
-                apellido={dataFilaAtencion.veterinario.apellido.trim()}
+                nombre={dataFilaAtencion.veterinario?.nombre}
+                apellido={dataFilaAtencion.veterinario?.apellido}
               />
               <div className={` text-center fs-5 ${styles.nameBox}`}>
                 <div>{dataFilaAtencion.veterinario.nombre}</div>
@@ -175,7 +180,7 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
           >
             <div>
               <div className={`fw-medium`}>Importe</div>
-              <div>{dataFilaAtencion.importe}</div>
+              <div>${dataFilaAtencion.importe}</div>
             </div>
             <div>
               <div className={`fw-medium`}>Pagara/pago con</div>
@@ -206,7 +211,7 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
                     </div>
                     <div>
                       <div className={`fw-medium`}>Monto</div>
-                      <div>{pag.importe}</div>
+                      <div>${pag.importe}</div>
                     </div>
                   </div>
                 ))}

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import styles from './atencion.module.css'
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {decodeToken} from '../../Functions/utiities.js';
 import TablaAtencion from './Tabla';
 
@@ -8,7 +8,7 @@ import TablaAtencion from './Tabla';
 const Atencion = () => {
     const [atens, setAtens] = useState([]);
 
-    // const history = useHistory();
+    const history = useHistory();
   
     useEffect(() => {
       const fetchAte = async () => {
@@ -33,16 +33,10 @@ const Atencion = () => {
   
       fetchAte();
     }, []);
-
-    // useEffect(()=>{
-    //   const token = localStorage.getItem('token');
-    //   let payload = decodeToken(token);
-    //   console.log(payload.email)
-    // },[])
   
-    // const handleUser = () => {
-    //   history.push("/admin/usuarios/form");
-    // };
+    const handleUser = () => {
+      history.push("/admin/atenciones/form");
+    };
   
     return (
       <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.clienteContainer}`}>
@@ -50,7 +44,7 @@ const Atencion = () => {
         <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
           <div
             onClick={() => {
-            //   handleUser();
+              handleUser();
             }}
             className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
           >
