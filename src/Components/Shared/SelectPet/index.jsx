@@ -9,7 +9,7 @@ const SelectPet = ({ mascotas, error, register , name}) => {
           className={!error ? `form-select ${styles.selectInput} ` : `form-select is-invalid ${styles.selectInput} ${styles.selectInputError}`}
           id="floatingSelect"
           aria-label="Floating label select example"
-          {...register(name, { required: { value: true, message: "Este campo es requerido" } })}        >
+          {...register(name, { required: { value: true, message: "Este campo es requerido" } })}>
           <option disabled defaultValue>
             Selecciona una mascota
           </option>

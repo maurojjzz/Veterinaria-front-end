@@ -1,0 +1,87 @@
+/* .usersBox{
+    background-color: white;
+    max-height: 240px;
+    overflow-y: scroll;
+    z-index: 10;
+    top: 65px;
+    min-width: 180px;
+    max-width: 300px;
+    width: 100%;
+} */
+
+.goodCont{
+    min-width: 180px;
+    max-width: 300px;
+    width: 100%;
+    position: relative;
+}
+.formInput{
+    min-width: 180px;
+    max-width: 300px;
+    height: 45px;
+    border: 1px solid #1BBCB6;   
+    box-shadow: 10px 7px 15px 0px rgba(27, 188, 182, 0.18);
+}
+.formInputError{
+    box-shadow: 10px 7px 15px 0px rgba(188, 51, 27, 0.18);
+    box-shadow: none;  
+}
+
+.formInputError:focus{
+    border: 3px solid #bc331b; 
+}
+
+.formInput:focus{
+    border: 3px solid #1BBCB6; 
+    box-shadow: none;  
+}
+
+.formLoginLabel,
+.goodCont .formInput:focus ~ .formLoginLabel{
+    color: #1BBCB6;
+    font-weight: 500;
+}
+
+.formLoginLabel ~ .formInputError,
+.goodCont .formInputError:focus ~ .formLoginLabel{
+    color: #bc331b;
+    font-weight: 500;
+}
+
+
+.spaceErrorMsg{
+    border: 1px solid transparent;
+    margin-top: 15px;
+    min-width: 180px;
+    max-width: 300px;
+    min-height: 45px;
+}
+.errorContainer{
+    margin-top: 15px;
+    min-width: 180px;
+    max-width: 300px;
+    min-height: 45px;
+}
+
+.errorMensaje{
+    color: #bc331b;
+    font-size: 12px;
+}
+
+.cursor{
+    cursor: pointer;
+    box-shadow: 0px 5px 10px -5px rgba(0, 0, 0, 0.75);
+}
+
+.usersBox{
+    background-color: white;
+    max-height: 240px;
+    overflow-y: scroll;
+    position: absolute;
+    z-index: 10;
+    top: 65px;
+    min-width: 180px;
+    max-width: 300px;
+    width: 100%;
+    box-shadow: 0px 5px 30px -5px rgba(0, 0, 0, 0.75);
+}

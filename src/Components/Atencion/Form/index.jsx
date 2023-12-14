@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { Input, ButtonSubmit, SelectUser, SelectPet } from "../../Shared";
+import { Input, ButtonSubmit, SelectUser, SelectPet, SelectVet, CheckPractices } from "../../Shared";
 import styles from "./atencionesForm.module.css";
 import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -26,8 +26,6 @@ const AtencionForm = () => {
   //   rol: dataForm?.rol || "65334d8d48ec52ff5e08c85a",
   //   mascotas: dataForm?.mascotas,
   // };
-
-  console.log(userPet);
 
   const {
     register,
@@ -92,12 +90,15 @@ const AtencionForm = () => {
   // };
 
   const onSubmit = (data) => {
+    console.log(data, "data");
     if (!id) {
       // addUser(data);
     } else {
       // updateUser(data);
     }
   };
+
+  // console.log(errors, "errors");
 
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
@@ -141,9 +142,9 @@ const AtencionForm = () => {
             labelText={`Forma de pago`}
             placeholder={`Messi`}
             type={`text`}
-            name={"pagos"}
+            name={"forma_de_pago"}
             register={register}
-            error={errors.pagos?.message}
+            error={errors.forma_de_pago?.message}
           />
         </div>
 
@@ -170,46 +171,22 @@ const AtencionForm = () => {
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
-          <div className="form-floating">
-            <select className="form-select" id="floatingSelect" aria-label="Floating label select example">
-              <option defaultValue>Open this select menu</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-            <label htmlFor="floatingSelect">Veterinario</label>
-          </div>
-          <div className="form-floating">
-            <select className="form-select" id="floatingSelect" aria-label="Floating label select example">
-              <option defaultValue>Open this select menu</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-            <label htmlFor="floatingSelect">Practicas</label>
-          </div>
-        </div>
-
-        {/* <div
-          className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
-        >
-          <Input
-            labelText={`Email`}
-            placeholder={`liomessigamer@gmail.com`}
-            type={`email`}
-            name={"email"}
-            register={register}
-            error={errors.email?.message}
-          />
-          <Input
-            labelText={`Direccion`}
-            placeholder={`Alberdi 4250`}
+          <SelectVet
+            labelText={`E-mail del veterinario`}
+            placeholder={`messi@messi.com`}
             type={`text`}
-            name={"direccion"}
+            name={"veterinario"}
             register={register}
-            error={errors.direccion?.message}
+            error={errors.veterinario?.message}
           />
-        </div> */}
+          <CheckPractices
+            labelText={`Practicas`}
+            placeholder={`Inyeccion`}
+            name={"practicas"}
+            register={register}
+            error={errors.practicas?.message}
+          />
+        </div>
 
         <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />
       </form>

@@ -59,17 +59,14 @@ const AtencionSchema = Joi.object({
     .messages({
       "any.required": "Este es un campo requerido",
     }),
-  practicas: Joi.array()
-    .items(
-      Joi.object({
-        id: Joi.string().required(),
-        descripcion: Joi.string().required(),
-      })
-    )
-    .messages({
-      "array.base": 'El campo "practicas" debe ser un arreglo',
-      "array.includes": 'El arreglo "practicas" debe contener elementos válidos',
-    }),
+  practicas: Joi.array().items(Joi.string()).min(1).required().messages({
+    "any.required": "Este es un campo requerido",
+    "array.base": 'El campo "practicas" debe ser un arreglo',
+    "array.includes": 'El arreglo "practicas" debe contener elementos válidos',
+    "array.min": 'El arreglo "practicas" debe contener al menos un elemento',
+    "string.base": 'Los elementos del arreglo "practicas" deben ser cadenas de texto',
+    "string.empty": 'Los elementos del arreglo "practicas" no pueden estar vacíos',
+  }),
 
   veterinario: Joi.alternatives()
     .try(
