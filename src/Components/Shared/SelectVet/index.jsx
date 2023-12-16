@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select_vet.module.css";
 
-const SelectVet = ({ labelText, placeholder, type, register, name, error }) => {
+const SelectVet = ({ labelText, placeholder, type, register, name, error, setValue }) => {
   const [veterinario, setVeterinario] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -33,12 +33,18 @@ const SelectVet = ({ labelText, placeholder, type, register, name, error }) => {
     setInputValue(value);
     const filtered = veterinario.filter((usuario) => usuario.email.toLowerCase().trim().includes(value.toLowerCase()));
     setFilteredEmails(filtered);
+    console.log(value, "value del handleInputChaange")
   };
 
   const selectedDue = (ele) => {
+    // console.log(ele)
     setInputValue(ele.email);
+    setValue(name, ele.id);
+    // register(name).setValue(ele.email);
     setFilteredEmails([]);
   };
+
+  // console.log(inputValue)
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>

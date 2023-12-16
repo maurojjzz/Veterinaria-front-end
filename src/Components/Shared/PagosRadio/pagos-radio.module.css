@@ -86,26 +86,15 @@
     box-shadow: 0px 5px 30px -5px rgba(0, 0, 0, 0.75);
 }
 
-.objetoChose{
-    min-height: 10px;
-    justify-content: center;
-    box-shadow: 0px 5px 15px -5px rgba(0, 0, 0, 0.75);
-}
-
-.elementPractices{
-    border:2px solid #1BBCB6;
-    height: min-content;
-    width: fit-content;
-    padding: 2px;
-}
-
-.closeIcon{
+.radioButtonLabel {
     cursor: pointer;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
 }
 
-.closeIcon:hover{
-    background-color: #116e6b48;
+.radioButtonCont{
+    width: min-content;
+}
+
+.radioButtonIcon{
+    width: 40px;
+    height: 40px;
 }

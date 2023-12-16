@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "./checkPractices.module.css";
 
-const CheckPractices = ({ register, name, error, labelText, placeholder }) => {
+const CheckPractices = ({ register, name, error, labelText, placeholder, setValue }) => {
   const [practicas, setPracticas] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredPracticas, setFilteredPracticas] = useState([]);
   const [selectedPrac, setSelectedPract] = useState([]);
+  const [practicaObj, setPracticaObj] = useState([]);
+  
 
   useEffect(() => {
     const fetchPracticas = async () => {
@@ -29,8 +31,6 @@ const CheckPractices = ({ register, name, error, labelText, placeholder }) => {
     fetchPracticas();
   }, []);
 
-  
-
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -46,16 +46,33 @@ const CheckPractices = ({ register, name, error, labelText, placeholder }) => {
 
     if (!selectedPrac.some((practica) => practica.id === ele.id)) {
       setSelectedPract((prevSelectedPracticas) => [...prevSelectedPracticas, ele.id]);
+      setPracticaObj((prevSelectedPracticas) => [...prevSelectedPracticas, ele]);
+      setValue(name, [...selectedPrac, ele.id]);
     } else {
       setSelectedPract((prevSelectedPracticas) => prevSelectedPracticas.filter((practica) => practica.id !== ele.id));
+      setPracticaObj((prevSelectedPracticas) => prevSelectedPracticas.filter((practica) => practica.id !== ele.id));
+      setValue(
+        name,
+        selectedPrac.filter((practica) => practica.id !== ele.id)
+      );
     }
   };
 
-  console.log(selectedPrac);
+  const handleDelete = (id) => {
+    setSelectedPract((prevSelectedPracticas) => prevSelectedPracticas.filter((practica) => practica !== id));
+    setPracticaObj((prevSelectedPracticas) => prevSelectedPracticas.filter((practica) => practica.id !== id));
+    setValue(
+      name,
+      selectedPrac.filter((practica) => practica.id !== id)
+    );
+  }
+
+  console.log(selectedPrac, "selectedPrac");
+  console.log(practicaObj, "objeto practica");
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
-      <input type="hidden" {...register(name)} value={selectedPrac} />
+      <input type="hidden" {...register(name)} value={JSON.stringify(selectedPrac)} />
       <input
         type={`text`}
         className={
@@ -91,12 +108,21 @@ const CheckPractices = ({ register, name, error, labelText, placeholder }) => {
           ))}
         </div>
       </div>
-      <div>
-        {selectedPrac.map((practica,index) => (
-          <span key={index}>{practica.descripcion}</span>
-        ))}
-      </div>
-
+      {practicaObj.length > 0 && (
+        <div className={`d-flex flex-wrap flex-row p-2 mt-2 border gap-2 ${styles.objetoChose}`}>
+          {practicaObj.map((practica, index) => (
+            <div className={`d-flex align-items-center rounded-4 p-1 ${styles.elementPractices}`} key={index}>
+              {practica.descripcion}
+              <img
+                src={`${process.env.PUBLIC_URL}/assets/icons/cerrar.png`}
+                alt="close icon"
+                className={`ms-1 ${styles.closeIcon}`}
+                onClick={() => handleDelete(practica.id)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
       {error ? (
         <div className={`${styles.errorContainer}`}>
           <div className={`text-center  ${styles.errorMensaje}`}>{error}</div>

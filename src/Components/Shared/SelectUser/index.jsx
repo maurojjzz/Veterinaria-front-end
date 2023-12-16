@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select-user.module.css";
 
-const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet }) => {
+const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet ,setValue}) => {
   const [usuarios, setUsuario] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -40,6 +40,7 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
   const selectedDue = (ele) => {
     setInputValue(ele.email);
     setUserPet(ele);
+    setValue(name, ele.id);
     setFilteredEmails([]);
   };
 

@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { Input, ButtonSubmit, SelectUser, SelectPet, SelectVet, CheckPractices } from "../../Shared";
+import { Input, ButtonSubmit, SelectUser, SelectPet, SelectVet, CheckPractices, PagosRadio } from "../../Shared";
 import styles from "./atencionesForm.module.css";
 import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
+  // const [practicaChosen, setPracticaChosen] = useState([]);
 
   const { id } = useParams();
   // const location = useLocation();
@@ -31,6 +32,8 @@ const AtencionForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    reset,
   } = useForm({
     mode: "onBlur",
     resolver: joiResolver(atencionSchema),
@@ -90,6 +93,7 @@ const AtencionForm = () => {
   // };
 
   const onSubmit = (data) => {
+    // data.practicas = practicaChosen;
     console.log(data, "data");
     if (!id) {
       // addUser(data);
@@ -98,7 +102,6 @@ const AtencionForm = () => {
     }
   };
 
-  // console.log(errors, "errors");
 
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
@@ -130,27 +133,6 @@ const AtencionForm = () => {
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
-          <Input
-            labelText={`Importe`}
-            placeholder={`Lionel`}
-            type={`text`}
-            name={"importe"}
-            register={register}
-            error={errors.importe?.message}
-          />
-          <Input
-            labelText={`Forma de pago`}
-            placeholder={`Messi`}
-            type={`text`}
-            name={"forma_de_pago"}
-            register={register}
-            error={errors.forma_de_pago?.message}
-          />
-        </div>
-
-        <div
-          className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
-        >
           <SelectUser
             labelText={`E-mail del cliente`}
             placeholder={`messi@messi.com`}
@@ -159,6 +141,7 @@ const AtencionForm = () => {
             register={register}
             error={errors.cliente?.message}
             setUserPet={setUserPet}
+            setValue={setValue} 
           />
           <SelectPet
             mascotas={userPet.mascotas}
@@ -178,6 +161,7 @@ const AtencionForm = () => {
             name={"veterinario"}
             register={register}
             error={errors.veterinario?.message}
+            setValue={setValue} 
           />
           <CheckPractices
             labelText={`Practicas`}
@@ -185,7 +169,21 @@ const AtencionForm = () => {
             name={"practicas"}
             register={register}
             error={errors.practicas?.message}
+            setValue={setValue} 
           />
+        </div>
+        <div
+          className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
+        >
+          <Input
+            labelText={`Importe`}
+            placeholder={`Lionel`}
+            type={`text`}
+            name={"importe"}
+            register={register}
+            error={errors.importe?.message}
+          />
+          <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message}/>
         </div>
 
         <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />
