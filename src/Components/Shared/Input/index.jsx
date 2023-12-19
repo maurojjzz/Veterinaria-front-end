@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./input.module.css";
 
 const Input = ({ labelText, placeholder, type, register, name, error }) => {
+  
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
       <input

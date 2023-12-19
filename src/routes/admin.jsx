@@ -8,6 +8,9 @@ import Veterinario from "../Components/Veterinario";
 import FormVeterinario from "../Components/Veterinario/FormVeterinario";
 import Practica from "../Components/Practica";
 import FormPractica from "../Components/Practica/Form";
+import Atencion from '../Components/Atencion';
+import AtencionForm from "../Components/Atencion/Form";
+
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch()
@@ -21,6 +24,8 @@ const AdminRoutes = () => {
         <Route path={`${url}/veterinarios/form/:id?`} component={FormVeterinario} />
         <Route exact path={`${url}/practicas`} component={Practica} />
         <Route path={`${url}/practicas/form/:id?`} component={FormPractica} />
+        <Route exact path={`${url}/atenciones`} component={Atencion} />
+        <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />
       </Switch>

@@ -25,14 +25,10 @@ const LoginForm = () => {
         history.push('/admin');
         break;
       case 'Usuario':
-        // history.push('/user');
-        history.push('/auth');
-
+        history.push('/user');
         break;
       case 'Veterinario':
-        // history.push('/vet');
-        history.push('/auth');
-
+        history.push('/vet');
         break;
       default: {
         break;
@@ -53,7 +49,6 @@ const LoginForm = () => {
 
       if (response.ok) {
         const dataRes = await response.json();
-        console.log(dataRes) //Borrar los clg xd dx
         await localStorage.setItem("token", dataRes.token);
         await localStorage.setItem("role", dataRes.role);
 
@@ -62,13 +57,10 @@ const LoginForm = () => {
             history.push('/admin');
             break;
           case 'Usuario':
-            // history.push('/user');
-            history.push('/auth');
+            history.push('/user');
             break;
           case 'Veterinario':
-            // history.push('/vet');
-            history.push('/auth');
-
+            history.push('/vet');
             break;
           default: {
             console.log('Error con el rol del user')

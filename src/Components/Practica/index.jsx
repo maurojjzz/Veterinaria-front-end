@@ -38,7 +38,6 @@ const Practica = () => {
       });
 
       if (response.ok) {
-        // Remove the practica from the table data
         const updatedPracticas = practicas.filter((practica) => practica.id !== id);
         setPracticas(updatedPracticas);
         console.log("Eliminada correctamente");
@@ -46,7 +45,7 @@ const Practica = () => {
         console.log("Error al eliminar practica");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
