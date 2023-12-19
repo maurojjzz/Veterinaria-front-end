@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styles from "./checkPractices.module.css";
 
-const CheckPractices = ({ register, name, error, labelText, placeholder, setValue }) => {
+const CheckPractices = ({ register, name, error, labelText, placeholder, setValue, defaultValue }) => {
   const [practicas, setPracticas] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredPracticas, setFilteredPracticas] = useState([]);
   const [selectedPrac, setSelectedPract] = useState([]);
   const [practicaObj, setPracticaObj] = useState([]);
-  
 
   useEffect(() => {
     const fetchPracticas = async () => {
@@ -30,6 +29,11 @@ const CheckPractices = ({ register, name, error, labelText, placeholder, setValu
 
     fetchPracticas();
   }, []);
+
+  useEffect(() => {
+    setSelectedPract(defaultValue);
+    setPracticaObj(practicas.filter((practica) => defaultValue.includes(practica.id)));
+  }, [defaultValue, practicas]);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -65,10 +69,7 @@ const CheckPractices = ({ register, name, error, labelText, placeholder, setValu
       name,
       selectedPrac.filter((practica) => practica.id !== id)
     );
-  }
-
-  console.log(selectedPrac, "selectedPrac");
-  console.log(practicaObj, "objeto practica");
+  };
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>

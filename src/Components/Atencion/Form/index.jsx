@@ -1,45 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { Input, ButtonSubmit, SelectUser, SelectPet, SelectVet, CheckPractices, PagosRadio } from "../../Shared";
 import styles from "./atencionesForm.module.css";
 import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
+import { formateoFecha, justFecha, justHour } from "../../../Functions/utiities";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
-  // const [practicaChosen, setPracticaChosen] = useState([]);
 
   const { id } = useParams();
-  // const location = useLocation();
+  const location = useLocation();
   const history = useHistory();
 
-  // const dataForm = location.state?.params;
+  const dataForm = location.state?.params;
 
-  // const usuarioDataUpdate = {
-  //   nombre: dataForm?.nombre,
-  //   apellido: dataForm?.apellido,
-  //   email: dataForm?.email,
-  //   password: dataForm?.password,
-  //   telefono: dataForm?.telefono,
-  //   nro_doc: dataForm?.nro_doc,
-  //   direccion: dataForm?.direccion,
-  //   rol: dataForm?.rol || "65334d8d48ec52ff5e08c85a",
-  //   mascotas: dataForm?.mascotas,
-  // };
+  useEffect(() => {
+    if (id) {
+      setUserPet(dataForm?.mascota?.owner);
+    }
+  }, [dataForm?.mascota?.owner, id]);
+
+  const atencionDataUpdate = {
+    fecha: justFecha(dataForm?.fecha_hora_atencion),
+    hora: justHour(dataForm?.fecha_hora_atencion),
+    cliente: dataForm?.mascota?.owner,
+    forma_de_pago: dataForm?.forma_de_pago,
+    importe: dataForm?.importe,
+    mascota: dataForm?.mascota?.id,
+    pagos: dataForm?.pagos,
+    practicas: dataForm?.practicas.map((practica) => practica.id) || [],
+    veterinario: dataForm?.veterinario?.id,
+  };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    reset,
   } = useForm({
     mode: "onBlur",
     resolver: joiResolver(atencionSchema),
-    // defaultValues: {
-    //   ...usuarioDataUpdate,
-    // },
+    defaultValues: {
+      ...atencionDataUpdate,
+    },
   });
 
   const goBackToTable = () => {
@@ -48,60 +53,55 @@ const AtencionForm = () => {
     }, 2000);
   };
 
-  // const addUser = async (data) => {
-  //   try {
-  //     const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-  //     if (response.ok) {
-  //       console.log("Se creo correctamente");
-  //       goBackToTable();
-  //     } else {
-  //       console.log("no se pudo crear el usuario");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al crear usuario", error);
-  //   }
-  // };
-
-  // const updateUser = async (data) => {
-  //   try {
-  //     data.mascotas = Array.from(new Set(data.mascotas.map((mascota) => mascota.id)));
-  //     console.log(data.mascotas);
-
-  //     const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios/${id}`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(data),
-  //     });
-  //     if (response.ok) {
-  //       console.log("response", response);
-  //       console.log("Se actualizo correctamente");
-  //       goBackToTable();
-  //     } else {
-  //       console.log("no se actualizar crear el usuario");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al actualizar usuario", error);
-  //   }
-  // };
-
-  const onSubmit = (data) => {
-    // data.practicas = practicaChosen;
-    console.log(data, "data");
-    if (!id) {
-      // addUser(data);
-    } else {
-      // updateUser(data);
+  const addAtencion = async (data) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_KEY}/atenciones`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        console.log("Se creo correctamente");
+        goBackToTable();
+      } else {
+        console.log("no se pudo crear la atencion");
+      }
+    } catch (error) {
+      console.error("Error al crear usuario", error);
     }
   };
 
+  const updateAtencion = async (data) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        console.log("Se actualizo correctamente");
+        goBackToTable();
+      } else {
+        console.log("no se actualizar crear el usuario");
+      }
+    } catch (error) {
+      console.error("Error al actualizar usuario", error);
+    }
+  };
+
+  const onSubmit = (data) => {
+    data.fecha_hora_atencion = formateoFecha(data.fecha, data.hora);
+    const { hora, fecha, cliente, ...atencionObj } = data;
+    if (!id) {
+      addAtencion(atencionObj);
+    } else {
+      updateAtencion(atencionObj);
+    }
+  };
 
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
@@ -141,13 +141,15 @@ const AtencionForm = () => {
             register={register}
             error={errors.cliente?.message}
             setUserPet={setUserPet}
-            setValue={setValue} 
+            setValue={setValue}
+            defaultValue={atencionDataUpdate.cliente}
           />
           <SelectPet
             mascotas={userPet.mascotas}
-            error={errors.mascotas?.message}
+            error={errors.mascota?.message}
             register={register}
-            name={`mascotas`}
+            name={`mascota`}
+            defaultValue={atencionDataUpdate.mascota}
           />
         </div>
 
@@ -161,7 +163,8 @@ const AtencionForm = () => {
             name={"veterinario"}
             register={register}
             error={errors.veterinario?.message}
-            setValue={setValue} 
+            setValue={setValue}
+            defaultValue={atencionDataUpdate.veterinario}
           />
           <CheckPractices
             labelText={`Practicas`}
@@ -169,7 +172,8 @@ const AtencionForm = () => {
             name={"practicas"}
             register={register}
             error={errors.practicas?.message}
-            setValue={setValue} 
+            setValue={setValue}
+            defaultValue={atencionDataUpdate.practicas}
           />
         </div>
         <div
@@ -183,7 +187,7 @@ const AtencionForm = () => {
             register={register}
             error={errors.importe?.message}
           />
-          <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message}/>
+          <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message} />
         </div>
 
         <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />

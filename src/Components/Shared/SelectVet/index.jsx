@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select_vet.module.css";
 
-const SelectVet = ({ labelText, placeholder, type, register, name, error, setValue }) => {
+const SelectVet = ({ labelText, placeholder, type, register, name, error, setValue, defaultValue }) => {
   const [veterinario, setVeterinario] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -28,23 +28,24 @@ const SelectVet = ({ labelText, placeholder, type, register, name, error, setVal
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+      setInputValue(veterinario.find((u) => u.id === defaultValue)?.email || ""); 
+      setValue(name, defaultValue);
+  }, [defaultValue, name, setValue, veterinario]);
+
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
     const filtered = veterinario.filter((usuario) => usuario.email.toLowerCase().trim().includes(value.toLowerCase()));
     setFilteredEmails(filtered);
-    console.log(value, "value del handleInputChaange")
   };
 
   const selectedDue = (ele) => {
-    // console.log(ele)
-    setInputValue(ele.email);
+    setInputValue(ele.id || "");
     setValue(name, ele.id);
-    // register(name).setValue(ele.email);
     setFilteredEmails([]);
   };
 
-  // console.log(inputValue)
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>

@@ -37,7 +37,7 @@ const AtencionSchema = Joi.object({
     .messages({
       "any.required": "Este es un campo requerido",
     }),
-  mascotas: Joi.alternatives()
+  mascota: Joi.alternatives()
     .try(
       Joi.array()
         .items(

@@ -24,7 +24,6 @@ const Atencion = () => {
             throw new Error("Error en la solicitud");
           }
           const data = await response.json();
-          console.log(data.data)
           setAtens(data.data);
         } catch (error) {
           console.log(error);
@@ -34,7 +33,7 @@ const Atencion = () => {
       fetchAte();
     }, []);
   
-    const handleUser = () => {
+    const handleAtencion = () => {
       history.push("/admin/atenciones/form");
     };
   
@@ -44,7 +43,7 @@ const Atencion = () => {
         <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
           <div
             onClick={() => {
-              handleUser();
+              handleAtencion();
             }}
             className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
           >

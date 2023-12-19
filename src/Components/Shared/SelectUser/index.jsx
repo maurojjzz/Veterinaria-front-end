@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select-user.module.css";
 
-const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet ,setValue}) => {
+const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet ,setValue, defaultValue }) => {
   const [usuarios, setUsuario] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,6 +30,14 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
 
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    if (defaultValue) {
+      setInputValue(usuarios.find((u) => u.id === defaultValue)?.email || ''); 
+      setUserPet(usuarios.find((u) => u.id === defaultValue));
+    }
+  }, [defaultValue, usuarios, setUserPet]);
+
 
   const handleInputChange = (e) => {
     const value = e.target.value;
