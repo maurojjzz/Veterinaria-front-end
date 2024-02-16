@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./table-cliente.module.css";
 import { useHistory} from 'react-router-dom';
-
+import axios from "../../../axios-config";
 
 const TablaCliente = ({ data }) => {
   const history = useHistory();
@@ -11,23 +11,18 @@ const TablaCliente = ({ data }) => {
     history.push(`/admin/usuarios/form/${user.id}`, {params: {...user}})
   };
 
-  const handleDelete = async (id)=>{
+  const handleDelete = async (id) => {
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios/${id}`,{
-            method: 'DELETE',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-        });
-        if (!response.ok) {
-          console.log('Error al eliminar usuario')
-        } else{
-            console.log('Eliminado correctamente')
-        }
-      } catch (error) {
-        console.log(error);
+      const response = await axios.delete(`/usuarios/${id}`);
+      if (response.status === 200) {
+        console.log("Eliminado correctamente");
+      } else {
+        console.log("Error al eliminar usuario");
       }
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={`d-flex justify-content-center`}>

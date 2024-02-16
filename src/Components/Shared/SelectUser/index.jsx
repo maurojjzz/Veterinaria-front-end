@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select-user.module.css";
+import axios from "../../../axios-config";
 
 const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet ,setValue, defaultValue }) => {
   const [usuarios, setUsuario] = useState([]);
@@ -10,19 +11,18 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-          method: "GET",
+        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/usuarios`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        if (!response.ok) {
+        if (response.status === 200) {
+          const usu = response.data.data.filter((u) => u.rol.descripcion === "Usuario");
+          setUsuario(usu);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        const usu = await data.data.filter((u) => u.rol.descripcion === "Usuario");
-        setUsuario(usu);
       } catch (error) {
         console.log(error);
       }

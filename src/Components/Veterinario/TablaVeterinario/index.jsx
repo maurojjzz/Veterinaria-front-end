@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./tabla-veterinarios.module.css";
 import { useHistory } from "react-router-dom";
+import axios from "../../../axios-config";
 
 const TablaVeterinario = ({ data, setData }) => {
   const [filteredData, setFilteredData] = useState([...data]);
@@ -14,17 +15,9 @@ const TablaVeterinario = ({ data, setData }) => {
 
   const handleDelete = async (id, event) => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_KEY}/veterinarios/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.delete(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`);
 
-      if (response.ok) {
+      if (response.status === 200) {
         const updatedData = data.filter((vet) => vet.id !== id);
         console.log("updatedData después de la eliminación:", updatedData);
         setData(updatedData);

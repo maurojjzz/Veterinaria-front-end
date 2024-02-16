@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import styles from "./tabla-atencion.module.css";
 import { handleDate } from "../../../Functions/utiities.js";
 import { ModalAtencion } from "../../Shared";
+import axios from "../../../axios-config";
 
 const TablaAtencion = ({ data }) => {
   const [owner, setOwner] = useState([]);
@@ -18,19 +19,18 @@ const TablaAtencion = ({ data }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-          method: "GET",
+        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/usuarios`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        if (!response.ok) {
+        if (response.status === 200) {
+          const usuarios = response.data.data.filter((u) => u.rol.descripcion === "Usuario");
+          setOwner(usuarios);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        const usuarios = await data.data.filter((u) => u.rol.descripcion === "Usuario");
-        setOwner(usuarios);
       } catch (error) {
         console.log(error);
       }
@@ -38,17 +38,16 @@ const TablaAtencion = ({ data }) => {
 
     const fetchSpecies = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/raza`, {
-          method: "GET",
+        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/raza`, {
           headers: {
             "Content-Type": "application/json",
           },
         });
-        if (!response.ok) {
+        if (response.status === 200) {
+          setRaza(response.data.data);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        setRaza(data.data);
       } catch (error) {
         console.log(error);
       }
@@ -60,16 +59,15 @@ const TablaAtencion = ({ data }) => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, {
-        method: "DELETE",
+      const response = await axios.delete(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      if (!response.ok) {
-        console.log("Error al eliminar la atencion");
-      } else {
+      if (response.status === 200) {
         console.log("Eliminado correctamente");
+      } else {
+        throw new Error("Error al eliminar la atención");
       }
     } catch (error) {
       console.log(error);

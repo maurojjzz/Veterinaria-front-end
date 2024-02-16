@@ -5,6 +5,7 @@ import { Input, ButtonSubmit } from "../../Shared";
 import styles from "./form.module.css";
 import { practicaSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
+import axios from "../../../axios-config";
 
 const FormPractica = () => {
   const { id } = useParams();
@@ -39,42 +40,29 @@ const FormPractica = () => {
 
   const addPractica = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response) {
-        console.log("Se creo correctamente");
+      const response = await axios.post("/practicas", data);
+      if (response.status >= 200 && response.status < 300) {
+        console.log("Se creó correctamente");
         goBackToTable();
       } else {
-        console.log("no se pudo crear la practica");
+        console.log("No se pudo crear la práctica");
       }
     } catch (error) {
-      console.error("Error al crear practica", error);
+      console.error("Error al crear práctica", error);
     }
   };
 
   const updatePractica = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response) {
-        console.log("response", response);
-        console.log("Se actualizo correctamente");
+      const response = await axios.put(`/practicas/${id}`, data);
+      if (response.status === 200) {
+        console.log("Se actualizó correctamente");
         goBackToTable();
       } else {
-        console.log("no se actualizó la practica");
+        console.log("No se pudo actualizar la práctica");
       }
     } catch (error) {
-      console.error("Error al actualizar practica", error);
+      console.error("Error al actualizar práctica", error);
     }
   };
 

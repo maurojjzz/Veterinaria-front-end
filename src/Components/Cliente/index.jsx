@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import styles from "./cliente.module.css";
 import TablaCliente from "./Table";
+import axios from "../../axios-config";
 
 const Cliente = () => {
   const [users, setUsers] = useState([]);
@@ -11,19 +12,18 @@ const Cliente = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-          method: "GET",
+        const response = await axios.get("/usuarios", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        if (!response.ok) {
+        if (response.status === 200) {
+          const usuarios = response.data.data.filter((u) => u.rol.descripcion === "Usuario");
+          setUsers(usuarios);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        const usuarios = await data.data.filter((u) => u.rol.descripcion === "Usuario");
-        setUsers(usuarios);
       } catch (error) {
         console.log(error);
       }

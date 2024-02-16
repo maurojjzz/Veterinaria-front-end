@@ -5,6 +5,7 @@ import { Input, ButtonSubmit } from "../../Shared";
 import styles from "./formVeterinario.module.css";
 import { veterinarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
+import axios from "../../../axios-config";
 
 const FormVeterinario = () => {
   const { id } = useParams();
@@ -44,20 +45,13 @@ const FormVeterinario = () => {
 
   const addVeterinario = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/veterinarios`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-  
-      if (response.ok) {
+      const response = await axios.post(`${process.env.REACT_APP_API_KEY}/veterinarios`, data);
+      if (response.status >= 200 && response.status < 300) {
         console.log("Se creó correctamente");
         goBackToTable();
       } else {
         console.log("No se pudo crear el veterinario");
-        console.error(await response.text());
+        console.error(response.data);
       }
     } catch (error) {
       console.error("Error al crear veterinario", error);
@@ -66,19 +60,13 @@ const FormVeterinario = () => {
 
   const updateVeterinario = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
+      const response = await axios.put(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`, data);
+      if (response.status === 200) {
         console.log("Se actualizó correctamente");
         goBackToTable();
       } else {
         console.log("No se pudo actualizar el veterinario");
-        console.error(await response.text());
+        console.error(response.data);
       }
     } catch (error) {
       console.error("Error al actualizar veterinario", error);

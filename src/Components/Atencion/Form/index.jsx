@@ -6,6 +6,7 @@ import styles from "./atencionesForm.module.css";
 import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { formateoFecha, justFecha, justHour } from "../../../Functions/utiities";
+import axios from "../../../axios-config";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
@@ -55,41 +56,29 @@ const AtencionForm = () => {
 
   const addAtencion = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/atenciones`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
-        console.log("Se creo correctamente");
+      const response = await axios.post(`${process.env.REACT_APP_API_KEY}/atenciones`, data);
+      if (response.status >= 200 && response.status < 300) {
+        console.log("Se creó correctamente");
         goBackToTable();
       } else {
-        console.log("no se pudo crear la atencion");
+        console.log("No se pudo crear la atención");
       }
     } catch (error) {
-      console.error("Error al crear usuario", error);
+      console.error("Error al crear atención", error);
     }
   };
 
   const updateAtencion = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
-        console.log("Se actualizo correctamente");
+      const response = await axios.put(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, data);
+      if (response.status === 200) {
+        console.log("Se actualizó correctamente");
         goBackToTable();
       } else {
-        console.log("no se actualizar crear el usuario");
+        console.log("No se pudo actualizar la atención");
       }
     } catch (error) {
-      console.error("Error al actualizar usuario", error);
+      console.error("Error al actualizar atención", error);
     }
   };
 

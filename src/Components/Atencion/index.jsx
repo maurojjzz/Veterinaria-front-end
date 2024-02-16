@@ -3,6 +3,7 @@ import styles from './atencion.module.css'
 import { useHistory } from "react-router-dom";
 import {decodeToken} from '../../Functions/utiities.js';
 import TablaAtencion from './Tabla';
+import axios from "../../axios-config";
 
 
 const Atencion = () => {
@@ -13,23 +14,21 @@ const Atencion = () => {
     useEffect(() => {
       const fetchAte = async () => {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_KEY}/atenciones`, {
-            method: "GET",
+          const response = await axios.get(`${process.env.REACT_APP_API_KEY}/atenciones`, {
             headers: {
               "Content-Type": "application/json"
-            //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+              // Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           });
-          if (!response.ok) {
+          if (response.status !== 200) {
             throw new Error("Error en la solicitud");
           }
-          const data = await response.json();
-          setAtens(data.data);
+          setAtens(response.data.data);
         } catch (error) {
           console.log(error);
         }
       };
-  
+    
       fetchAte();
     }, []);
   

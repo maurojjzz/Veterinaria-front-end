@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select_vet.module.css";
+import axios from "../../../axios-config";
 
 const SelectVet = ({ labelText, placeholder, type, register, name, error, setValue, defaultValue }) => {
   const [veterinario, setVeterinario] = useState([]);
@@ -9,17 +10,16 @@ const SelectVet = ({ labelText, placeholder, type, register, name, error, setVal
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/veterinarios`, {
-          method: "GET",
+        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/veterinarios`, {
           headers: {
             "Content-Type": "application/json"
           },
         });
-        if (!response.ok) {
+        if (response.status === 200) {
+          setVeterinario(response.data.data);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        setVeterinario(data.data);
       } catch (error) {
         console.log(error);
       }

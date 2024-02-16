@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./checkPractices.module.css";
+import axios from "../../../axios-config";
 
 const CheckPractices = ({ register, name, error, labelText, placeholder, setValue, defaultValue }) => {
   const [practicas, setPracticas] = useState([]);
@@ -11,17 +12,12 @@ const CheckPractices = ({ register, name, error, labelText, placeholder, setValu
   useEffect(() => {
     const fetchPracticas = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
+        const response = await axios.get("/practicas");
+        if (response.status === 200) {
+          setPracticas(response.data.data);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        setPracticas(data.data);
       } catch (error) {
         console.log(error);
       }
