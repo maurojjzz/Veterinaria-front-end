@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import styles from "./veterinario.module.css"; 
 import TablaVeterinario from "./TablaVeterinario";
+import axios from "../../axios-config";
 
 const Veterinario = () => {
   const [veterinarios, setVeterinarios] = useState([]);
@@ -10,12 +11,12 @@ const Veterinario = () => {
   useEffect(() => {
     const fetchVeterinarios = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/veterinarios`);
-        if (!response.ok) {
+        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/veterinarios`);
+        if (response.status === 200) {
+          setVeterinarios(response.data.data);
+        } else {
           throw new Error("Error en la solicitud");
         }
-        const data = await response.json();
-        setVeterinarios(data.data);
       } catch (error) {
         console.log(error);
       }

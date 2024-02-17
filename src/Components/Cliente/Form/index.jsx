@@ -5,6 +5,8 @@ import { Input, ButtonSubmit } from "../../Shared";
 import styles from "./form.module.css";
 import { usuarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
+import axios from "../../../axios-config";
+
 
 const FormClient = () => {
   const { id } = useParams();
@@ -45,18 +47,12 @@ const FormClient = () => {
 
   const addUser = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
-        console.log("Se creo correctamente");
+      const response = await axios.post("/usuarios", data);
+      if (response.status === 200) {
+        console.log("Se creó correctamente");
         goBackToTable();
       } else {
-        console.log("no se pudo crear el usuario");
+        console.log("No se pudo crear el usuario");
       }
     } catch (error) {
       console.error("Error al crear usuario", error);
@@ -66,21 +62,12 @@ const FormClient = () => {
   const updateUser = async (data) => {
     try {
       data.mascotas = Array.from(new Set(data.mascotas.map((mascota) => mascota.id)));
-      console.log(data.mascotas);
-
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (response.ok) {
-        console.log("response", response);
-        console.log("Se actualizo correctamente");
+      const response = await axios.put(`/usuarios/${id}`, data);
+      if (response.status === 200) {
+        console.log("Se actualizó correctamente");
         goBackToTable();
       } else {
-        console.log("no se actualizar crear el usuario");
+        console.log("No se pudo actualizar el usuario");
       }
     } catch (error) {
       console.error("Error al actualizar usuario", error);

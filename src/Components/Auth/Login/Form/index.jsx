@@ -5,6 +5,8 @@ import styles from "./login-form.module.css";
 import loginSchema from "../../../../Validations/loginSchema.js";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useHistory } from "react-router-dom";
+import axios from "../../../../axios-config";
+
 
 const LoginForm = () => {
   const history = useHistory();
@@ -39,19 +41,14 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        const dataRes = await response.json();
-        await localStorage.setItem("token", dataRes.token);
-        await localStorage.setItem("role", dataRes.role);
-
+      const response = await axios.post('/auth/login', data);
+      console.log(response);
+  
+      if (response.status === 200) {
+        const dataRes = response.data;
+        localStorage.setItem("token", dataRes.token);
+        localStorage.setItem("role", dataRes.role);
+  
         switch (dataRes.role) {
           case 'Admin':
             history.push('/admin');
@@ -63,14 +60,14 @@ const LoginForm = () => {
             history.push('/vet');
             break;
           default: {
-            console.log('Error con el rol del user')
+            console.log('Error con el rol del usuario');
             break;
           }
         }
       } else {
-        throw new Error("Error al intentar logearse ");
+        throw new Error("Error al intentar logearse");
       }
-
+  
     } catch (error) {
       console.error(error);
     }

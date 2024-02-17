@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from 'react-router-dom';
 import TablaPracticas from "./Tabla";
 import styles from "./practica.module.css"
+import axios from "../../axios-config";
 
 const Practica = () => {
   const [practicas, setPracticas] = useState([]); 
@@ -10,12 +11,8 @@ const Practica = () => {
   useEffect(() => {
     const fetchPracticas = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas`);
-        if (!response.ok) {
-          throw new Error("Error en la solicitud");
-        }
-        const data = await response.json();
-        setPracticas(data.data); 
+        const response = await axios.get("/practicas");
+        setPracticas(response.data.data); 
       } catch (error) {
         console.log(error);
       }
@@ -30,14 +27,8 @@ const Practica = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/practicas/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
+      const response = await axios.delete(`/practicas/${id}`);
+      if (response.status === 200) {
         const updatedPracticas = practicas.filter((practica) => practica.id !== id);
         setPracticas(updatedPracticas);
         console.log("Eliminada correctamente");
