@@ -3,7 +3,7 @@ import styles from "./table-cliente.module.css";
 import { useHistory} from 'react-router-dom';
 import axios from "../../../axios-config";
 
-const TablaCliente = ({ data }) => {
+const TablaCliente = ({ data, setData }) => {
   const history = useHistory();
 
 
@@ -16,8 +16,9 @@ const TablaCliente = ({ data }) => {
       const response = await axios.delete(`/usuarios/${id}`);
       if (response.status === 200) {
         console.log("Eliminado correctamente");
+        setData((prevData) => prevData.filter((usuario) => usuario.id !== id));
       } else {
-        console.log("Error al eliminar usuario");
+        throw new Error("Error al eliminar usuario");
       }
     } catch (error) {
       console.log(error);

@@ -7,9 +7,12 @@ import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { formateoFecha, justFecha, justHour } from "../../../Functions/utiities";
 import axios from "../../../axios-config";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
   const location = useLocation();
@@ -50,11 +53,12 @@ const AtencionForm = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/admin");
+      history.push("/admin/atenciones");
     }, 2000);
   };
 
   const addAtencion = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_KEY}/atenciones`, data);
       if (response.status >= 200 && response.status < 300) {
@@ -65,10 +69,15 @@ const AtencionForm = () => {
       }
     } catch (error) {
       console.error("Error al crear atención", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
   const updateAtencion = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.put(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, data);
       if (response.status === 200) {
@@ -79,10 +88,15 @@ const AtencionForm = () => {
       }
     } catch (error) {
       console.error("Error al actualizar atención", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     data.fecha_hora_atencion = formateoFecha(data.fecha, data.hora);
     const { hora, fecha, cliente, ...atencionObj } = data;
     if (!id) {
@@ -179,10 +193,16 @@ const AtencionForm = () => {
           <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message} />
         </div>
 
-        <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />
+        <ButtonSubmit 
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
+          clickAction={() => {}} 
+          type={`submit`} 
+          disabled={isLoading} 
+        />
       </form>
     </div>
   );
 };
 
 export default AtencionForm;
+

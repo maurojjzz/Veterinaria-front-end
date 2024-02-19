@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { Input, ButtonSubmit } from "../../Shared";
@@ -6,11 +6,14 @@ import styles from "./form.module.css";
 import { practicaSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "../../../axios-config";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const FormPractica = () => {
   const { id } = useParams();
   const location = useLocation();
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
 
   const dataForm = location.state?.params;
 
@@ -36,9 +39,9 @@ const FormPractica = () => {
       history.push("/admin/practicas/");  
     }, 2000);
   };
-  
 
   const addPractica = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.post("/practicas", data);
       if (response.status >= 200 && response.status < 300) {
@@ -49,10 +52,15 @@ const FormPractica = () => {
       }
     } catch (error) {
       console.error("Error al crear práctica", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
   const updatePractica = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.put(`/practicas/${id}`, data);
       if (response.status === 200) {
@@ -63,6 +71,10 @@ const FormPractica = () => {
       }
     } catch (error) {
       console.error("Error al actualizar práctica", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
@@ -93,7 +105,12 @@ const FormPractica = () => {
             error={errors.descripcion?.message}  
         />
         </div>
-        <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />
+        <ButtonSubmit 
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
+          clickAction={() => {}} 
+          type={`submit`} 
+          disabled={isLoading} 
+        />
       </form>
     </div>
   );

@@ -45,7 +45,7 @@ const Practica = () => {
       <h1 className={`mb-5 ms-2`}>Practicas</h1>
       <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
         <div onClick={() => { handlePractica() }} className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addPracticaBtn} `}>
-          <h3>+ practica</h3>
+          <h3>Agregar Practica</h3>
         </div>
         <TablaPracticas data={practicas} handleDelete={handleDelete} />
       </div>

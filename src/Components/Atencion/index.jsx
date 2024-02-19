@@ -46,9 +46,9 @@ const Atencion = () => {
             }}
             className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
           >
-            <h3>+ atencion</h3>
+            <h3>Agregar Atencion</h3>
           </div>
-          <TablaAtencion data={atens} />
+          <TablaAtencion data={atens} setData={setAtens} />
         </div>
       </div>
     );
