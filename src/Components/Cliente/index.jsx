@@ -46,9 +46,9 @@ const Cliente = () => {
           }}
           className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
         >
-          <h3>+ usuario</h3>
+          <h3>Agregar Usuario</h3>
         </div>
-        <TablaCliente data={users} />
+        <TablaCliente data={users} setData={setUsers}/>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { Input, ButtonSubmit } from "../../Shared";
@@ -6,11 +6,14 @@ import styles from "./formVeterinario.module.css";
 import { veterinarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
 import axios from "../../../axios-config";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const FormVeterinario = () => {
   const { id } = useParams();
   const location = useLocation();
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
 
   const dataForm = location.state?.params;
 
@@ -44,6 +47,7 @@ const FormVeterinario = () => {
   };
 
   const addVeterinario = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_KEY}/veterinarios`, data);
       if (response.status >= 200 && response.status < 300) {
@@ -55,10 +59,15 @@ const FormVeterinario = () => {
       }
     } catch (error) {
       console.error("Error al crear veterinario", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
   const updateVeterinario = async (data) => {
+    setIsLoading(true);
     try {
       const response = await axios.put(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`, data);
       if (response.status === 200) {
@@ -70,6 +79,10 @@ const FormVeterinario = () => {
       }
     } catch (error) {
       console.error("Error al actualizar veterinario", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 
@@ -170,12 +183,18 @@ const FormVeterinario = () => {
             error={errors.repeatPassword?.message}
           />
         </div>
-        <ButtonSubmit msg={`ENVIAR`} clickAction={() => {}} type={`submit`} />
+        <ButtonSubmit 
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
+          clickAction={() => {}} 
+          type={`submit`} 
+          disabled={isLoading} 
+        />
       </form>
     </div>
   );
 };
 
 export default FormVeterinario;
+
 
 

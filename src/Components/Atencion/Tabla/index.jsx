@@ -5,7 +5,7 @@ import { handleDate } from "../../../Functions/utiities.js";
 import { ModalAtencion } from "../../Shared";
 import axios from "../../../axios-config";
 
-const TablaAtencion = ({ data }) => {
+const TablaAtencion = ({ data, setData }) => {
   const [owner, setOwner] = useState([]);
   const [raza, setRaza] = useState([]);
   const [modal, setModal] = useState(false);
@@ -66,6 +66,7 @@ const TablaAtencion = ({ data }) => {
       });
       if (response.status === 200) {
         console.log("Eliminado correctamente");
+        setData((prevData) => prevData.filter((atencion) => atencion.id !== id));
       } else {
         throw new Error("Error al eliminar la atención");
       }
