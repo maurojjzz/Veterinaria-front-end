@@ -8,9 +8,20 @@ import Atencion from '../Components/Atencion';
 
 const UsuarioRoutes = () => {
   const { url } = useRouteMatch()
+
+  const routes = [
+    {
+      name: 'Home',
+      path: '/user/dash',
+    },
+    {
+      name: 'Atenciones',
+      path: '/user/atencion',
+    },
+  ];
   
   return (
-    <Layout>
+    <Layout routes={routes}>
       <Switch>
         <Route exact path={`${url}/dash`} component={DasboardUser} />
         <Route exact path={`${url}/atencion`} component={Atencion} />

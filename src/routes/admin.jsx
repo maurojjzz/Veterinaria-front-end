@@ -13,10 +13,30 @@ import AtencionForm from "../Components/Atencion/Form";
 
 
 const AdminRoutes = () => {
-  const { url } = useRouteMatch()
+  const { url } = useRouteMatch();
+
+  const routes = [
+    {
+      name: 'Usuarios',
+      path: '/admin/usuarios',
+    },
+    {
+      name: 'Veterinarios',
+      path: '/admin/veterinarios',
+    },
+    {
+      name: 'Practicas',
+      path: '/admin/practicas',
+    },
+    {
+      name: 'Atenciones',
+      path: '/admin/atenciones',
+    }
+  ];
+
   
   return (
-    <Layout>
+    <Layout routes={routes}>
       <Switch>
         <Route exact path={`${url}/usuarios`} component={Cliente} />
         <Route path={`${url}/usuarios/form/:id?`} component={FormClient} />

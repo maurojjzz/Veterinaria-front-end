@@ -7,6 +7,7 @@ const Layout = (props) => {
   return (
     <div className={`container-fluid d-flex flex-column p-0 ${styles.whole_layout_cont}`}>
         <Header />
+        {console.log(props.routes)}
         {props.children}
     </div>
   );
