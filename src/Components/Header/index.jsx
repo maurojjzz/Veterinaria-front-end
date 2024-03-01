@@ -3,17 +3,19 @@ import styles from "./header.module.css";
 import {useHistory} from 'react-router-dom';
 
 
-const Header = () => {
+const Header = ({setClickHamb, clickHamb}) => {
 
   const history = useHistory();
 
   return (
     <div className={`d-flex justify-content-evenly align-items-center text-light ${styles.headerContainer}`}>
-      <img
-        src={`${process.env.PUBLIC_URL}/assets/icons/menu.png`}
-        alt={`hamburguer menu icon`}
-        className={`d-md-none ${styles.logo}`}
-      />
+      <div onClick={()=>{setClickHamb(!clickHamb)}}>
+        <img
+          src={`${process.env.PUBLIC_URL}/assets/icons/menu.png`}
+          alt={`hamburguer menu icon`}
+          className={`d-md-none ${styles.logo}`}
+        />
+      </div>
       <div onClick={()=>{history.push('/')}} className={`d-flex gap-2 align-items-center ${styles.logotitle}`}>
         <img
           src={`${process.env.PUBLIC_URL}/assets/icons/pata.png`}
