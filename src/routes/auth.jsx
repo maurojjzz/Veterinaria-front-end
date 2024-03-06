@@ -6,10 +6,32 @@ import Login from '../Components/Auth/Login';
 import SignUp from '../Components/Auth/SignUp';
 
 const AuthRoute = () => {
-  const { url } = useRouteMatch()
+  const { url } = useRouteMatch();
+
+  const routes = [
+    {
+      name: 'Home',
+      path: '/auth/home',
+      image: 'home.png',
+      alt: 'home icon'    
+    },
+    {
+      name: 'Login',
+      path: '/auth/login',
+      image: 'enter.png',
+      alt: 'login icon'   
+    },
+    {
+      name: 'Sign Up',
+      path: '/auth/sign-up',
+      image: 'add-user.png',
+      alt: 'sign up icon'   
+    }
+  ];
+  
   
   return (
-    <Layout>
+    <Layout routes={routes}>
       <Switch>
         <Route exact path={`${url}/home`} component={Home} />
         <Route exact path={`${url}/login`} component={Login} />

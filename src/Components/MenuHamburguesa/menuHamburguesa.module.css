@@ -1,0 +1,27 @@
+.containerMenu{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: #a9c3b8fd;
+    z-index: 10;
+}
+.navContainer{
+    list-style-type: none;
+    width: 250px;
+}
+.navContainer li{
+    cursor: pointer;
+    transition: all ease 0.5s;
+    width: fit-content;
+    padding: 5px 5px 0 5px;
+    border-bottom: 2px solid transparent;
+}
+.navContainer li:hover{
+    border-bottom: 2px solid #252F48;
+}
+.navContainer li a{
+    text-decoration: none;
+    color: #252F48;
+    font-weight: 600;
+    font-size: 20px; 
+}
