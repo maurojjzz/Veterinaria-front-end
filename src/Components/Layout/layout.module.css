@@ -1,4 +1,6 @@
 .whole_layout_cont{
     height: 100vh;
 }
-
+.contentChild{
+   padding-left: 50px;
+}

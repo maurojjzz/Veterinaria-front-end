@@ -13,10 +13,14 @@ const UsuarioRoutes = () => {
     {
       name: 'Home',
       path: '/user/dash',
+      image: 'home.png',
+      alt: 'home icon'  
     },
     {
       name: 'Atenciones',
       path: '/user/atencion',
+      image: 'order-history.png',
+      alt: 'atenciones icon'  
     },
   ];
   

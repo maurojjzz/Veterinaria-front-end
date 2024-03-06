@@ -12,17 +12,20 @@ const AuthRoute = () => {
     {
       name: 'Home',
       path: '/auth/home',
-      // icon: 'newhome.svg'
+      image: 'home.png',
+      alt: 'home icon'    
     },
     {
       name: 'Login',
       path: '/auth/login',
-      // icon: 'login.svg'
+      image: 'enter.png',
+      alt: 'login icon'   
     },
     {
       name: 'Sign Up',
       path: '/auth/sign-up',
-      // icon: 'signup.svg'
+      image: 'add-user.png',
+      alt: 'sign up icon'   
     }
   ];
   

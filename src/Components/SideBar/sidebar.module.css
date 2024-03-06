@@ -1,0 +1,43 @@
+.sidebar {
+  width: 50px; 
+  transition: width 0.4s ease;
+  overflow: hidden;
+  background-color: #a9c3b8fd;
+  height: 100vh;
+}
+.sidebar.expanded {
+  width: 200px;
+}
+.navContainer{
+    list-style-type: none;
+}
+.navContainer li{
+    cursor: pointer;
+    transition: all ease 0.5s;
+    width: fit-content;
+    padding-bottom: 5px;
+    border-bottom: 2px solid transparent;
+}
+.navContainer li a{
+    text-decoration: none;
+    color: #252F48;
+    font-weight: 600;
+    font-size: 20px; 
+}
+.navContainer li:hover{
+    border-bottom: 2px solid #ffffff;
+}
+.sidebarIcon{
+    width: 35px;
+    height: 35px;
+}
+.navContainer li:hover .sidebarIcon{
+    transition: all ease 0.4s;
+    cursor: pointer;
+    filter: invert(100%);
+}
+
+.navContainer li:hover  a{
+    color: #ffffff;
+    transition: all ease 0.4s;
+}

@@ -19,18 +19,26 @@ const AdminRoutes = () => {
     {
       name: 'Usuarios',
       path: '/admin/usuarios',
+      image: 'group.png',
+      alt: 'users icon'
     },
     {
       name: 'Veterinarios',
       path: '/admin/veterinarios',
+      image: 'veterinary.png',
+      alt: 'icono de veterinario'
     },
     {
       name: 'Practicas',
       path: '/admin/practicas',
+      image: 'practica2.png',
+      alt: 'icono de practicas'
     },
     {
       name: 'Atenciones',
       path: '/admin/atenciones',
+      image: 'order-history.png',
+      alt: 'icono de historial de atenciones'
     }
   ];
 
