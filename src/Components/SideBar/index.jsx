@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "./sidebar.module.css";
+import LogOut from '../Auth/LogOut';
 
-function SideBar({ routes }) {
+function SideBar({ routes, setClickHamb }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -21,6 +22,7 @@ function SideBar({ routes }) {
             {isHovered ? <a href={route.path}>{route.name}</a> : <></>}
           </li>
         ))}
+        <LogOut className={`${styles.logOut}`} isHovered={isHovered} setClickHamb={setClickHamb}/>
       </nav>
     </div>
   );
