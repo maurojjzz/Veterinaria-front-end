@@ -1,0 +1,32 @@
+.logText{
+    cursor: pointer;
+    transition: all ease 0.5s;
+    width: fit-content;
+    padding: 5px 5px 0 5px;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    color: #252F48;
+    font-weight: 600;
+    font-size: 20px;
+    cursor: pointer;
+}
+.logText:hover{
+    border-bottom: 2px solid #252F48;
+}
+
+.logIcon{
+    width: 35px;
+    height: 35px;
+}
+
+.logOut:hover .logIcon{
+    transition: all ease 0.4s;
+    filter: invert(100%);
+}
+
+.logOut:hover .logText{
+    transition: all ease 0.4s;
+    border-bottom: 2px solid #ffffff;
+    color: #ffffff;
+
+}
