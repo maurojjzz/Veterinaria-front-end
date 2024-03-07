@@ -1,6 +1,10 @@
 .whole_layout_cont{
     height: 100vh;
 }
-.contentChild{
-   padding-left: 50px;
+
+@media screen and (min-width: 767px) {
+    .contentChild{
+        padding-left: 50px;
+     }
 }
+
