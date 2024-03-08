@@ -5,6 +5,8 @@ import LogOut from '../Auth/LogOut';
 function SideBar({ routes, setClickHamb }) {
   const [isHovered, setIsHovered] = useState(false);
 
+  const token = localStorage.getItem('token');
+
   return (
     <div
       className={` d-flex flex-column ${styles.sidebar} ${isHovered ? styles.expanded : ""}`}
@@ -22,7 +24,7 @@ function SideBar({ routes, setClickHamb }) {
             {isHovered ? <a href={route.path}>{route.name}</a> : <></>}
           </li>
         ))}
-        <LogOut className={`${styles.logOut}`} isHovered={isHovered} setClickHamb={setClickHamb}/>
+        {!!token && <LogOut isHovered={isHovered} setClickHamb={setClickHamb}/>}
       </nav>
     </div>
   );
