@@ -17,7 +17,7 @@ const LogOut = ({ isHovered, setClickHamb}) => {
         src={`${process.env.PUBLIC_URL}/assets/icons/turn-off.png`}
         alt={"log out icon"}
       />
-      {isHovered ? <div className={` ${styles.logText}`}>LogOut</div> : <div className={` d-md-none ${styles.logText}`}>Log Out</div>}
+      {isHovered ? <div className={` ${styles.logText}`}>Salir</div> : <div className={` d-md-none ${styles.logText}`}>Salir</div>}
     </div>
   );
 };
