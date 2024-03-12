@@ -1,0 +1,41 @@
+.container{
+    position: relative;
+    min-width: 250px;
+    max-width: 500px;
+    width: 90%;
+    min-height: 50px;
+    max-height: 250px;
+    overflow: hidden;
+    overflow-y: scroll; 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.452); 
+    border: 1px solid #ffe9e9;
+    margin-bottom: 20px;
+}
+.borderStart{
+    width: 15px;
+}
+.iconimg{
+    width: 40px;
+}
+.iconClose{
+    width: 15px;
+    cursor: pointer;
+}
+.iconoToast{
+    width: 50px;
+}
+.TextoToast{
+    width: 200px;
+}
+.error{
+    background-color:#f74850;
+}
+.success{
+    background-color: #00ba00;
+}
+.warning{
+    background-color: #ffb400;
+}
+.info{
+    background-color: #2196f3;
+}
