@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import styles from "./toast.module.css";
 
-function Toast({ title, message }) {
-  const [closed, setClosed] = useState(false);
-
-  const handleClose = () => {
-    setClosed(true);
-    console.log("Cerrado");
-    // Aquí podrías agregar lógica adicional, como llamar a una función de devolución de llamada para informar al componente padre del cierre.
-  };
-
+function Toast({ title, message, setError }) {
   return (
     <div className={`d-flex flex-row bg-light rounded-2 justify-content-between ${styles.container}`}>
       <div className="d-flex flex-row ">
@@ -26,7 +18,7 @@ function Toast({ title, message }) {
         <h1>{title}</h1>
         <div>{message}</div>
       </div>
-      <div className={`d-flex flex-column pt-3  pe-2 ${styles.cerrarToast}`} onClick={handleClose}>
+      <div className={`d-flex flex-column pt-3  pe-2 ${styles.cerrarToast}`} onClick={()=>{setError(false)}}>
         <img
           src={`${process.env.PUBLIC_URL}/assets/icons/close.png`}
           alt={`dog footprint logo`}

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import { Input, ButtonSubmit } from "../../../Shared";
 import styles from "./login-form.module.css";
@@ -6,9 +6,12 @@ import loginSchema from "../../../../Validations/loginSchema.js";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useHistory } from "react-router-dom";
 import axios from "../../../../axios-config";
+import Toast from "../../../Shared/Toast";
 
 
 const LoginForm = () => {
+  const [error, setError] = useState(false);
+  const [toastMessage, setToastMessage] = useState('Error in database');
   const history = useHistory();
 
   const {
@@ -41,9 +44,7 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('/auth/login', data);
-      console.log(response);
-  
+      const response = await axios.post('/auth/login', data);  
       if (response.status === 200) {
         const dataRes = response.data;
         localStorage.setItem("token", dataRes.token);
@@ -69,7 +70,8 @@ const LoginForm = () => {
       }
   
     } catch (error) {
-      console.error(error);
+      setError(true);
+      setToastMessage(error.response.data.message || error.response.data.error);
     }
   };
 
@@ -106,6 +108,7 @@ const LoginForm = () => {
           Don't have an account? <span className={`forgotPass fw-medium ${styles.forgotPass}`}>Sign Up</span>
         </p>
       </div>
+      {error && <Toast message={toastMessage} title={"Error"} setError={setError} />}
     </div>
   );
 };

@@ -7,9 +7,9 @@ const SignUp = () => {
     <div>
       <h1>Sign Up en desarrollo</h1>
       <Toast title={"Error"} message={"Error al loguearse"} />
-      <Toast title={"Success"} message={"Error al loguearse"} />
-      <Toast title={"Warning"} message={"Error al loguearse"} />
-      <Toast title={"Info"} message={"Error al loguearse"} />
+      <Toast title={"Success"} message={"Usuario creado"} />
+      <Toast title={"Warning"} message={"Ingresar contraseña"} />
+      <Toast title={"Info"} message={"Se ha informado al veterinario"} />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 .container{
-    position: relative;
+    position: absolute;
     min-width: 250px;
     max-width: 500px;
     width: 90%;
@@ -10,6 +10,7 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.452); 
     border: 1px solid #ffe9e9;
     margin-bottom: 20px;
+    top: 15px;
 }
 .borderStart{
     width: 15px;
@@ -18,7 +19,7 @@
     width: 40px;
 }
 .iconClose{
-    width: 15px;
+    width: 12px;
     cursor: pointer;
 }
 .iconoToast{
