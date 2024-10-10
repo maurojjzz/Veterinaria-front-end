@@ -15,6 +15,8 @@ import {
 
 const initialState = {
   users: [],
+  pending: false,
+  error: undefined,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -46,7 +48,8 @@ const usersReducer = (state = initialState, action) => {
     case DELETE_USER_SUCCESS: {
       const newList = state.users.filter((user) => user.id !== action.payload);
       return {
-        notes: [...newList],
+        ...state,
+        users: newList,
       };
     }
     case DELETE_USER_ERROR: {

@@ -1,3 +1,5 @@
+import axios from '../../axios-config'; 
+
 import {
   addUserError,
   addUserPending,
@@ -11,106 +13,69 @@ import {
   updateUserError,
   updateUserPending,
   updateUserSuccess,
-} from "./actions.js";
+} from './actions.js';
 
 export const initUsers = () => {
   return async (dispatch) => {
     dispatch(getUsersPending(true));
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await response.json();
+      const { data } = await axios.get('/usuarios');
 
-      if (response.ok) {
-        const usuarios = data.data.filter((u) => u.rol.descripcion === "Usuario");
-        dispatch(getUsersSuccess(usuarios));
-        dispatch(getUsersError(undefined));
-      } else {
-        dispatch(getUsersError(data.message || "Failed to fetch users"));
-      }
+      const usuarios = data.data.filter((u) => u.rol.descripcion === 'Usuario');
+      dispatch(getUsersSuccess(usuarios));
+      dispatch(getUsersError(undefined));
     } catch (error) {
-      dispatch(getUsersError(error.message || "Failed to fetch users"));
+      dispatch(getUsersError(error.response?.data?.message || 'Failed to fetch users'));
     } finally {
       dispatch(getUsersPending(false));
     }
   };
 };
 
-export const addNote = (note) => {
+export const addUser = (user) => {
   return async (dispatch) => {
     dispatch(addUserPending(true));
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/note`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(note),
-      });
-      const data = await response.json();
+      const { data } = await axios.post('/usuarios', user); 
 
-      if (response.ok) {
-        dispatch(addUserSuccess(data.data));
-        dispatch(addUserError(undefined));
-      } else {
-        dispatch(addUserError(data.message));
-      }
+      dispatch(addUserSuccess(data.data));
+      dispatch(addUserError(undefined));
     } catch (error) {
-      dispatch(addUserError(error.message || "Failed to add note"));
+      dispatch(addUserError(error.response?.data?.message || 'Failed to add user'));
+      throw error;
     } finally {
       dispatch(addUserPending(false));
     }
   };
 };
 
-export const deleteNote = (id) => {
+export const deleteUser = (id) => {
   return async (dispatch) => {
     dispatch(deleteUserPending(true));
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/note/${id}`, {
-        method: "DELETE",
-      });
-      const data = await response.json();
+      await axios.delete(`/usuarios/${id}`); 
 
-      if (response.ok) {
-        dispatch(deleteUserSuccess(id));
-      } else {
-        dispatch(deleteUserError(data.message));
-      }
+      dispatch(deleteUserSuccess(id));
     } catch (error) {
-      dispatch(deleteUserError(error.message || "Failed to delete note"));
+      dispatch(deleteUserError(error.response?.data?.message || 'Failed to delete user'));
+      throw error;
     } finally {
       dispatch(deleteUserPending(false));
     }
   };
 };
 
-export const updateNote = (note) => {
+export const updateUser = (user) => {
   return async (dispatch) => {
     dispatch(updateUserPending(true));
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/note/${note.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(note),
-      });
-      const data = await response.json();
+      const { data } = await axios.put(`/usuarios/${user.id}`, user); 
 
-      if (response.ok) {
-        dispatch(updateUserSuccess(data.data));
-        dispatch(updateUserError(undefined));
-      } else {
-        dispatch(updateUserError(data.message));
-      }
+      dispatch(updateUserSuccess(data.data));
+      dispatch(updateUserError(undefined));
     } catch (error) {
-      dispatch(updateUserError(error.message || "Failed to update note"));
+      dispatch(updateUserError(error.response?.data?.message || 'Failed to update user'));
+      throw error;
     } finally {
       dispatch(updateUserPending(false));
     }

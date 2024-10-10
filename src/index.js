@@ -4,8 +4,8 @@ import { Provider } from "react-redux";
 import store from "./redux/store.js";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
-import reportWebVitals from "./reportWebVitals";
-import Routes from "./routes";
+import reportWebVitals from "./reportWebVitals.js";
+import Routes from "./routes/index.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
