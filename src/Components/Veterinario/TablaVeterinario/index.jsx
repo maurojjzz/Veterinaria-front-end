@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
 import styles from "./tabla-veterinarios.module.css";
 import { useHistory } from "react-router-dom";
-import axios from "../../../axios-config";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteVet, getVet } from "../../../redux/veterinarios/thunks.js";
 
-const TablaVeterinario = ({ data, setData }) => {
-  const [filteredData, setFilteredData] = useState([...data]);
+const TablaVeterinario = () => {
   const history = useHistory();
+
+  const dispatch = useDispatch();
+
+  const { veterinarios, pending, error } = useSelector((state) => state.veterinarios);
+
 
   const handleEdit = (veterinario) => {
     history.push(`/admin/veterinarios/form/${veterinario.id}`, {
@@ -13,30 +18,19 @@ const TablaVeterinario = ({ data, setData }) => {
     });
   };
 
-  const handleDelete = async (id, event) => {
+  useEffect(() => {
+    dispatch(getVet());
+  }, [dispatch]);
+
+  const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`);
-
-      if (response.status === 200) {
-        const updatedData = data.filter((vet) => vet.id !== id);
-        console.log("updatedData después de la eliminación:", updatedData);
-        setData(updatedData);
-        setFilteredData(updatedData);
-        console.log("Eliminado correctamente");
-      } else {
-        console.log("Error al eliminar veterinario");
-      }
+      await dispatch(deleteVet(id));
+      console.log("Eliminado correctamente");
+      await dispatch(getVet());
     } catch (error) {
-      console.log(error);
-    }
-
-    if (event) {
-      event.preventDefault();
+      console.log("Error al eliminar veterinario",error);
     }
   };
-
-  console.log("data en TablaVeterinario:", data);
-  console.log("filteredData en TablaVeterinario:", filteredData);
 
   return (
     <div className={`d-flex justify-content-center`}>
@@ -55,7 +49,7 @@ const TablaVeterinario = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((vet, index) => (
+            {veterinarios.map((vet, index) => (
               <tr key={index} className={`${styles.fila}`}>
                 <td>{vet.matricula}</td>
                 <td>{vet.email}</td>
@@ -64,9 +58,7 @@ const TablaVeterinario = ({ data, setData }) => {
                 <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
                 <td className={`d-none d-md-table-cell`}>{vet.nro_doc}</td>
                 <td>
-                  <div
-                    className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}
-                  >
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       onClick={() => handleEdit(vet)}
                       className={`${styles.tableIcon}`}
@@ -76,12 +68,10 @@ const TablaVeterinario = ({ data, setData }) => {
                   </div>
                 </td>
                 <td>
-                  <div
-                    className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}
-                  >
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={(event) => handleDelete(vet.id, event)}
+                      onClick={(event) => handleDelete(vet.id)}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
                     />

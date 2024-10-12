@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Input, ButtonSubmit } from "../../Shared";
 import styles from "./formVeterinario.module.css";
 import { veterinarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
-import axios from "../../../axios-config";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { addVet, updateVet } from "../../../redux/veterinarios/thunks.js";
 
 const FormVeterinario = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { id } = useParams();
+  const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
-  const [isLoading, setIsLoading] = useState(false);
 
   const dataForm = location.state?.params;
 
@@ -47,16 +50,10 @@ const FormVeterinario = () => {
   };
 
   const addVeterinario = async (data) => {
-    setIsLoading(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_KEY}/veterinarios`, data);
-      if (response.status >= 200 && response.status < 300) {
-        console.log("Se creó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo crear el veterinario");
-        console.error(response.data);
-      }
+      await dispatch(addVet(data));
+      console.log("Se creó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al crear veterinario", error);
     } finally {
@@ -69,14 +66,9 @@ const FormVeterinario = () => {
   const updateVeterinario = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_KEY}/veterinarios/${id}`, data);
-      if (response.status === 200) {
-        console.log("Se actualizó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo actualizar el veterinario");
-        console.error(response.data);
-      }
+      await dispatch(updateVet(data));
+      console.log("Se actualizó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al actualizar veterinario", error);
     } finally {
@@ -87,6 +79,7 @@ const FormVeterinario = () => {
   };
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     console.log("Datos", data);
     if (!id) {
       addVeterinario(data);
@@ -183,11 +176,11 @@ const FormVeterinario = () => {
             error={errors.repeatPassword?.message}
           />
         </div>
-        <ButtonSubmit 
-          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
-          clickAction={() => {}} 
-          type={`submit`} 
-          disabled={isLoading} 
+        <ButtonSubmit
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
+          clickAction={() => {}}
+          type={`submit`}
+          disabled={isLoading}
         />
       </form>
     </div>
@@ -195,6 +188,3 @@ const FormVeterinario = () => {
 };
 
 export default FormVeterinario;
-
-
-
