@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -80,7 +80,6 @@ const FormVeterinario = () => {
 
   const onSubmit = (data) => {
     setIsLoading(true);
-    console.log("Datos", data);
     if (!id) {
       addVeterinario(data);
     } else {

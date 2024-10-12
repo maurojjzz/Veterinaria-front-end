@@ -40,16 +40,16 @@ const veterinarioReducer = (state = initialState, action) => {
       };
     }
     case DELETE_VET_PENDING: {
-      const newList = state.veterinarios.filter((veterinario) => veterinario.id !== action.payload);
       return {
         ...state,
-        pending: newList,
+        pending: action.payload,
       };
     }
     case DELETE_VET_SUCCESS: {
+      const newList = state.veterinarios.filter((veterinario) => veterinario.id !== action.payload);
       return {
         ...state,
-        error: action.payload,
+        veterinarios: newList,
       };
     }
     case DELETE_VET_ERROR: {
