@@ -1,25 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { Input, ButtonSubmit } from "../../Shared";
 import styles from "./form.module.css";
 import { practicaSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
-import axios from "../../../axios-config";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { addPract, updatePract } from "../../../redux/practicas/thunks.js";
 
 const FormPractica = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { id } = useParams();
   const location = useLocation();
   const history = useHistory();
-  const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const dataForm = location.state?.params;
 
   const practicaDataUpdate = {
-    descripcion: dataForm?.descripcion
-    
+    descripcion: dataForm?.descripcion,
   };
 
   const {
@@ -36,20 +39,15 @@ const FormPractica = () => {
 
   const goBackToTable = () => {
     setTimeout(() => {
-      history.push("/admin/practicas/");  
+      history.push("/admin/practicas/");
     }, 2000);
   };
 
   const addPractica = async (data) => {
-    setIsLoading(true);
     try {
-      const response = await axios.post("/practicas", data);
-      if (response.status >= 200 && response.status < 300) {
-        console.log("Se creó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo crear la práctica");
-      }
+      await dispatch(addPract(data));
+      console.log("Se creó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al crear práctica", error);
     } finally {
@@ -60,15 +58,10 @@ const FormPractica = () => {
   };
 
   const updatePractica = async (data) => {
-    setIsLoading(true);
     try {
-      const response = await axios.put(`/practicas/${id}`, data);
-      if (response.status === 200) {
-        console.log("Se actualizó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo actualizar la práctica");
-      }
+      await dispatch(updatePract(data));
+      console.log("Se actualizó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al actualizar práctica", error);
     } finally {
@@ -79,10 +72,11 @@ const FormPractica = () => {
   };
 
   const onSubmit = (data) => {
-    console.log("Datita", data);
+    setIsLoading(true);
     if (!id) {
       addPractica(data);
     } else {
+      data.id = id;
       updatePractica(data);
     }
   };
@@ -96,20 +90,20 @@ const FormPractica = () => {
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
-         <Input
+          <Input
             labelText={`descripcion`}
             placeholder={`Castracion`}
             type={`text`}
             name={"descripcion"}
             register={register}
-            error={errors.descripcion?.message}  
-        />
+            error={errors.descripcion?.message}
+          />
         </div>
-        <ButtonSubmit 
-          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
-          clickAction={() => {}} 
-          type={`submit`} 
-          disabled={isLoading} 
+        <ButtonSubmit
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
+          clickAction={() => {}}
+          type={`submit`}
+          disabled={isLoading}
         />
       </form>
     </div>

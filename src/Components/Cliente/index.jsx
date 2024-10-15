@@ -1,36 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./cliente.module.css";
 import TablaCliente from "./Table";
-import axios from "../../axios-config";
+import { initUsers } from "../../redux/users/thunks.js";
 
 const Cliente = () => {
-  const [users, setUsers] = useState([]);
+  const [data, setData] = useState([]);
 
+  const dispatch = useDispatch();
   const history = useHistory();
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get("/usuarios", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        if (response.status === 200) {
-          const usuarios = response.data.data.filter((u) => u.rol.descripcion === "Usuario");
-          setUsers(usuarios);
-        } else {
-          throw new Error("Error en la solicitud");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const { users, pending, error } = useSelector((state) => state.users);
 
-    fetchUsers();
-  }, []);
+  useEffect(() => {
+    dispatch(initUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (users) {
+      setData(users);
+    }
+  }, [users]);
 
   const handleUser = () => {
     history.push("/admin/usuarios/form");
@@ -48,7 +39,7 @@ const Cliente = () => {
         >
           <h3>Agregar Usuario</h3>
         </div>
-        <TablaCliente data={users} setData={setUsers}/>
+        <TablaCliente data={data} setData={setData} />
       </div>
     </div>
   );

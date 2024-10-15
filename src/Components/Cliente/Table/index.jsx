@@ -1,25 +1,26 @@
 import React from "react";
 import styles from "./table-cliente.module.css";
-import { useHistory} from 'react-router-dom';
-import axios from "../../../axios-config";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteUser } from "../../../redux/users/thunks.js";
 
 const TablaCliente = ({ data, setData }) => {
   const history = useHistory();
-
+  const dispatch = useDispatch();
 
   const handleEdit = (user) => {
-    history.push(`/admin/usuarios/form/${user.id}`, {params: {...user}})
+    history.push(`/admin/usuarios/form/${user.id}`, { params: { ...user } });
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`/usuarios/${id}`);
-      if (response.status === 200) {
-        console.log("Eliminado correctamente");
-        setData((prevData) => prevData.filter((usuario) => usuario.id !== id));
-      } else {
-        throw new Error("Error al eliminar usuario");
-      }
+      await dispatch(deleteUser(id));
+      setData((prevData) => {
+        if (Array.isArray(prevData)) {
+          return prevData.filter((usuario) => usuario.id !== id);
+        }
+        return [];
+      });
     } catch (error) {
       console.log(error);
     }
@@ -43,10 +44,7 @@ const TablaCliente = ({ data, setData }) => {
           </thead>
           <tbody>
             {data.map((use, index) => (
-              <tr
-                key={index}
-                className={`${styles.fila}`}
-              >
+              <tr key={index} className={`${styles.fila}`}>
                 <td>{use.email}</td>
                 <td>{use.nombre}</td>
                 <td className={`d-none d-sm-table-cell `}>{use.apellido}</td>

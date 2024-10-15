@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Input, ButtonSubmit } from "../../Shared";
 import styles from "./form.module.css";
 import { usuarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
-import axios from "../../../axios-config";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { addUser as addUserThunk, updateUser as updateUserThunk } from "../../../redux/users/thunks.js";
 
 const FormClient = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const location = useLocation();
   const history = useHistory();
 
   const dataForm = location.state?.params;
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const usuarioDataUpdate = {
     nombre: dataForm?.nombre,
@@ -40,8 +44,6 @@ const FormClient = () => {
     },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const goBackToTable = () => {
     setTimeout(() => {
       history.push("/admin");
@@ -49,15 +51,10 @@ const FormClient = () => {
   };
 
   const addUser = async (data) => {
-    setIsLoading(true);
     try {
-      const response = await axios.post("/usuarios", data);
-      if (response.status >= 200 && response.status < 300) {
-        console.log("Se creó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo crear el usuario");
-      }
+      await dispatch(addUserThunk(data));
+      console.log("Se creó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al crear usuario", error);
     } finally {
@@ -68,16 +65,12 @@ const FormClient = () => {
   };
 
   const updateUser = async (data) => {
-    setIsLoading(true);
     try {
       data.mascotas = Array.from(new Set(data.mascotas.map((mascota) => mascota.id)));
-      const response = await axios.put(`/usuarios/${id}`, data);
-      if (response.status === 200) {
-        console.log("Se actualizó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo actualizar el usuario");
-      }
+      data.id = id;
+      await dispatch(updateUserThunk(data));
+      console.log("Se actualizó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al actualizar usuario", error);
     } finally {
@@ -88,6 +81,7 @@ const FormClient = () => {
   };
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     if (!id) {
       addUser(data);
     } else {
@@ -182,11 +176,11 @@ const FormClient = () => {
             error={errors.repeatPassword?.message}
           />
         </div>
-        <ButtonSubmit 
-          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
-          clickAction={() => {}} 
-          type={`submit`} 
-          disabled={isLoading} 
+        <ButtonSubmit
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
+          clickAction={() => {}}
+          type={`submit`}
+          disabled={isLoading}
         />
       </form>
     </div>
@@ -194,4 +188,3 @@ const FormClient = () => {
 };
 
 export default FormClient;
-
