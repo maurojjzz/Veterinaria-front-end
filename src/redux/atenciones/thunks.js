@@ -50,6 +50,7 @@ export const addAtencion = (atencion) => {
 export const updateAtencion = (atencion) => {
   return async (dispatch) => {
     dispatch(updateAtencionPending(true));
+    console.log(atencion.id)
     try {
       const { data } = await axios.put(`/atenciones/${atencion.id}`, atencion);
       dispatch(updateAtencionSuccess(data.data));

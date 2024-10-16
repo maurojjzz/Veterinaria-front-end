@@ -9,11 +9,14 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
 
   useEffect(() => {
     const due = owners.find((owner) => owner.id === dataFilaAtencion.mascota.owner);
-    setDueno(due);
+    setDueno(due || {});
     const raz = raza.find((r) => r.id === dataFilaAtencion.mascota.raza);
-    setRazaPet(raz);
+    console.log(dataFilaAtencion.mascota.raza)
+    setRazaPet(raz || {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dataFilaAtencion, owners, raza]);
+
+
 
   const edadPet = (fecha) => {
     const hoy = new Date();
@@ -104,7 +107,7 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
           <div
             className={`d-flex flex-column align-items-center justify-content-center gap-2 p-3 border-end border-2 ${styles.iconTextPet}`}
           >
-            <BoxPetIcon especie={razaPet.especie?.descripcion} />
+            <BoxPetIcon especie={razaPet?.especie?.descripcion} />
             <div className={` text-center fs-5`}>{dataFilaAtencion.mascota?.nombre}</div>
           </div>
           <div className={`d-flex flex-column justify-content-center flex-grow-1`}>
