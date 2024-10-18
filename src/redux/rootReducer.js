@@ -9,6 +9,7 @@ import rolesReducer from './roles/reducers.js';
 import pagosReducer from './pagos/reducers.js';
 import razasReducer from './razas/reducers.js';
 import preciosReducer from './precios/reducers.js';
+import authReducer from './auth/reducers.js';
 
 const rootReducer = combineReducers({
     users: usersReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     roles: rolesReducer,
     pagos: pagosReducer,
     razas: razasReducer,
-    precios: preciosReducer
+    precios: preciosReducer,
+    auth: authReducer
 });
 
 
