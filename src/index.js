@@ -6,12 +6,17 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.css";
 import reportWebVitals from "./reportWebVitals.js";
 import Routes from "./routes/index.jsx";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import theme from "./themes/theme.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <Routes />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Routes />
+      </ThemeProvider>
     </React.StrictMode>
   </Provider>
 );
