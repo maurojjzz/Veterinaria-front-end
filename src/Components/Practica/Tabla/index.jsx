@@ -1,12 +1,32 @@
-import React from "react";
+import { useEffect } from "react";
 import styles from "./table-practica.module.css";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getPract, deletePract } from "../../../redux/practicas/thunks.js";
 
-const TablaPractica = ({ data, handleDelete }) => {
+const TablaPractica = () => {
   const history = useHistory();
 
+  const dispatch = useDispatch();
+
+  const { practicas, pending, error } = useSelector((state) => state.practicas);
+
   const handleEdit = (practica) => {
-    history.push(`/admin/practicas/form/${practica.id}`, {params: {...practica}})
+    history.push(`/admin/practicas/form/${practica.id}`, { params: { ...practica } });
+  };
+
+  useEffect(() => {
+    dispatch(getPract());
+  }, [dispatch]);
+
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deletePract(id));
+      console.log("Eliminada correctamente");
+      await dispatch(getPract());
+    } catch (error) {
+      console.error("Error al eliminar la practica", error);
+    }
   };
 
   return (
@@ -21,7 +41,7 @@ const TablaPractica = ({ data, handleDelete }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((practica, index) => (
+            {practicas.map((practica, index) => (
               <tr key={index} className={`${styles.fila}`}>
                 <td>{practica.descripcion}</td>
                 <td>
@@ -54,4 +74,3 @@ const TablaPractica = ({ data, handleDelete }) => {
 };
 
 export default TablaPractica;
-

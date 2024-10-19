@@ -1,18 +1,20 @@
-import React, {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input, ButtonSubmit } from "../../../Shared";
 import styles from "./login-form.module.css";
 import loginSchema from "../../../../Validations/loginSchema.js";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useHistory } from "react-router-dom";
-import axios from "../../../../axios-config";
 import Toast from "../../../Shared/Toast";
-
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../../../redux/auth/thunks.js";
 
 const LoginForm = () => {
-  const [error, setError] = useState(false);
-  const [toastMessage, setToastMessage] = useState('Error in database');
+  const [toastMessage, setToastMessage] = useState("Error in database");
   const history = useHistory();
+
+  const dispatch = useDispatch();
+  const { error, authenticated } = useSelector((state) => state.auth);
 
   const {
     register,
@@ -24,54 +26,30 @@ const LoginForm = () => {
   });
 
   useEffect(() => {
-    const role = localStorage.getItem('role');
-    switch (role) {
-      case 'Admin':
-        history.push('/admin');
-        break;
-      case 'Usuario':
-        history.push('/user');
-        break;
-      case 'Veterinario':
-        history.push('/vet');
-        break;
-      default: {
-        break;
+    if (authenticated) {
+      const role = localStorage.getItem("role");
+      switch (role) {
+        case "Admin":
+          history.push("/admin");
+          break;
+        case "Usuario":
+          history.push("/user");
+          break;
+        case "Veterinario":
+          history.push("/vet");
+          break;
+        default: {
+          break;
+        }
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [authenticated, history]);
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('/auth/login', data);  
-      if (response.status === 200) {
-        const dataRes = response.data;
-        localStorage.setItem("token", dataRes.token);
-        localStorage.setItem("role", dataRes.role);
-  
-        switch (dataRes.role) {
-          case 'Admin':
-            history.push('/admin');
-            break;
-          case 'Usuario':
-            history.push('/user');
-            break;
-          case 'Veterinario':
-            history.push('/vet');
-            break;
-          default: {
-            console.log('Error con el rol del usuario');
-            break;
-          }
-        }
-      } else {
-        throw new Error("Error al intentar logearse");
-      }
-  
+      await dispatch(login(data));
     } catch (error) {
-      setError(true);
-      setToastMessage(error.response.data.message || error.response.data.error);
+      setToastMessage(error.response.data.error);
     }
   };
 
@@ -108,7 +86,7 @@ const LoginForm = () => {
           Don't have an account? <span className={`forgotPass fw-medium ${styles.forgotPass}`}>Sign Up</span>
         </p>
       </div>
-      {error && <Toast message={toastMessage} title={"Error"} setError={setError} />}
+      {error && <Toast message={toastMessage} title={"Error"} setError={()=>{}} />}
     </div>
   );
 };
