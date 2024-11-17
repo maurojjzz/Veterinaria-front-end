@@ -3,6 +3,8 @@ import styles from "./layout.module.css";
 import Header from "../Header";
 import MenuHamburguesa from "../MenuHamburguesa";
 import SideBar from "../SideBar";
+import Home from "../Home";
+import Footer from "../Footer";
 
 const Layout = (props) => {
   const [clickHamb, setClickHamb] = useState(false);
