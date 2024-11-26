@@ -1,7 +1,24 @@
 .footer {
-    background-color: #4CAF50;
-    color: #FFFFFF;
-    text-align: center;
-    padding: 15px 0;
-    font-size: 18px;
+  background-color: #023e8a; 
+  color: #ffffff;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  z-index: 1; 
+  position: relative; 
+}
+
+.emailLink {
+  color: #00b4d8; 
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.emailLink:hover {
+  text-decoration: underline;
+}
+
+.footerCredits {
+  font-size: 0.8rem;
+  color: #adb5bd; 
 }

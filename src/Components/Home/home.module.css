@@ -1,75 +1,79 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.heroSection {
+  background: linear-gradient(135deg, #0077b6, #00b4d8); 
+  height: auto; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem; 
+  color: #ffffff;
+  position: relative; 
+  margin-bottom: 6rem;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    background-color: #f8f9fa;
-}
-.btn-primary {
-    background-color: #34A853; 
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+.heroContent {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.btn-primary:hover {
-    background-color: #2C8D46; 
+.heroImage {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
+  border: 5px solid rgba(255, 255, 255, 0.6); 
 }
 
-.btn-secondary {
-    background-color: transparent;
-    border: 2px solid #34A853;
-    color: #34A853;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.heroTitle {
+  font-size: 2.5rem;
+  margin: 1rem 0;
+  color: #caf0f8;
 }
 
-.btn-secondary:hover {
-    background-color: #34A853;
-    color: white;
+.heroText {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #dbe7f0;
 }
 
-.hero {
-    background: linear-gradient(to right, #A9DFF7, #A3D9B2); 
-    color: white;
-    padding: 100px 0;
-    text-align: center;
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.hero-content h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
+.btnPrimary {
+  background-color: #023e8a;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.hero-content p {
-    font-size: 20px;
-    margin-bottom: 30px;
+.btnPrimary:hover {
+  background-color: #0077b6;
+  transform: scale(1.05);
 }
 
-.about {
-    background-color: white;
-    padding: 50px 0;
-    text-align: center;
+.btnSecondary {
+  background-color: #02c39a;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
-.about h2 {
-    color: #007B83;
-    font-size: 32px;
-    margin-bottom: 20px;
+.btnSecondary:hover {
+  background-color: #028f72;
+  transform: scale(1.05);
 }
 
-.about p {
-    font-size: 18px;
-    color: #555;
+.heroSection {
+  margin-bottom: 2rem; 
 }
