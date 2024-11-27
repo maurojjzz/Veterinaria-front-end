@@ -1,24 +1,18 @@
 .footer {
   background-color: #023e8a; 
-  color: #ffffff;
-  padding: 1.5rem 1rem;
+  color: #ffffff; 
   text-align: center;
-  font-size: 0.9rem;
-  z-index: 1; 
+  padding: 1rem 0; 
+  font-size: 0.9rem; 
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); 
+  width: 100%; 
+  margin-top: auto; 
   position: relative; 
 }
 
-.emailLink {
-  color: #00b4d8; 
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.emailLink:hover {
-  text-decoration: underline;
-}
 
 .footerCredits {
+  margin-top: 1rem;
   font-size: 0.8rem;
-  color: #adb5bd; 
+  color: #a9d6e5;
 }

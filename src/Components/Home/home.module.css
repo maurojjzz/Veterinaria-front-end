@@ -1,51 +1,50 @@
 .heroSection {
   background: linear-gradient(135deg, #0077b6, #00b4d8); 
-  height: auto; 
+  min-height: 100vh; 
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem; 
-  color: #ffffff;
-  position: relative; 
-  margin-bottom: 6rem;
-}
-
-.heroContent {
-  max-width: 600px;
-  margin: 0 auto;
-  text-align: center;
+  flex-wrap: wrap; 
+  padding: 3rem 1rem;
+  color: #ffffff; 
 }
 
 .heroImage {
   width: 100%;
-  max-width: 500px;
-  margin-bottom: 1rem;
+  max-width: 500px; 
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); 
-  border: 5px solid rgba(255, 255, 255, 0.6); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  margin-bottom: 1rem;
+}
+
+.heroContent {
+  max-width: 600px; 
+  text-align: center; 
 }
 
 .heroTitle {
   font-size: 2.5rem;
-  margin: 1rem 0;
-  color: #caf0f8;
+  margin-bottom: 1rem;
+  color: #caf0f8; 
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6); 
 }
 
 .heroText {
   font-size: 1.2rem;
   margin-bottom: 2rem;
-  color: #dbe7f0;
+  color: #e5f6ff; 
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); 
 }
 
 .heroButtons {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+  gap: 1rem; 
+  flex-wrap: wrap; 
   justify-content: center;
 }
 
 .btnPrimary {
-  background-color: #023e8a;
+  background-color: #023e8a; 
   color: white;
   padding: 0.8rem 1.5rem;
   border: none;
@@ -55,12 +54,12 @@
 }
 
 .btnPrimary:hover {
-  background-color: #0077b6;
-  transform: scale(1.05);
+  background-color: #0077b6; 
+  transform: scale(1.05); 
 }
 
 .btnSecondary {
-  background-color: #02c39a;
+  background-color: #02c39a; 
   color: white;
   padding: 0.8rem 1.5rem;
   border: none;
@@ -70,10 +69,38 @@
 }
 
 .btnSecondary:hover {
-  background-color: #028f72;
+  background-color: #028f72; 
   transform: scale(1.05);
 }
 
-.heroSection {
-  margin-bottom: 2rem; 
+
+@media (max-width: 768px) {
+  .heroSection {
+    flex-direction: column; 
+    text-align: center; 
+  }
+
+  .heroImage {
+    margin-bottom: 1.5rem;
+  }
+
+  .heroButtons {
+    flex-direction: column; 
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    width: 100%; 
+  }
 }
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+
+  .heroText {
+    font-size: 1rem; 
+  }
+}
+
