@@ -4,10 +4,7 @@
   text-align: center;
   padding: 1rem 0; 
   font-size: 0.9rem; 
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2); 
-  width: 100%; 
-  margin-top: auto; 
-  position: relative; 
+  width: 100vw; 
 }
 
 
@@ -15,4 +12,10 @@
   margin-top: 1rem;
   font-size: 0.8rem;
   color: #a9d6e5;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    margin-left: -50px;
+  }
 }
