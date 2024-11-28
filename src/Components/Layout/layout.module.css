@@ -1,9 +1,10 @@
 .whole_layout_cont{
-    height: 100vh;
+    min-height: 100vh;
 }
 
 @media screen and (min-width: 767px) {
     .contentChild{
+        flex-grow: 1;
         padding-left: 50px;
      }
 }
