@@ -25,7 +25,7 @@ const authReducer = (state = initialState, action) => {
     case LOGOUT_PENDING:
       return {
         ...state,
-        pending: true,
+        pending: action.payload,
       };
     case LOGIN_ERROR:
     case SIGN_UP_ERROR:

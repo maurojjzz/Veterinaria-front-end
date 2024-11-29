@@ -6,11 +6,16 @@ import loginSchema from "../../../../Validations/loginSchema.js";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { useHistory } from "react-router-dom";
 import Toast from "../../../Shared/Toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../../../redux/auth/thunks.js";
 
 const LoginForm = () => {
-  const [toastMessage, setToastMessage] = useState("Error in database");
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -46,12 +51,24 @@ const LoginForm = () => {
   }, [authenticated, history]);
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       await dispatch(login(data));
-    } catch (error) {
-      setToastMessage(error.response.data.error);
+    } catch (axiosError) {
+      const backenderror = axiosError.response?.data?.error || "Error en la conexion con la base de datos";
+      setToastMessage(error || backenderror);
+      setShowToast(true);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      setToastMessage(error);
+      setShowToast(true);
+    }
+  }, [error]);
 
   return (
     <div className={`d-flex flex-column align-items-center justify-content-center gap-4 ${styles.loginFormContainer}`}>
@@ -73,7 +90,11 @@ const LoginForm = () => {
           register={register}
           error={errors.password?.message}
         />
-        <ButtonSubmit msg={`LOGIN`} clickAction={() => {}} type={`submit`} />
+        <ButtonSubmit
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `LOGIN`}
+          clickAction={() => {}}
+          type={`submit`}
+        />
       </form>
       <div className={`w-100`}>
         <p className={`${styles.forgotPass} ${styles.cursor} fw-medium text-center`}>Forgot password?</p>
@@ -86,7 +107,15 @@ const LoginForm = () => {
           Don't have an account? <span className={`forgotPass fw-medium ${styles.forgotPass}`}>Sign Up</span>
         </p>
       </div>
-      {error && <Toast message={toastMessage} title={"Error"} setError={()=>{}} />}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          title={"Error"}
+          setError={() => {
+            setShowToast(false);
+          }}
+        />
+      )}
     </div>
   );
 };
