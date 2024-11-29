@@ -6,9 +6,10 @@ import styles from "./atencionesForm.module.css";
 import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { formateoFecha, justFecha, justHour } from "../../../Functions/utiities";
-import axios from "../../../axios-config";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { addAtencion, updateAtencion } from "../../../redux/atenciones/thunks.js";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
@@ -17,6 +18,8 @@ const AtencionForm = () => {
   const { id } = useParams();
   const location = useLocation();
   const history = useHistory();
+
+  const dispatch = useDispatch();
 
   const dataForm = location.state?.params;
 
@@ -57,16 +60,12 @@ const AtencionForm = () => {
     }, 2000);
   };
 
-  const addAtencion = async (data) => {
+  const addAtenciones = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_KEY}/atenciones`, data);
-      if (response.status >= 200 && response.status < 300) {
-        console.log("Se creó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo crear la atención");
-      }
+      await dispatch(addAtencion(data));
+      console.log("Se creó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al crear atención", error);
     } finally {
@@ -76,16 +75,13 @@ const AtencionForm = () => {
     }
   };
 
-  const updateAtencion = async (data) => {
+  const updateAtenciones = async (data) => {
+    console.log(data, "datota");
     setIsLoading(true);
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, data);
-      if (response.status === 200) {
-        console.log("Se actualizó correctamente");
-        goBackToTable();
-      } else {
-        console.log("No se pudo actualizar la atención");
-      }
+      await dispatch(updateAtencion(data));
+      console.log("Se actualizó correctamente");
+      goBackToTable();
     } catch (error) {
       console.error("Error al actualizar atención", error);
     } finally {
@@ -99,10 +95,12 @@ const AtencionForm = () => {
     setIsLoading(true);
     data.fecha_hora_atencion = formateoFecha(data.fecha, data.hora);
     const { hora, fecha, cliente, ...atencionObj } = data;
+
     if (!id) {
-      addAtencion(atencionObj);
+      addAtenciones(atencionObj);
     } else {
-      updateAtencion(atencionObj);
+      atencionObj.id = id;
+      updateAtenciones(atencionObj);
     }
   };
 
@@ -193,11 +191,11 @@ const AtencionForm = () => {
           <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message} />
         </div>
 
-        <ButtonSubmit 
-          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`} 
-          clickAction={() => {}} 
-          type={`submit`} 
-          disabled={isLoading} 
+        <ButtonSubmit
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
+          clickAction={() => {}}
+          type={`submit`}
+          disabled={isLoading}
         />
       </form>
     </div>
@@ -205,4 +203,3 @@ const AtencionForm = () => {
 };
 
 export default AtencionForm;
-

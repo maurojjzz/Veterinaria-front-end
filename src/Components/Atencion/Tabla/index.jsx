@@ -1,88 +1,58 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styles from "./tabla-atencion.module.css";
 import { handleDate } from "../../../Functions/utiities.js";
 import { ModalAtencion } from "../../Shared";
-import axios from "../../../axios-config";
+import { useDispatch, useSelector } from "react-redux";
+import { getAtenciones, deleteAtencion } from "../../../redux/atenciones/thunks.js";
+import { initUsers } from "../../../redux/users/thunks.js";
+import { getEspecie } from "../../../redux/especies/thunks.js";
+import { getRazas } from "../../../redux/razas/thunks.js";
 
-const TablaAtencion = ({ data, setData }) => {
-  const [owner, setOwner] = useState([]);
-  const [raza, setRaza] = useState([]);
+const TablaAtencion = () => {
   const [modal, setModal] = useState(false);
   const [dataFilaAtencion, setDataFilaAtencion] = useState({});
+
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { atenciones, pending, error } = useSelector((state) => state.atenciones);
+  const { users } = useSelector((state) => state.users);
+  const { especies } = useSelector((state) => state.especies);
+  const { razas } = useSelector((state) => state.razas);
 
   const handleEdit = (ate) => {
     history.push(`/admin/atenciones/form/${ate.id}`, { params: { ...ate } });
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        if (response.status === 200) {
-          const usuarios = response.data.data.filter((u) => u.rol.descripcion === "Usuario");
-          setOwner(usuarios);
-        } else {
-          throw new Error("Error en la solicitud");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchSpecies = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/raza`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.status === 200) {
-          setRaza(response.data.data);
-        } else {
-          throw new Error("Error en la solicitud");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUsers();
-    fetchSpecies();
-  }, []);
+    dispatch(getAtenciones());
+    dispatch(initUsers());
+    dispatch(getEspecie());
+    dispatch(getRazas());
+  }, [dispatch]);
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_KEY}/atenciones/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 200) {
-        console.log("Eliminado correctamente");
-        setData((prevData) => prevData.filter((atencion) => atencion.id !== id));
-      } else {
-        throw new Error("Error al eliminar la atención");
-      }
+      await dispatch(deleteAtencion(id));
+      console.log("Eliminada correctamente");
+      await dispatch(getAtenciones());
     } catch (error) {
-      console.log(error);
+      console.log("Error al eliminar atencion", error);
     }
   };
 
   const findOwner = (id) => {
-    const due = owner.find((owner) => owner.id === id);
+    const due = users.find((owner) => owner.id === id);
     return `${due?.nombre} ${due?.apellido}`;
   };
 
   const findSpecie = (id) => {
-    const raz = raza.find((spe) => spe.id === id);
-    return raz.especie.descripcion;
+    if (!especies || especies.length === 0) {
+      return "Especie no encontrada";
+    }
+    const raz = especies.find((spe) => spe.id === id);
+    return raz ? raz.especies?.descripcion : "Especie no encontrada";
   };
 
   return (
@@ -105,7 +75,7 @@ const TablaAtencion = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((ate, index) => (
+            {atenciones.map((ate, index) => (
               <tr
                 key={index}
                 className={`${styles.fila}`}
@@ -165,8 +135,8 @@ const TablaAtencion = ({ data, setData }) => {
           setModal={setModal}
           dataFilaAtencion={dataFilaAtencion}
           setDataFilaAtencion={setDataFilaAtencion}
-          owners={owner}
-          raza={raza}
+          owners={users}
+          raza={razas}
         />
       )}
     </div>

@@ -1,0 +1,21 @@
+.footer {
+  background-color: #023e8a; 
+  color: #ffffff; 
+  text-align: center;
+  padding: 1rem 0; 
+  font-size: 0.9rem; 
+  width: 100vw; 
+}
+
+
+.footerCredits {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #a9d6e5;
+}
+
+@media (min-width: 768px) {
+  .footer {
+    margin-left: -50px;
+  }
+}
