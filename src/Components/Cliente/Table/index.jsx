@@ -1,10 +1,17 @@
-import React from "react";
+import { useState } from "react";
 import styles from "./table-cliente.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/users/thunks.js";
+import { ModalAlert, Toast } from "../../Shared";
 
 const TablaCliente = ({ data, setData }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [idUser, setIdUser] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -21,8 +28,16 @@ const TablaCliente = ({ data, setData }) => {
         }
         return [];
       });
+      setToastMessage("Usuario eliminado correctamente");
+      setToastType("Info");
     } catch (error) {
       console.log(error);
+      setToastMessage("Error al eliminar usuario");
+      setToastType("Error");
+    } finally {
+      setShowToast(true);
+      setIdUser(null);
+      setShowModal(false);
     }
   };
 
@@ -65,7 +80,10 @@ const TablaCliente = ({ data, setData }) => {
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={() => handleDelete(use.id)}
+                      onClick={() => {
+                        setShowModal(true);
+                        setIdUser(use.id);
+                      }}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
                     />
@@ -76,6 +94,18 @@ const TablaCliente = ({ data, setData }) => {
           </tbody>
         </table>
       </div>
+      <ModalAlert
+        text="¿Desea eliminar al usuario?"
+        clickAction={() => handleDelete(idUser)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && 
+        <Toast 
+          title={toastType} 
+          message={toastMessage} 
+          setError={setShowToast} 
+        />}
     </div>
   );
 };

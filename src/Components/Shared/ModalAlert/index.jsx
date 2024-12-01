@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { Box, Modal, Typography, useTheme, Button } from "@mui/material";
-const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", clickAction = () => {} }) => {
-  const [abrir, setAbrir] = useState(true);
-
+const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", clickAction, showModal, setShowModal }) => {
   const theme = useTheme();
 
   const styleButton = {
@@ -18,8 +15,8 @@ const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", click
 
   return (
     <Modal
-      open={abrir}
-      onClose={() => {}}
+      open={showModal}
+      onClose={() => setShowModal(false)}
       sx={{
         display: "flex",
         justifyContent: "center",
@@ -43,7 +40,6 @@ const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", click
       >
         <Box
           sx={{
-            // border: "1px solid red",
             position: "relative",
             display: "flex",
             justifyContent: "center",
@@ -53,16 +49,10 @@ const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", click
           <img
             src={`${process.env.PUBLIC_URL}/assets/icons/information.png`}
             alt="info icon"
-            // style={
-            //   {
-            //     // border: "1px solid red",
-            //   }
-            // }
           />
         </Box>
         <Box
           sx={{
-            // border: "1px solid red",
             flexGrow: 1,
             display: "flex",
             flexDirection: "column",
@@ -86,7 +76,6 @@ const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", click
               mt: "auto",
               pt: "10px",
               pb: "20px",
-              // border: "1px solid red",
               display: "flex",
               flexDirection: {
                 xs: "column",
@@ -106,7 +95,7 @@ const ModalAlert = ({ text = "¿Estas seguro de seguir con la operacion?", click
             <Button variant="contained" sx={styleButton} color="success" onClick={clickAction}>
               Aceptar
             </Button>
-            <Button variant="outlined" sx={styleButton} color="error" onClick={() => setAbrir(false)}>
+            <Button variant="outlined" sx={styleButton} color="error" onClick={() => setShowModal(false)}>
               Cancelar
             </Button>
           </Box>
