@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./cliente.module.css";
 import TablaCliente from "./Table";
@@ -14,13 +14,9 @@ const Cliente = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
 
   const { users, pending, error } = useSelector((state) => state.users);
-
-  console.log(users, "usuarios redux");
-  console.log(error, "error redux");
-  console.log(pending, "pending redux");
-
 
   useEffect(() => {
     dispatch(initUsers());
@@ -44,6 +40,14 @@ const Cliente = () => {
     }
   }, [error, pending]);
 
+  useEffect(() => {
+    if (location.state?.state?.message) {
+      setToastMessage(location.state?.state?.message);
+      setToastType(location.state?.state.type);
+      setShowToast(true);
+      history.replace("/admin/usuarios", {});
+    }
+  }, [location, history]);
 
   const handleUser = () => {
     history.push("/admin/usuarios/form");
@@ -63,12 +67,7 @@ const Cliente = () => {
         </div>
         <TablaCliente data={data} setData={setData} />
       </div>
-      {showToast && 
-        <Toast 
-          title={toastType} 
-          message={toastMessage} 
-          setError={setShowToast} 
-        />}
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
