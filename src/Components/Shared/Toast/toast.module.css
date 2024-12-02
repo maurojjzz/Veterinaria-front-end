@@ -1,5 +1,5 @@
 .container{
-    position: absolute;
+    position: fixed;
     min-width: 250px;
     max-width: 500px;
     width: 90%;
@@ -10,7 +10,8 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.452); 
     border: 1px solid #ffe9e9;
     margin-bottom: 20px;
-    top: 15px;
+    top: 50px;
+    z-index: 10;
 }
 .borderStart{
     width: 15px;

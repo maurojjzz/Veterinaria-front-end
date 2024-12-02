@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Input, ButtonSubmit } from "../../Shared";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, ButtonSubmit, Toast, ModalAlert } from "../../Shared";
 import styles from "./form.module.css";
 import { usuarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -11,6 +11,12 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { addUser as addUserThunk, updateUser as updateUserThunk } from "../../../redux/users/thunks.js";
 
 const FormClient = () => {
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState(null);
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const location = useLocation();
@@ -19,6 +25,16 @@ const FormClient = () => {
   const dataForm = location.state?.params;
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const { pending, error } = useSelector((state) => state.users);
+
+  useEffect(() => {
+    if (!pending && error) {
+      setToastMessage(error);
+      setToastType("Error");
+      setShowToast(true);
+    }
+  }, [error, pending]);
 
   const usuarioDataUpdate = {
     nombre: dataForm?.nombre,
@@ -44,17 +60,16 @@ const FormClient = () => {
     },
   });
 
-  const goBackToTable = () => {
+  const goBackToTable = (message, type = "Success") => {
     setTimeout(() => {
-      history.push("/admin");
+      history.push("/admin/usuarios", { state: { message, type } });
     }, 2000);
   };
 
   const addUser = async (data) => {
     try {
       await dispatch(addUserThunk(data));
-      console.log("Se creó correctamente");
-      goBackToTable();
+      goBackToTable("Usuario creado exitosamente");
     } catch (error) {
       console.error("Error al crear usuario", error);
     } finally {
@@ -69,8 +84,7 @@ const FormClient = () => {
       data.mascotas = Array.from(new Set(data.mascotas.map((mascota) => mascota.id)));
       data.id = id;
       await dispatch(updateUserThunk(data));
-      console.log("Se actualizó correctamente");
-      goBackToTable();
+      goBackToTable("Usuario actualizado correctamente");
     } catch (error) {
       console.error("Error al actualizar usuario", error);
     } finally {
@@ -81,11 +95,17 @@ const FormClient = () => {
   };
 
   const onSubmit = (data) => {
+    setFormData(data);
+    setShowModal(true);
+  };
+
+  const confirmAction = () => {
     setIsLoading(true);
+    setShowModal(false);
     if (!id) {
-      addUser(data);
+      addUser(formData);
     } else {
-      updateUser(data);
+      updateUser(formData);
     }
   };
 
@@ -183,6 +203,13 @@ const FormClient = () => {
           disabled={isLoading}
         />
       </form>
+      <ModalAlert
+        text={id ? "¿Desea actualizar al usuario?" : "¿Desea crear el usuario?"}
+        clickAction={confirmAction}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };

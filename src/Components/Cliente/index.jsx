@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./cliente.module.css";
 import TablaCliente from "./Table";
 import { initUsers } from "../../redux/users/thunks.js";
+import { Toast } from "../Shared";
 
 const Cliente = () => {
   const [data, setData] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
 
   const { users, pending, error } = useSelector((state) => state.users);
 
@@ -22,6 +27,27 @@ const Cliente = () => {
       setData(users);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (!pending && error) {
+      if (error === "access denied, token expired or incorrect") {
+        setToastMessage("Sesion expirada");
+      } else {
+        setToastMessage(error);
+      }
+      setToastType("Error");
+      setShowToast(true);
+    }
+  }, [error, pending]);
+
+  useEffect(() => {
+    if (location.state?.state?.message) {
+      setToastMessage(location.state?.state?.message);
+      setToastType(location.state?.state.type);
+      setShowToast(true);
+      history.replace("/admin/usuarios", {});
+    }
+  }, [location, history]);
 
   const handleUser = () => {
     history.push("/admin/usuarios/form");
@@ -41,6 +67,7 @@ const Cliente = () => {
         </div>
         <TablaCliente data={data} setData={setData} />
       </div>
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
