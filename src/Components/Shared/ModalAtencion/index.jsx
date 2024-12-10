@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./modal-atencion.module.css";
 import { BoxUserIcon, BoxPetIcon, BoxVetIcon } from "../";
 import { handleDate } from "../../../Functions/utiities.js";
+import { Button } from "@mui/material";
 
 const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners, raza }) => {
   const [dueno, setDueno] = useState("");
