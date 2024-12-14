@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./atencionesPendientesPago.module.css";
+import styles from "./AtencionesPendientesPago.css";
 
 const AtencionesPendientesPago = () => {
   const [atencionesPendientes, setAtencionesPendientes] = useState([]);
@@ -36,9 +36,15 @@ const AtencionesPendientesPago = () => {
         <ul className={styles.list}>
           {atencionesPendientes.map((atencion) => (
             <li key={atencion.id} className={styles.item}>
-              <p><strong>Fecha:</strong> {atencion.fecha}</p>
-              <p><strong>Mascota:</strong> {atencion.mascota}</p>
-              <p><strong>Monto:</strong> {atencion.monto}</p>
+              <p>
+                <strong>Fecha:</strong> {atencion.fecha}
+              </p>
+              <p>
+                <strong>Mascota:</strong> {atencion.mascota}
+              </p>
+              <p>
+                <strong>Monto:</strong> {atencion.monto}
+              </p>
             </li>
           ))}
         </ul>
