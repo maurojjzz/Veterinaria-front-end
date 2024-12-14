@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {styles} from "./atencionesPendientesPago.module.css";
+import styles from "./AtencionesPendientesPago.css";
 
 const AtencionesPendientesPago = () => {
   const [atencionesPendientes, setAtencionesPendientes] = useState([]);

@@ -4,10 +4,9 @@ import Layout from '../Components/Layout';
 import DasboardUser from '../Components/Users/User';
 import NotAllowed from '../Components/Auth/Not-Allowed';
 import Atencion from '../Components/Atencion';
-import AtencionesPendientesPago from '../Components/AtencionesPendientesPago';
+import AtencionesPendientesPago from '../Components/Users/User/AtencionesPendientesPago';
 
 const UsuarioRoutes = () => {
-  const { url } = useRouteMatch();
   const { url } = useRouteMatch();
 
   const routes = [
