@@ -37,7 +37,18 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
       <div className={`d-flex flex-column align-items-center rounded-2 bg-light pb-4 pt-2 ${styles.container}`}>
         
 
-        <div className={`d-flex justify-content-end  w-100 pe-2`}>
+        <div className={`d-flex justify-content-end  w-100 pe-2 pb-2`}>
+          <Button
+            variant="outlined"
+            color="success"
+            // disabled --> cuando este pagado tambien se puede cambiar el texto a pagado
+            sx={{
+              fontWeight: "bold",
+              mr:3
+            }}
+          >
+            Pagar
+          </Button>
           <img
             onClick={() => {
               setDataFilaAtencion({});
