@@ -5,15 +5,12 @@ import { getVet } from "../../../redux/veterinarios/thunks.js";
 import { Autocomplete, TextField, Box, ListItem } from "@mui/material";
 
 const SelectVet = ({ labelText, placeholder, type, register, name, error, setValue, defaultValue }) => {
-  // const [veterinario, setVeterinario] = useState([]);
-  // const [inputValue, setInputValue] = useState("");
-  // const [filteredEmails, setFilteredEmails] = useState([]);
+
   const [selectedVet, setSelectedVet] = useState(null);
 
   const dispatch = useDispatch();
 
   const { veterinarios } = useSelector((state) => state.veterinarios);
-  // console.log(veterinarios, "veterinario");
 
   useEffect(() => {
     dispatch(getVet());
@@ -35,12 +32,6 @@ const SelectVet = ({ labelText, placeholder, type, register, name, error, setVal
       setValue(name, newValue.id);
     }
   };
-
-  // const selectedDue = (ele) => {
-  //   setInputValue(ele.id || "");
-  //   setValue(name, ele.id);
-  //   setFilteredEmails([]);
-  // };
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
