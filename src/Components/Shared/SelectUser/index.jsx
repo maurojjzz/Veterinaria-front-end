@@ -56,7 +56,7 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
             variant="outlined"
             autoComplete="off"
             sx={{
-              mt: "-15px",
+              mt: "-10px",
               "& .MuiOutlinedInput-root": {
                 border: `1px solid ${error ? "#bc331b" : "#1BBCB6"}`,
                 boxShadow: error ? "none" : "10px 7px 15px 0px rgba(27, 188, 182, 0.18)",
@@ -76,9 +76,7 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
               "& .MuiFormHelperText-root": {
                 pt: "10px",
                 textAlign: "center",
-
                 height: "45px",
-                border: "1px solid red",
               },
               "& .MuiInputLabel-root": {
                 color: error ? "#FF4C4C" : "#1BBCB6",
