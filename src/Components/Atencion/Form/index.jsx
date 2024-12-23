@@ -8,8 +8,9 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { formateoFecha, justFecha, justHour } from "../../../Functions/utiities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addAtencion, updateAtencion } from "../../../redux/atenciones/thunks.js";
+import { getVet } from "../../../redux/veterinarios/thunks.js";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
@@ -22,6 +23,14 @@ const AtencionForm = () => {
   const dispatch = useDispatch();
 
   const dataForm = location.state?.params;
+
+  const { veterinarios } = useSelector((state) => state.veterinarios);
+
+  // console.log(veterinarios);
+
+  useEffect(() => {
+    dispatch(getVet());
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {
@@ -38,7 +47,7 @@ const AtencionForm = () => {
     mascota: dataForm?.mascota?.id,
     pagos: dataForm?.pagos,
     practicas: dataForm?.practicas.map((practica) => practica.id) || [],
-    veterinario: dataForm?.veterinario?.id,
+    veterinario: dataForm?.veterinario?.id || dataForm?.veterinario,
   };
 
   const {
@@ -95,7 +104,7 @@ const AtencionForm = () => {
     setIsLoading(true);
     data.fecha_hora_atencion = formateoFecha(data.fecha, data.hora);
     const { hora, fecha, cliente, ...atencionObj } = data;
-
+    atencionObj.veterinario = veterinarios.find((v) => v.email === atencionObj.veterinario)?.id;
     if (!id) {
       addAtenciones(atencionObj);
     } else {

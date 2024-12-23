@@ -29,7 +29,7 @@ const SelectVet = ({ labelText, placeholder, type, register, name, error, setVal
   const handleChange = (event, newValue) => {
     setSelectedVet(newValue);
     if (newValue) {
-      setValue(name, newValue.id);
+      setValue(name, newValue.id );
     }
   };
 
