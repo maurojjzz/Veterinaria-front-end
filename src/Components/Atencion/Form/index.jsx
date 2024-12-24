@@ -11,6 +11,8 @@ import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addAtencion, updateAtencion } from "../../../redux/atenciones/thunks.js";
 import { getVet } from "../../../redux/veterinarios/thunks.js";
+import { getPrecios } from "../../../redux/precios/thunks.js";
+import { TextField } from "@mui/material";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
@@ -26,10 +28,9 @@ const AtencionForm = () => {
 
   const { veterinarios } = useSelector((state) => state.veterinarios);
 
-  // console.log(veterinarios);
-
   useEffect(() => {
     dispatch(getVet());
+    dispatch(getPrecios());
   }, [dispatch]);
 
   useEffect(() => {
@@ -55,6 +56,7 @@ const AtencionForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm({
     mode: "onBlur",
     resolver: joiResolver(atencionSchema),
@@ -178,7 +180,7 @@ const AtencionForm = () => {
           />
           <CheckPractices
             labelText={`Practicas`}
-            placeholder={`Inyeccion`}
+            placeholder={``}
             name={"practicas"}
             register={register}
             error={errors.practicas?.message}
@@ -189,13 +191,39 @@ const AtencionForm = () => {
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
-          <Input
-            labelText={`Importe`}
-            placeholder={`Lionel`}
-            type={`text`}
+          <TextField
+            label={`Importe`}
+            type={`number`}
             name={"importe"}
-            register={register}
-            error={errors.importe?.message}
+            value={getValues("importe") || 0}
+            {...register("importe")}
+            disabled
+            // error={!!errors.importe}
+            // helperText={errors.importe?.message}
+            InputProps={{
+              readOnly: true,
+            }}
+            sx={{
+              border: "1px solid #1BBCB6",
+              borderRadius: "5px",
+              width: "100%",
+              maxWidth: "300px",
+              mt: "-25px",
+              mb: "30px",
+              "& .MuiInputLabel-root": {
+                color: "#1BBCB6",
+                backgroundColor: "white", 
+              },
+              "& .MuiInputBase-input": {
+                color: "#1BBCB6", 
+                fontSize: "16px",
+                fontWeight: "normal", 
+              },
+              "& .MuiInputBase-input.Mui-disabled": {
+                color: "#1BBCB6", 
+                WebkitTextFillColor: "#1BBCB6",
+              },
+            }}
           />
           <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message} />
         </div>
