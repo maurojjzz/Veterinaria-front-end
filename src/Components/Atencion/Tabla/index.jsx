@@ -21,7 +21,7 @@ const TablaAtencion = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { atenciones /*, pending, error */ } = useSelector((state) => state.atenciones);
+  const { atenciones } = useSelector((state) => state.atenciones);
   const { users } = useSelector((state) => state.users);
   const { especies } = useSelector((state) => state.especies);
   const { razas } = useSelector((state) => state.razas);

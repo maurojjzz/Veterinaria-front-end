@@ -39,13 +39,11 @@ const ModalAtencion = ({
   const edadPet = (fecha) => {
     const hoy = new Date();
     const birth = new Date(fecha);
-
     const edad = hoy.getFullYear() - birth.getFullYear();
 
     if (hoy.getMonth() < birth.getMonth() || (hoy.getMonth() === birth.getMonth() && hoy.getDate() < birth.getDate())) {
       return edad - 1;
     }
-
     return edad;
   };
 
