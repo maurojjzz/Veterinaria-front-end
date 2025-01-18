@@ -3,21 +3,38 @@ import styles from "./modal-atencion.module.css";
 import { BoxUserIcon, BoxPetIcon, BoxVetIcon } from "../";
 import { handleDate } from "../../../Functions/utiities.js";
 import { Button } from "@mui/material";
+import { ModalAlert } from "../../Shared";
+import { useDispatch } from "react-redux";
+import { getPagos, addPago } from "../../../redux/pagos/thunks.js";
+import { getAtenciones } from "../../../redux/atenciones/thunks.js";
 
-const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners, raza }) => {
+const ModalAtencion = ({
+  setModal,
+  setDataFilaAtencion,
+  dataFilaAtencion,
+  owners,
+  raza,
+  setShowToast,
+  setToastMessage,
+  setToastType,
+}) => {
   const [dueno, setDueno] = useState("");
   const [razaPet, setRazaPet] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPagos());
+  }, [dispatch]);
 
   useEffect(() => {
     const due = owners.find((owner) => owner.id === dataFilaAtencion.mascota.owner);
     setDueno(due || {});
     const raz = raza.find((r) => r.id === dataFilaAtencion.mascota.raza);
-    console.log(dataFilaAtencion.mascota.raza)
     setRazaPet(raz || {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataFilaAtencion, owners, raza]);
-
-
 
   const edadPet = (fecha) => {
     const hoy = new Date();
@@ -32,22 +49,45 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
     return edad;
   };
 
+  const handleAddPago = async () => {
+    const pago = {
+      atencion: dataFilaAtencion.id,
+      importe: dataFilaAtencion.importe,
+      fecha_hora_pago: new Date().toISOString(),
+      forma_de_pago: dataFilaAtencion.forma_de_pago,
+      cuotas: 1,
+      nro_cuota: 1,
+    };
+    try {
+      await dispatch(addPago(pago));
+      setShowToast(true);
+      setToastMessage("Pago registrado exitosamente");
+      setToastType("Success");
+    } catch (error) {
+      setShowToast(true);
+      setToastMessage("Hubo un error al registrar el pago");
+      setToastType("Error");
+    } finally {
+      await dispatch(getAtenciones());
+      setModal(false);
+    }
+  };
+
   return (
     <div className={`${styles.wholeContainer}`}>
       <div className={`d-flex flex-column align-items-center rounded-2 bg-light pb-4 pt-2 ${styles.container}`}>
-        
-
         <div className={`d-flex justify-content-end  w-100 pe-2 pb-2`}>
           <Button
             variant="outlined"
             color="success"
-            // disabled --> cuando este pagado tambien se puede cambiar el texto a pagado
+            disabled={dataFilaAtencion.pagos.length > 0}
             sx={{
               fontWeight: "bold",
-              mr:3
+              mr: 3,
             }}
+            onClick={() => setShowModal(true)}
           >
-            Pagar
+            {dataFilaAtencion.pagos.length > 0 ? "Pagado" : "Pagar"}
           </Button>
           <img
             onClick={() => {
@@ -236,6 +276,12 @@ const ModalAtencion = ({ setModal, setDataFilaAtencion, dataFilaAtencion, owners
             )}
           </div>
         </div>
+        <ModalAlert
+          text="¿Desea marcar esta atencion como pagada?"
+          clickAction={() => handleAddPago()}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
       </div>
     </div>
   );

@@ -65,9 +65,9 @@ const AtencionForm = () => {
     },
   });
 
-  const goBackToTable = () => {
+  const goBackToTable = (message, type = "Success") => {
     setTimeout(() => {
-      history.push("/admin/atenciones");
+      history.push("/admin/atenciones", { state: { message, type } });
     }, 2000);
   };
 
@@ -75,8 +75,7 @@ const AtencionForm = () => {
     setIsLoading(true);
     try {
       await dispatch(addAtencion(data));
-      console.log("Se creó correctamente");
-      goBackToTable();
+      goBackToTable("Se creó correctamente");
     } catch (error) {
       console.error("Error al crear atención", error);
     } finally {
@@ -87,12 +86,10 @@ const AtencionForm = () => {
   };
 
   const updateAtenciones = async (data) => {
-    console.log(data, "datota");
     setIsLoading(true);
     try {
       await dispatch(updateAtencion(data));
-      console.log("Se actualizó correctamente");
-      goBackToTable();
+      goBackToTable("Se actualizó correctamente");
     } catch (error) {
       console.error("Error al actualizar atención", error);
     } finally {
@@ -212,15 +209,15 @@ const AtencionForm = () => {
               mb: "30px",
               "& .MuiInputLabel-root": {
                 color: "#1BBCB6",
-                backgroundColor: "white", 
+                backgroundColor: "white",
               },
               "& .MuiInputBase-input": {
-                color: "#1BBCB6", 
+                color: "#1BBCB6",
                 fontSize: "16px",
-                fontWeight: "normal", 
+                fontWeight: "normal",
               },
               "& .MuiInputBase-input.Mui-disabled": {
-                color: "#1BBCB6", 
+                color: "#1BBCB6",
                 WebkitTextFillColor: "#1BBCB6",
               },
             }}
