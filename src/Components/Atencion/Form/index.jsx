@@ -8,8 +8,11 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { formateoFecha, justFecha, justHour } from "../../../Functions/utiities";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addAtencion, updateAtencion } from "../../../redux/atenciones/thunks.js";
+import { getVet } from "../../../redux/veterinarios/thunks.js";
+import { getPrecios } from "../../../redux/precios/thunks.js";
+import { TextField } from "@mui/material";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
@@ -22,6 +25,13 @@ const AtencionForm = () => {
   const dispatch = useDispatch();
 
   const dataForm = location.state?.params;
+
+  const { veterinarios } = useSelector((state) => state.veterinarios);
+
+  useEffect(() => {
+    dispatch(getVet());
+    dispatch(getPrecios());
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {
@@ -38,7 +48,7 @@ const AtencionForm = () => {
     mascota: dataForm?.mascota?.id,
     pagos: dataForm?.pagos,
     practicas: dataForm?.practicas.map((practica) => practica.id) || [],
-    veterinario: dataForm?.veterinario?.id,
+    veterinario: dataForm?.veterinario?.id || dataForm?.veterinario,
   };
 
   const {
@@ -46,6 +56,7 @@ const AtencionForm = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm({
     mode: "onBlur",
     resolver: joiResolver(atencionSchema),
@@ -54,9 +65,9 @@ const AtencionForm = () => {
     },
   });
 
-  const goBackToTable = () => {
+  const goBackToTable = (message, type = "Success") => {
     setTimeout(() => {
-      history.push("/admin/atenciones");
+      history.push("/admin/atenciones", { state: { message, type } });
     }, 2000);
   };
 
@@ -64,8 +75,7 @@ const AtencionForm = () => {
     setIsLoading(true);
     try {
       await dispatch(addAtencion(data));
-      console.log("Se creó correctamente");
-      goBackToTable();
+      goBackToTable("Se creó correctamente");
     } catch (error) {
       console.error("Error al crear atención", error);
     } finally {
@@ -76,12 +86,10 @@ const AtencionForm = () => {
   };
 
   const updateAtenciones = async (data) => {
-    console.log(data, "datota");
     setIsLoading(true);
     try {
       await dispatch(updateAtencion(data));
-      console.log("Se actualizó correctamente");
-      goBackToTable();
+      goBackToTable("Se actualizó correctamente");
     } catch (error) {
       console.error("Error al actualizar atención", error);
     } finally {
@@ -95,7 +103,7 @@ const AtencionForm = () => {
     setIsLoading(true);
     data.fecha_hora_atencion = formateoFecha(data.fecha, data.hora);
     const { hora, fecha, cliente, ...atencionObj } = data;
-
+    atencionObj.veterinario = veterinarios.find((v) => v.email === atencionObj.veterinario)?.id;
     if (!id) {
       addAtenciones(atencionObj);
     } else {
@@ -169,7 +177,7 @@ const AtencionForm = () => {
           />
           <CheckPractices
             labelText={`Practicas`}
-            placeholder={`Inyeccion`}
+            placeholder={``}
             name={"practicas"}
             register={register}
             error={errors.practicas?.message}
@@ -180,13 +188,39 @@ const AtencionForm = () => {
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
-          <Input
-            labelText={`Importe`}
-            placeholder={`Lionel`}
-            type={`text`}
+          <TextField
+            label={`Importe`}
+            type={`number`}
             name={"importe"}
-            register={register}
-            error={errors.importe?.message}
+            value={getValues("importe") || 0}
+            {...register("importe")}
+            disabled
+            // error={!!errors.importe}
+            // helperText={errors.importe?.message}
+            InputProps={{
+              readOnly: true,
+            }}
+            sx={{
+              border: "1px solid #1BBCB6",
+              borderRadius: "5px",
+              width: "100%",
+              maxWidth: "300px",
+              mt: "-25px",
+              mb: "30px",
+              "& .MuiInputLabel-root": {
+                color: "#1BBCB6",
+                backgroundColor: "white",
+              },
+              "& .MuiInputBase-input": {
+                color: "#1BBCB6",
+                fontSize: "16px",
+                fontWeight: "normal",
+              },
+              "& .MuiInputBase-input.Mui-disabled": {
+                color: "#1BBCB6",
+                WebkitTextFillColor: "#1BBCB6",
+              },
+            }}
           />
           <PagosRadio name={"forma_de_pago"} register={register} error={errors.forma_de_pago?.message} />
         </div>

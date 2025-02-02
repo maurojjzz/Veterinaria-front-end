@@ -1,110 +1,113 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select-user.module.css";
-import axios from "../../../axios-config";
+import { useDispatch, useSelector } from "react-redux";
+import { Autocomplete, TextField, Box, ListItem } from "@mui/material";
+import { initUsers } from "../../../redux/users/thunks.js";
 
-const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet ,setValue, defaultValue }) => {
-  const [usuarios, setUsuario] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [filteredEmails, setFilteredEmails] = useState([]);
+const SelectUser = ({ labelText, placeholder, type, register, name, error, setUserPet, setValue, defaultValue }) => {
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const { users } = useSelector((state) => state.users);
+
+  // console.log(defaultValue);
 
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/usuarios`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        if (response.status === 200) {
-          const usu = response.data.data.filter((u) => u.rol.descripcion === "Usuario");
-          setUsuario(usu);
-        } else {
-          throw new Error("Error en la solicitud");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+    dispatch(initUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (defaultValue) {
-      setInputValue(usuarios.find((u) => u.id === defaultValue)?.email || ''); 
-      setUserPet(usuarios.find((u) => u.id === defaultValue));
+      const s_usu = users.find((u) => u.id === defaultValue);
+      if (s_usu) {
+        setSelectedUser(s_usu);
+        setUserPet(s_usu);
+      }
     }
-  }, [defaultValue, usuarios, setUserPet]);
+  }, [defaultValue, users, setUserPet]);
 
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    const filtered = usuarios.filter((usuario) => usuario.email.toLowerCase().trim().includes(value.toLowerCase()));
-    setFilteredEmails(filtered);
-  };
-
-  const selectedDue = (ele) => {
-    setInputValue(ele.email);
-    setUserPet(ele);
-    setValue(name, ele.id);
-    setFilteredEmails([]);
+  const handleChange = (event, newValue) => {
+    setSelectedUser(newValue);
+    if (newValue) {
+      setUserPet(newValue);
+      setValue(name, newValue.id);
+    }
   };
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
-      <input
-        type={type}
-        className={
-          !error
-            ? `form-control ${styles.formInput} `
-            : `form-control is-invalid ${styles.formInput} ${styles.formInputError}`
-        }
-        id={`floatingInput-${labelText}`}
-        placeholder={placeholder}
-        autoComplete="off"
-        {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
-        onChange={handleInputChange}
-        value={inputValue}
+      <Autocomplete
+        options={users}
+        getOptionLabel={(option) => option?.email || ""}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        value={selectedUser}
+        onChange={handleChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
+            error={!!error}
+            helperText={error || ""}
+            label={labelText}
+            placeholder={placeholder}
+            variant="outlined"
+            autoComplete="off"
+            sx={{
+              mt: "-10px",
+              "& .MuiOutlinedInput-root": {
+                border: `1px solid ${error ? "#bc331b" : "#1BBCB6"}`,
+                boxShadow: error ? "none" : "10px 7px 15px 0px rgba(27, 188, 182, 0.18)",
+                mb: error ? "0px" : "50px",
+                "& fieldset": {
+                  border: "none",
+                },
+              },
+              "& .MuiOutlinedInput-root.Mui-focused": {
+                border: `3px solid ${error ? "#bc331b" : "#1BBCB6"}`,
+                boxShadow: "0 0 5px rgba(27, 188, 182, 0.5)",
+                outline: "none",
+                "& fieldset": {
+                  border: "none",
+                },
+              },
+              "& .MuiFormHelperText-root": {
+                pt: "10px",
+                textAlign: "center",
+                height: "45px",
+              },
+              "& .MuiInputLabel-root": {
+                color: error ? "#FF4C4C" : "#1BBCB6",
+                backgroundColor: "white",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: error ? "#FF4C4C" : "#1BBCB6",
+              },
+            }}
+          />
+        )}
+        renderOption={(props, option) => (
+          <ListItem
+            {...props}
+            key={option.id}
+            sx={{ display: "block", borderBottom: "1px solid #e0e0e0", padding: "8px 16px", cursor: "pointer" }}
+          >
+            <Box>
+              <Box sx={{ fontWeight: "bold", marginBottom: "4px" }}>{option.email}</Box>
+              <Box sx={{ color: "text.secondary", marginBottom: "4px" }}>
+                {option.nombre} {option.apellido}
+              </Box>
+              <Box>
+                <strong>DNI:</strong> {option.nro_doc}
+              </Box>
+            </Box>
+          </ListItem>
+        )}
+        noOptionsText="No se encontraron usuarios"
+        disablePortal
+        fullWidth
       />
-      <label
-        className={!error ? ` ${styles.formLoginLabel} text-info ` : `text-danger`}
-        htmlFor={`floatingInput-${labelText}`}
-      >
-        {labelText}
-      </label>
-
-      <div className={`p-2 rounded-2 ${styles.usersBox} ${filteredEmails.length === 0 ? `d-none` : `d-block`}`}>
-        <div className={`d-flex  flex-column text-center`}>
-          {filteredEmails.map((due) => (
-            <div
-              key={due.id}
-              onClick={() => {
-                selectedDue(due);
-              }}
-              className={`d-flex flex-column border mb-2 rounded-3 ${styles.cursor}`}
-            >
-              <div>{due.email}</div>
-              <div>
-                {due.nombre} {due.apellido}
-              </div>
-              <div>
-                <span className="fw-bold">DNI: </span> {due.nro_doc}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {error ? (
-        <div className={`${styles.errorContainer}`}>
-          <div className={`text-center  ${styles.errorMensaje}`}>{error}</div>
-        </div>
-      ) : (
-        <div className={`${styles.spaceErrorMsg}`}></div>
-      )}
     </div>
   );
 };

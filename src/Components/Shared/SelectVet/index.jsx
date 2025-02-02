@@ -1,104 +1,109 @@
 import React, { useEffect, useState } from "react";
 import styles from "./select_vet.module.css";
-import axios from "../../../axios-config";
+import { useDispatch, useSelector } from "react-redux";
+import { getVet } from "../../../redux/veterinarios/thunks.js";
+import { Autocomplete, TextField, Box, ListItem } from "@mui/material";
 
 const SelectVet = ({ labelText, placeholder, type, register, name, error, setValue, defaultValue }) => {
-  const [veterinario, setVeterinario] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [filteredEmails, setFilteredEmails] = useState([]);
+
+  const [selectedVet, setSelectedVet] = useState(null);
+
+  const dispatch = useDispatch();
+
+  const { veterinarios } = useSelector((state) => state.veterinarios);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_KEY}/veterinarios`, {
-          headers: {
-            "Content-Type": "application/json"
-          },
-        });
-        if (response.status === 200) {
-          setVeterinario(response.data.data);
-        } else {
-          throw new Error("Error en la solicitud");
-        }
-      } catch (error) {
-        console.log(error);
+    dispatch(getVet());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (defaultValue) {
+      const selected = veterinarios.find((v) => v.id === defaultValue);
+      if (selected) {
+        setSelectedVet(selected);
+        setValue(name, selected.id);
       }
-    };
+    }
+  }, [defaultValue, name, setValue, veterinarios]);
 
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-      setInputValue(veterinario.find((u) => u.id === defaultValue)?.email || ""); 
-      setValue(name, defaultValue);
-  }, [defaultValue, name, setValue, veterinario]);
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    const filtered = veterinario.filter((usuario) => usuario.email.toLowerCase().trim().includes(value.toLowerCase()));
-    setFilteredEmails(filtered);
+  const handleChange = (event, newValue) => {
+    setSelectedVet(newValue);
+    if (newValue) {
+      setValue(name, newValue.id );
+    }
   };
-
-  const selectedDue = (ele) => {
-    setInputValue(ele.id || "");
-    setValue(name, ele.id);
-    setFilteredEmails([]);
-  };
-
 
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
-      <input
-        type={type}
-        className={
-          !error
-            ? `form-control ${styles.formInput} `
-            : `form-control is-invalid ${styles.formInput} ${styles.formInputError}`
-        }
-        id={`floatingInput-${labelText}`}
-        placeholder={placeholder}
-        autoComplete="off"
-        {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
-        onChange={handleInputChange}
-        value={inputValue}
+      <Autocomplete
+        options={veterinarios}
+        getOptionLabel={(option) => option?.email || ""}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        value={selectedVet}
+        onChange={handleChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
+            error={!!error}
+            helperText={error || ""}
+            label={labelText}
+            placeholder={placeholder}
+            autoComplete="off"
+            sx={{
+              mt: "-10px",
+              "& .MuiOutlinedInput-root": {
+                border: `1px solid ${error ? "#FF4C4C" : "#1BBCB6"}`,
+                boxShadow: error ? "none" : "10px 7px 15px 0px rgba(27, 188, 182, 0.18)",
+                mb: error ? "0px" : "50px",
+                "& fieldset": { border: "none" },
+              },
+              "& .MuiOutlinedInput-root.Mui-focused": {
+                border: `3px solid ${error ? "#FF4C4C" : "#1BBCB6"}`,
+                outline: "none",
+              },
+              "& .MuiFormHelperText-root": {
+                color: error ? "#FF4C4C" : "inherit",
+                pt: "10px",
+                textAlign: "center",
+                height: "45px",
+              },
+              "& .MuiInputLabel-root": {
+                color: error ? "#FF4C4C" : "#1BBCB6",
+                backgroundColor: "white",
+              },
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: error ? "#FF4C4C" : "#1BBCB6",
+              },
+            }}
+          />
+        )}
+        renderOption={(props, option) => (
+          <ListItem
+            {...props}
+            key={option.id}
+            sx={{
+              display: "block",
+              borderBottom: "1px solid #e0e0e0",
+              padding: "8px 16px",
+              cursor: "pointer",
+            }}
+          >
+            <Box>
+              <Box sx={{ fontWeight: "bold", marginBottom: "4px" }}>{option.email}</Box>
+              <Box sx={{ color: "text.secondary", marginBottom: "4px" }}>
+                {option.nombre} {option.apellido}
+              </Box>
+              <Box>
+                <strong>Matrícula:</strong> {option.matricula}
+              </Box>
+            </Box>
+          </ListItem>
+        )}
+        noOptionsText="No se encontraron veterinarios"
+        disablePortal
+        fullWidth
       />
-      <label
-        className={!error ? ` ${styles.formLoginLabel} text-info ` : `text-danger`}
-        htmlFor={`floatingInput-${labelText}`}
-      >
-        {labelText}
-      </label>
-
-      <div className={`p-2 rounded-2 ${styles.usersBox} ${filteredEmails.length === 0 ? `d-none` : `d-block`}`}>
-        <div className={`d-flex  flex-column text-center`}>
-          {filteredEmails.map((due) => (
-            <div
-              key={due.id}
-              onClick={() => {
-                selectedDue(due);
-              }}
-              className={`d-flex flex-column border mb-2 rounded-3 ${styles.cursor}`}
-            >
-              <div>{due.email}</div>
-              <div>
-                {due.nombre} {due.apellido}
-              </div>
-              <div>
-                <span className="fw-bold">Matricula: </span> {due.matricula}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {error ? (
-        <div className={`${styles.errorContainer}`}>
-          <div className={`text-center  ${styles.errorMensaje}`}>{error}</div>
-        </div>
-      ) : (
-        <div className={`${styles.spaceErrorMsg}`}></div>
-      )}
     </div>
   );
 };

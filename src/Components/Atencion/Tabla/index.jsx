@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styles from "./tabla-atencion.module.css";
 import { handleDate } from "../../../Functions/utiities.js";
-import { ModalAtencion } from "../../Shared";
+import { ModalAtencion, Toast, ModalAlert } from "../../Shared";
 import { useDispatch, useSelector } from "react-redux";
 import { getAtenciones, deleteAtencion } from "../../../redux/atenciones/thunks.js";
 import { initUsers } from "../../../redux/users/thunks.js";
@@ -12,11 +12,16 @@ import { getRazas } from "../../../redux/razas/thunks.js";
 const TablaAtencion = () => {
   const [modal, setModal] = useState(false);
   const [dataFilaAtencion, setDataFilaAtencion] = useState({});
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+  const [showModalAlert, setShowModalAlert] = useState(false);
+  const [idToEliminate, setIdToEliminate] = useState(null);
 
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { atenciones, pending, error } = useSelector((state) => state.atenciones);
+  const { atenciones } = useSelector((state) => state.atenciones);
   const { users } = useSelector((state) => state.users);
   const { especies } = useSelector((state) => state.especies);
   const { razas } = useSelector((state) => state.razas);
@@ -35,10 +40,16 @@ const TablaAtencion = () => {
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteAtencion(id));
-      console.log("Eliminada correctamente");
+      setShowToast(true);
+      setToastMessage("Eliminada correctamente");
+      setToastType("Success");
       await dispatch(getAtenciones());
     } catch (error) {
-      console.log("Error al eliminar atencion", error);
+      setShowToast(true);
+      setToastMessage("Error al eliminar atencion");
+      setToastType("Error");
+    } finally {
+      setShowModalAlert(false);
     }
   };
 
@@ -118,7 +129,8 @@ const TablaAtencion = () => {
                       className={`${styles.tableIcon}`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(ate.id);
+                        setIdToEliminate(ate.id);
+                        setShowModalAlert(true);
                       }}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
@@ -137,8 +149,18 @@ const TablaAtencion = () => {
           setDataFilaAtencion={setDataFilaAtencion}
           owners={users}
           raza={razas}
+          setShowToast={setShowToast}
+          setToastMessage={setToastMessage}
+          setToastType={setToastType}
         />
       )}
+      <ModalAlert
+        text="¿Desea eliminar la atencion?"
+        clickAction={() => handleDelete(idToEliminate)}
+        showModal={showModalAlert}
+        setShowModal={setShowModalAlert}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
