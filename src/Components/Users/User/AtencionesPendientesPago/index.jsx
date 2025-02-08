@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAtenciones } from "../../../../redux/atenciones/thunks.js";
-import "./AtencionesPendientesPago.css"; // Importamos el CSS
+import "./AtencionesPendientesPago.css";
 
 const AtencionesPendientesPago = () => {
   const dispatch = useDispatch();
 
-  // Obtener atenciones y usuario logueado
+
   const { atenciones, pending, error } = useSelector((state) => state.atenciones);
-  const usuario = useSelector((state) => state.auth.usuario); // Ajusta según tu estado global
+  const usuario = useSelector((state) => state.auth.usuario); 
 
   useEffect(() => {
     dispatch(getAtenciones());
@@ -17,7 +17,6 @@ const AtencionesPendientesPago = () => {
   if (pending) return <p className="loading">Cargando atenciones pendientes de pago...</p>;
   if (error) return <p className="error">Error: {error}</p>;
 
-  // Filtrar atenciones por usuario logueado
   const atencionesUsuario = atenciones?.filter(
     (atencion) => atencion.usuario_id === usuario?.id
   );
