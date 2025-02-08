@@ -1,48 +1,46 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAtenciones } from "../../../../redux/atenciones/thunks.js";
-
-import styles from "./AtencionesPendientesPago.css";
+import "./AtencionesPendientesPago.css"; // Importamos el CSS
 
 const AtencionesPendientesPago = () => {
-
   const dispatch = useDispatch();
 
+  // Obtener atenciones y usuario logueado
   const { atenciones, pending, error } = useSelector((state) => state.atenciones);
-
+  const usuario = useSelector((state) => state.auth.usuario); // Ajusta según tu estado global
 
   useEffect(() => {
     dispatch(getAtenciones());
   }, [dispatch]);
 
-  if (pending) return <p>Cargando atenciones pendientes de pago...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (pending) return <p className="loading">Cargando atenciones pendientes de pago...</p>;
+  if (error) return <p className="error">Error: {error}</p>;
+
+  // Filtrar atenciones por usuario logueado
+  const atencionesUsuario = atenciones?.filter(
+    (atencion) => atencion.usuario_id === usuario?.id
+  );
 
   return (
-    <div className={styles.container}>
-      <h1>Atenciones Pendientes de Pago</h1>
-      {atenciones.length > 0 ? (
-        <ul className={styles.list}>
-          {console.log(atenciones)}
-          {atenciones?.map((atencion) => (
-            <li key={atencion.id} className={styles.item}>
-              <p>
-                <strong>Fecha:</strong> {atencion.fecha_hora_atencion}
-              </p>
-              <p>
-                <strong>Mascota:</strong> {atencion.mascota.nombre}
-              </p>
-              <p>
-                <strong>Monto:</strong> {atencion.importe}
-              </p>
-            </li>
+    <div className="container">
+      <h1 className="title">Atenciones Pendientes de Pago</h1>
+      {atencionesUsuario.length > 0 ? (
+        <div className="grid">
+          {atencionesUsuario.map((atencion) => (
+            <div key={atencion.id} className="card">
+              <p><strong>Fecha:</strong> {atencion.fecha_hora_atencion}</p>
+              <p><strong>Mascota:</strong> {atencion.mascota.nombre}</p>
+              <p><strong>Monto:</strong> ${atencion.importe}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
-        <p>No hay atenciones pendientes de pago.</p>
+        <p className="no-data">No hay atenciones pendientes de pago.</p>
       )}
     </div>
   );
 };
 
 export default AtencionesPendientesPago;
+

@@ -5,18 +5,18 @@ import styles from "./userDashboard.module.css";
 const Dashboard = () => {
   const history = useHistory();
 
-  const handleOptionClick = (option) => {
-    alert(`Redirigiendo a ${option}`);
-    // history(`/${option.toLowerCase().replace(/\s/g, "-")}`); cuando se agreguen las rutas poner la redireccion hacia ahi
+  const handleOptionClick = (path) => {
+    history.push(path); // Redirige a la ruta correspondiente
   };
 
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>Dashboard Cliente - Veterinaria</header>
       <div className={styles.optionsGrid}>
+        
         <div
           className={styles.optionCard}
-          onClick={() => handleOptionClick("Atenciones Pendientes de Pago")}
+          onClick={() => handleOptionClick("/user/atenciones-pendientes")}
         >
           <div className={styles.icon}>💳</div>
           <p>Atenciones Pendientes de Pago</p>
@@ -24,15 +24,7 @@ const Dashboard = () => {
 
         <div
           className={styles.optionCard}
-          onClick={() => handleOptionClick("Historial de Atenciones")}
-        >
-          <div className={styles.icon}>📜</div>
-          <p>Historial de Atenciones</p>
-        </div>
-      
-        <div
-          className={styles.optionCard}
-          onClick={() => handleOptionClick("Atenciones")}
+          onClick={() => handleOptionClick("/user/atencion")}
         >
           <div className={styles.icon}>📋</div>
           <p>Atenciones</p>
@@ -40,15 +32,23 @@ const Dashboard = () => {
 
         <div
           className={styles.optionCard}
-          onClick={() => handleOptionClick("Mascotas")}
+          onClick={() => handleOptionClick("/user/dash")}
+        >
+          <div className={styles.icon}>📜</div>
+          <p>Historial de Atenciones</p>
+        </div>
+
+        <div
+          className={styles.optionCard}
+          onClick={() => handleOptionClick("/user/mascotas")}
         >
           <div className={styles.icon}>🐾</div>
           <p>Mascotas</p>
         </div>
+
       </div>
     </div>
   );
 };
 
 export default Dashboard;
-
