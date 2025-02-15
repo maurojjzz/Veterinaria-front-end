@@ -1,37 +1,54 @@
-import { useState } from "react";
-// import styles from './signup.module.css'
-import { Button } from "@mui/material";
-import { Toast, ModalAlert } from "../../Shared";
+import { Box } from "@mui/material";
+import Form from "./Form/Form.jsx"; 
 
 const SignUp = () => {
-  const [error, setError] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-
+ 
   return (
-    <div>
-      <h1>Sign Up en desarrollo</h1>
-      {error && <Toast title={"Info"} message={"Error al loguearse"} setError={setError} />}
-
-      <Button
-        variant="contained"
-        onClick={() => {
-          setShowModal(true);
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection:  "row" ,
+        justifyContent: { xs: "center", lg: "space-evenly" },
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Box
+        sx={{
+          display: { xs: "none", lg: "flex" },
+          borderRight: 4,
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          flexGrow: 1,
+          maxWidth: "50%",
         }}
       >
-        Prueba
-      </Button>
-      
-      <ModalAlert
-        text={"Prbando"}
-        clickAction={() => {
-          setError(false);
-          setShowModal(false);
+        <Box sx={{ maxWidth: "85%" }}>
+          <img
+            src={`${process.env.PUBLIC_URL}/assets/images/Veterinary-rafiki.png`}
+            alt="Foto veterinaria animada"
+            style={{ width: "100%" }}
+          />
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          border:"1px solid blue",
+          height: "100%",
+          // justifyContent: "center",
+          // alignItems: "center",
+          flexGrow: 1,
         }}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
-    </div>
+      >
+        <Form />
+      </Box>
+    </Box>
   );
 };
 
 export default SignUp;
+
+
