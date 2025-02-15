@@ -4,6 +4,7 @@
   overflow: hidden;
   background-color: #a9c3b8fd;
   height: 100vh;
+  padding-top: 75px;
 }
 .sidebar.expanded {
   width: 200px;

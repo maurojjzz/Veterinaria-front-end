@@ -1,11 +1,13 @@
-.whole_layout_cont{
-    min-height: 100vh;
+.whole_layout_cont {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (min-width: 767px) {
-    .contentChild{
-        flex-grow: 1;
-        padding-left: 50px;
-     }
+  .contentChild {
+    flex-grow: 1;
+    padding-top: 75px; 
+    overflow: auto;
+  }
 }
-
