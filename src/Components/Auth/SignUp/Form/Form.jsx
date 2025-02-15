@@ -18,30 +18,45 @@ const Form = () => {
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
-        // justifyContent: "center",
         alignItems: "center",
-        overflowY: "scroll",
+        minHeight: "90vh",
+        width: "100%",
+        marginTop: { xs: "80px", md: "0px" },
       }}
     >
-      <Typography
-        variant="h3"
-        sx={{
-          fontFamily: "Roboto, sans-serif",
-          fontSize: "32px",
-        }}
-      >
-        Sign Up
-      </Typography>
       <Box
         component="form"
         onSubmit={handleSubmit((data) => console.log(data))}
         sx={{
-          border: "1px solid red",
           width: "100%",
           flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "20px",
         }}
       >
-        <Box>
+        <Typography
+          variant="h3"
+          sx={{
+            fontFamily: "Roboto, sans-serif",
+            fontSize: "32px",
+            paddingBottom: "40px",
+          }}
+        >
+          Sign Up
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "85%",
+          }}
+        >
           <Input
             labelText={`Nombre`}
             placeholder={`Lionel`}
@@ -59,7 +74,16 @@ const Form = () => {
             // error={errors.email?.message}
           />
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "85%",
+          }}
+        >
           <Input
             labelText={`Telefono`}
             placeholder={`1234567890`}
@@ -77,7 +101,16 @@ const Form = () => {
             // error={errors.email?.message}
           />
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "85%",
+          }}
+        >
           <Input
             labelText={`DNI`}
             placeholder={`12345678`}
@@ -95,7 +128,16 @@ const Form = () => {
             // error={errors.email?.message}
           />
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "85%",
+          }}
+        >
           <Input
             labelText={`Contraseña`}
             placeholder={`**********`}
@@ -115,7 +157,6 @@ const Form = () => {
         </Box>
 
         <ButtonSubmit type={"submit"} msg={"CONFIRMAR CUENTA"} />
-
       </Box>
     </Box>
   );

@@ -1,8 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import Form from "./Form/Form.jsx"; 
+// import theme from "../../../themes/theme.js";
 
 const SignUp = () => {
  
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -10,18 +13,18 @@ const SignUp = () => {
         flexDirection:  "row" ,
         justifyContent: { xs: "center", lg: "space-evenly" },
         alignItems: "center",
-        height: "100vh",
+        minHeight: "100vh",
       }}
     >
+
       <Box
         sx={{
           display: { xs: "none", lg: "flex" },
-          borderRight: 4,
           height: "100%",
           justifyContent: "center",
           alignItems: "center",
           flexGrow: 1,
-          maxWidth: "50%",
+          maxWidth: "45%",
         }}
       >
         <Box sx={{ maxWidth: "85%" }}>
@@ -36,10 +39,8 @@ const SignUp = () => {
       <Box
         sx={{
           display: "flex",
-          border:"1px solid blue",
-          height: "100%",
-          // justifyContent: "center",
-          // alignItems: "center",
+          borderLeft:`3px solid #dfe3e6`,
+          height: "100vh",
           flexGrow: 1,
         }}
       >
@@ -50,5 +51,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-
