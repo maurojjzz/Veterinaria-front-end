@@ -7,9 +7,9 @@ import {
   logoutError,
   logoutPenging,
   logoutSuccess,
-  //   signUpError,
-  //   signUpPenging,
-  //   signUpSuccess,
+  signUpError,
+  signUpPending,
+  signUpSuccess,
 } from "./actions.js";
 
 export const login = (data) => {
@@ -30,10 +30,29 @@ export const login = (data) => {
       );
       dispatch(loginError(undefined));
     } catch (error) {
-      dispatch(loginError(error.response.data.error));
+      dispatch(loginError(error.response?.data?.error || "Error al iniciar sesión"));
       throw error;
     } finally {
       dispatch(loginPenging(false));
+    }
+  };
+};
+
+export const signUp = (data) => {
+  return async (dispatch) => {
+    dispatch(signUpPending(true));
+    try {
+      const res = await axios.post("/auth/signup", data);
+      const dataRes = res.data;
+      console.log(dataRes);
+
+      dispatch(signUpSuccess());
+      dispatch(signUpError(undefined));
+    } catch (error) {
+      dispatch(signUpError(error.response?.data?.error || "Error al registrarse"));
+      throw error;
+    } finally {
+      dispatch(signUpPending(false));
     }
   };
 };

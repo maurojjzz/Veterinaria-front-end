@@ -1,16 +1,31 @@
+import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { Input, ButtonSubmit } from "../../../Shared";
 import { useForm } from "react-hook-form";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { usuarioSchema } from "../../../../Validations";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const Form = () => {
+
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "onBlur",
-    // resolver: joiResolver(loginSchema),
+    mode: "all",
+    resolver: joiResolver(usuarioSchema),
   });
+
+  const actionSumbit = (data) => {
+    //aca agrego el id de usuario para que tenga ese rol negri
+    console.log(data);
+    setIsLoading(true);
+  };
 
   return (
     <Box
@@ -26,7 +41,7 @@ const Form = () => {
     >
       <Box
         component="form"
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleSubmit(actionSumbit)}
         sx={{
           width: "100%",
           flexGrow: 1,
@@ -50,7 +65,7 @@ const Form = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
+            flexDirection: { xs: "column", m_sm: "row" },
             justifyContent: "space-evenly",
             alignItems: "center",
             flexWrap: "wrap",
@@ -61,23 +76,23 @@ const Form = () => {
             labelText={`Nombre`}
             placeholder={`Lionel`}
             type={`text`}
-            name={"name"}
+            name={"nombre"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.nombre?.message}
           />
           <Input
             labelText={`Apellido`}
             placeholder={`Messi`}
             type={`text`}
-            name={"surname"}
+            name={"apellido"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.apellido?.message}
           />
         </Box>
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
+            flexDirection: { xs: "column", m_sm: "row" },
             justifyContent: "space-evenly",
             alignItems: "center",
             flexWrap: "wrap",
@@ -88,23 +103,23 @@ const Form = () => {
             labelText={`Telefono`}
             placeholder={`1234567890`}
             type={`tel`}
-            name={"phone"}
+            name={"telefono"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.telefono?.message}
           />
           <Input
             labelText={`Direccion`}
             placeholder={`Calle 123`}
             type={`text`}
-            name={"address"}
+            name={"direccion"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.direccion?.message}
           />
         </Box>
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
+            flexDirection: { xs: "column", m_sm: "row" },
             justifyContent: "space-evenly",
             alignItems: "center",
             flexWrap: "wrap",
@@ -115,9 +130,9 @@ const Form = () => {
             labelText={`DNI`}
             placeholder={`12345678`}
             type={`number`}
-            name={"dni"}
+            name={"nro_doc"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.nro_doc?.message}
           />
           <Input
             labelText={`Email`}
@@ -125,13 +140,13 @@ const Form = () => {
             type={`email`}
             name={"email"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.email?.message}
           />
         </Box>
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
+            flexDirection: { xs: "column", m_sm: "row" },
             justifyContent: "space-evenly",
             alignItems: "center",
             flexWrap: "wrap",
@@ -144,19 +159,22 @@ const Form = () => {
             type={`password`}
             name={"password"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.password?.message}
           />
           <Input
             labelText={`Confirmar contraseña`}
             placeholder={`**********`}
             type={`password`}
-            name={"confirmPassword"}
+            name={"repeatPassword"}
             register={register}
-            // error={errors.email?.message}
+            error={errors.repeatPassword?.message}
           />
         </Box>
 
-        <ButtonSubmit type={"submit"} msg={"CONFIRMAR CUENTA"} />
+        <ButtonSubmit
+          type={"submit"}
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `CREAR CUENTA`}
+        />
       </Box>
     </Box>
   );
