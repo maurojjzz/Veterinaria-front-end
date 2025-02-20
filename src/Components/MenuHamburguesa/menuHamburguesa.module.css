@@ -4,6 +4,7 @@
     height: 100vh;
     background-color: #a9c3b8fd;
     z-index: 10;
+    margin-top: 75px;
 }
 .navContainer{
     list-style-type: none;

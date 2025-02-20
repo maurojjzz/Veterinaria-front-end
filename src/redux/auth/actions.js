@@ -31,7 +31,7 @@ export const loginError = (error) => {
   };
 };
 
-export const signUpPenging = (pending) => {
+export const signUpPending = (pending) => {
   return {
     type: SIGN_UP_PENDING,
     payload: pending,

@@ -45,9 +45,9 @@ const authReducer = (state = initialState, action) => {
     case SIGN_UP_SUCCESS:
       return {
         ...state,
-        token: action.payload.token,
-        role: action.payload.role,
-        authenticated: true,
+        token: undefined,
+        role: undefined,
+        authenticated: false,
       };
     case LOGOUT_SUCCESS:
       return {

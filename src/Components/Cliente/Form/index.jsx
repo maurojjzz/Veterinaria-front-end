@@ -44,7 +44,7 @@ const FormClient = () => {
     telefono: dataForm?.telefono,
     nro_doc: dataForm?.nro_doc,
     direccion: dataForm?.direccion,
-    rol: dataForm?.rol || "65334d8d48ec52ff5e08c85a",
+    rol: dataForm?.rol || process.env.REACT_APP_USER_TYPE_ID,
     mascotas: dataForm?.mascotas,
   };
 
