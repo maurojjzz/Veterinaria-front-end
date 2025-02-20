@@ -1,8 +1,11 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import styles from "./home.module.css";
 import Footer from "../Footer";
 
 const Home = () => {
+  const history = useHistory();
+
   return (
     <div>
       <div id="hero" className={`position-relative ${styles.heroSection}`}>
@@ -17,7 +20,12 @@ const Home = () => {
           <h2 className={styles.heroTitle}>Cuidamos a tus mascotas como parte de nuestra familia</h2>
           <p className={styles.heroText}>Servicios veterinarios de calidad con atención personalizada.</p>
           <div className={styles.heroButtons}>
-            <button className={styles.btnPrimary}>Ver Servicios</button>
+            <button 
+              className={styles.btnPrimary} 
+              onClick={() => history.push("/user/dash")}
+            >
+              Ver Servicios
+            </button>
             <button className={styles.btnSecondary}>Agendar Cita</button>
           </div>
         </div>
@@ -28,3 +36,4 @@ const Home = () => {
 };
 
 export default Home;
+
