@@ -1,22 +1,25 @@
-import { Box, useTheme } from "@mui/material";
-import Form from "./Form/Form.jsx"; 
-// import theme from "../../../themes/theme.js";
+import { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import Form from "./Form/Form.jsx";
+import { Logged } from "../../Shared";
 
 const SignUp = () => {
- 
-  const theme = useTheme();
+  const [logged, setLogged] = useState(false);
+
+  useEffect(() => {
+    setLogged(localStorage.getItem("token"));
+  }, [logged]);
 
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection:  "row" ,
+        flexDirection: "row",
         justifyContent: { xs: "center", lg: "space-evenly" },
         alignItems: "center",
         minHeight: "100vh",
       }}
     >
-
       <Box
         sx={{
           display: { xs: "none", lg: "flex" },
@@ -29,7 +32,7 @@ const SignUp = () => {
       >
         <Box sx={{ maxWidth: "85%" }}>
           <img
-            src={`${process.env.PUBLIC_URL}/assets/images/Veterinary-rafiki.png`}
+            src={`${process.env.PUBLIC_URL}/assets/images/Veterinary-pana.png`}
             alt="Foto veterinaria animada"
             style={{ width: "100%" }}
           />
@@ -39,13 +42,14 @@ const SignUp = () => {
       <Box
         sx={{
           display: "flex",
-          borderLeft:`3px solid #dfe3e6`,
+          borderLeft: `3px solid #dfe3e6`,
           height: "100vh",
           flexGrow: 1,
         }}
       >
         <Form />
       </Box>
+      {logged && <Logged setLogged={setLogged} />}
     </Box>
   );
 };

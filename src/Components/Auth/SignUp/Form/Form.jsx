@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { Input, ButtonSubmit } from "../../../Shared";
 import { useForm } from "react-hook-form";
@@ -6,25 +6,54 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { usuarioSchema } from "../../../../Validations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { signUp } from "../../../../redux/auth/thunks.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { Toast, ModalAlert } from "../../../Shared";
 
 const Form = () => {
-
   const [isLoading, setIsLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const { error, pending } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (error) {
+      setToastMessage(error);
+      setShowToast(true);
+    }
+  }, [error]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
     mode: "all",
     resolver: joiResolver(usuarioSchema),
   });
 
-  const actionSumbit = (data) => {
-    //aca agrego el id de usuario para que tenga ese rol negri
-    console.log(data);
+  const actionSumbit = async (data) => {
     setIsLoading(true);
+    try {
+      await dispatch(signUp(data));
+      setShowModal(true);
+      reset();
+    } catch (error) {
+      console.error(error);
+      setToastMessage("Error al crear usuario");
+      setShowToast(true);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
   };
 
   return (
@@ -50,6 +79,7 @@ const Form = () => {
           alignItems: "center",
           justifyContent: "center",
           gap: "20px",
+          paddingBottom: "40px",
         }}
       >
         <Typography
@@ -171,11 +201,23 @@ const Form = () => {
           />
         </Box>
 
-        <ButtonSubmit
-          type={"submit"}
-          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `CREAR CUENTA`}
-        />
+        <ButtonSubmit type={"submit"} msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `CREAR CUENTA`} />
       </Box>
+      <ModalAlert
+        text="¡Usuario creado con exito! Inicia sesion para continuar"
+        clickAction={() => history.push("/auth/login")}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          title={"Error"}
+          setError={() => {
+            setShowToast(false);
+          }}
+        />
+      )}
     </Box>
   );
 };
