@@ -20,10 +20,7 @@ const Home = () => {
           <h2 className={styles.heroTitle}>Cuidamos a tus mascotas como parte de nuestra familia</h2>
           <p className={styles.heroText}>Servicios veterinarios de calidad con atención personalizada.</p>
           <div className={styles.heroButtons}>
-            <button 
-              className={styles.btnPrimary} 
-              onClick={() => history.push("/user/dash")}
-            >
+            <button className={styles.btnPrimary} onClick={() => history.push("/user/dash")}>
               Ver Servicios
             </button>
             <button className={styles.btnSecondary}>Agendar Cita</button>
