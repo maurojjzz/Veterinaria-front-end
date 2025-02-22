@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { Input, ButtonSubmit } from "../../Shared";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, ButtonSubmit, Toast, ModalAlert } from "../../Shared";
 import styles from "./formVeterinario.module.css";
 import { veterinarioSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -13,6 +13,11 @@ import Typography from "@mui/material/Typography";
 
 const FormVeterinario = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState(null);
 
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -20,6 +25,8 @@ const FormVeterinario = () => {
   const history = useHistory();
 
   const dataForm = location.state?.params;
+
+  const { pending, error } = useSelector((state) => state.veterinarios);
 
   const veterinarioDataUpdate = {
     matricula: dataForm?.matricula,
@@ -43,17 +50,24 @@ const FormVeterinario = () => {
     },
   });
 
-  const goBackToTable = () => {
+  useEffect(() => {
+    if (!pending && error) {
+      setToastMessage(error);
+      setToastType("Error");
+      setShowToast(true);
+    }
+  }, [error, pending]);
+
+  const goBackToTable = (message, type = "Success") => {
     setTimeout(() => {
-      history.push("/admin/veterinarios");
+      history.push("/admin/veterinarios", { state: { message, type } });
     }, 2000);
   };
 
   const addVeterinario = async (data) => {
     try {
       await dispatch(addVet(data));
-      console.log("Se creó correctamente");
-      goBackToTable();
+      goBackToTable("Veterinario creado exitosamente");
     } catch (error) {
       console.error("Error al crear veterinario", error);
     } finally {
@@ -67,8 +81,7 @@ const FormVeterinario = () => {
     setIsLoading(true);
     try {
       await dispatch(updateVet(data));
-      console.log("Se actualizó correctamente");
-      goBackToTable();
+      goBackToTable("Veterinario actualizado correctamente");
     } catch (error) {
       console.error("Error al actualizar veterinario", error);
     } finally {
@@ -79,14 +92,23 @@ const FormVeterinario = () => {
   };
 
   const onSubmit = (data) => {
-    setIsLoading(true);
-    if (!id) {
-      addVeterinario(data);
-    } else {
+    if (id) {
       data.id = id;
-      updateVeterinario(data);
+    }
+    setFormData(data);
+    setShowModal(true);
+  };
+
+  const confirmAction = () => {
+    setIsLoading(true);
+    setShowModal(false);
+    if (!id) {
+      addVeterinario(formData);
+    } else {
+      updateVeterinario(formData);
     }
   };
+
 
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
@@ -187,6 +209,13 @@ const FormVeterinario = () => {
           disabled={isLoading}
         />
       </form>
+      <ModalAlert
+        text={id ? "¿Desea actualizar al veterinario?" : "¿Desea crear veterinario?"}
+        clickAction={confirmAction}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
