@@ -20,7 +20,7 @@ const Form = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { error, pending } = useSelector((state) => state.auth);
+  const { error } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (error) {
