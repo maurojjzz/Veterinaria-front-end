@@ -4,6 +4,7 @@ export { default as BoxVetIcon } from './BoxVetIcon';
 export { default as ButtonSubmit } from './ButtonSubmit';
 export { default as CheckPractices } from './CheckPractices';
 export { default as Input } from './Input';
+export { default as Loader } from './Loader/Loader';
 export { default as Logged } from './Logged/Logged';
 export { default as LoggedInfo } from './LoggedInfo';
 export { default as ModalAlert } from './ModalAlert';
