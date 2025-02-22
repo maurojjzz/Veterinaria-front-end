@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addAtencion, updateAtencion } from "../../../redux/atenciones/thunks.js";
 import { getVet } from "../../../redux/veterinarios/thunks.js";
 import { getPrecios } from "../../../redux/precios/thunks.js";
-import { TextField } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
@@ -115,9 +115,12 @@ const AtencionForm = () => {
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
       <form
-        className={`container d-flex flex-column align-items-center p-4 pt-5 rounded-3 ${styles.formContainer} `}
+        className={`container d-flex flex-column align-items-center pb-4 rounded-3 ${styles.formContainer} `}
         onSubmit={handleSubmit(onSubmit)}
       >
+        <Typography variant="h4" pb={4} pt={3}>
+          Atención
+        </Typography>
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >

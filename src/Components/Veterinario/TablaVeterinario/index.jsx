@@ -1,16 +1,19 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import styles from "./tabla-veterinarios.module.css";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteVet, getVet } from "../../../redux/veterinarios/thunks.js";
+import { useDispatch } from "react-redux";
+import { deleteVet } from "../../../redux/veterinarios/thunks.js";
+import { ModalAlert, Toast } from "../../Shared";
 
-const TablaVeterinario = () => {
+const TablaVeterinario = ({ data, setData }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [idVet, setIdVet] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+
   const history = useHistory();
-
   const dispatch = useDispatch();
-
-  const { veterinarios, pending, error } = useSelector((state) => state.veterinarios);
-
 
   const handleEdit = (veterinario) => {
     history.push(`/admin/veterinarios/form/${veterinario.id}`, {
@@ -18,17 +21,25 @@ const TablaVeterinario = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(getVet());
-  }, [dispatch]);
-
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteVet(id));
-      console.log("Eliminado correctamente");
-      await dispatch(getVet());
+      setData((prevData) => {
+        if (Array.isArray(prevData)) {
+          return prevData.filter((veterinario) => veterinario.id !== id);
+        }
+        return [];
+      });
+      setToastMessage("Veterinario eliminado correctamente");
+      setToastType("Info");
     } catch (error) {
-      console.log("Error al eliminar veterinario",error);
+      console.log(error);
+      setToastMessage("Error al eliminar Veterinario");
+      setToastType("Error");
+    } finally {
+      setShowToast(true);
+      setIdVet(null);
+      setShowModal(false);
     }
   };
 
@@ -49,7 +60,7 @@ const TablaVeterinario = () => {
             </tr>
           </thead>
           <tbody>
-            {veterinarios.map((vet, index) => (
+            {data.map((vet, index) => (
               <tr key={index} className={`${styles.fila}`}>
                 <td>{vet.matricula}</td>
                 <td>{vet.email}</td>
@@ -71,7 +82,10 @@ const TablaVeterinario = () => {
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={(event) => handleDelete(vet.id)}
+                      onClick={() => {
+                        setShowModal(true);
+                        setIdVet(vet.id);
+                      }}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
                     />
@@ -82,6 +96,13 @@ const TablaVeterinario = () => {
           </tbody>
         </table>
       </div>
+      <ModalAlert
+        text="¿Desea eliminar el veterinario?"
+        clickAction={() => handleDelete(idVet)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };

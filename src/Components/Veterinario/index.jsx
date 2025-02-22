@@ -1,14 +1,48 @@
-import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import styles from "./veterinario.module.css";
 import TablaVeterinario from "./TablaVeterinario";
+import { Toast } from "../Shared";
+import { getVet } from "../../redux/veterinarios/thunks.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const Veterinario = () => {
+  const [data, setData] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
   const history = useHistory();
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  const { veterinarios } = useSelector((state) => state.veterinarios);
+
+  useEffect(() => {
+    dispatch(getVet());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (veterinarios) {
+      setData(veterinarios);
+    }
+  }, [veterinarios]);
+
+
 
   const handleVeterinario = () => {
     history.push("/admin/veterinarios/form");
   };
+
+  useEffect(() => {
+    if (location.state?.state?.message) {
+      setToastMessage(location.state?.state?.message);
+      setToastType(location.state?.state.type);
+      setShowToast(true);
+      history.replace("/admin/veterinarios", {});
+    }
+  }, [location, history]);
+
 
   return (
     <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.clienteContainer}`}>
@@ -22,8 +56,10 @@ const Veterinario = () => {
         >
           <h3>Agregar Veterinario</h3>
         </div>
-        <TablaVeterinario />
+        <TablaVeterinario data={data} setData={setData} />
       </div>
+
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };

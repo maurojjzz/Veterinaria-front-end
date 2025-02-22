@@ -97,14 +97,14 @@ const LoginForm = () => {
         />
       </form>
       <div className={`w-100`}>
-        <p className={`${styles.forgotPass} ${styles.cursor} fw-medium text-center`}>Forgot password?</p>
+        <p className={`${styles.forgotPass} ${styles.cursor} fw-medium text-center`}>¿Olvido su contraseña?</p>
         <p
           className={`${styles.cursor}  fw-normal text-center`}
           onClick={() => {
             history.push("/auth/sign-up");
           }}
         >
-          Don't have an account? <span className={`forgotPass fw-medium ${styles.forgotPass}`}>Sign Up</span>
+          ¿No tienes una cuenta? <span className={`forgotPass fw-medium ${styles.forgotPass}`}>¡Crea Una!</span>
         </p>
       </div>
       {showToast && (

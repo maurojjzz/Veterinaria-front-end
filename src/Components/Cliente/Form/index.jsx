@@ -9,6 +9,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { addUser as addUserThunk, updateUser as updateUserThunk } from "../../../redux/users/thunks.js";
+import Typography from "@mui/material/Typography";
 
 const FormClient = () => {
   const [showToast, setShowToast] = useState(false);
@@ -40,7 +41,6 @@ const FormClient = () => {
     nombre: dataForm?.nombre,
     apellido: dataForm?.apellido,
     email: dataForm?.email,
-    password: dataForm?.password,
     telefono: dataForm?.telefono,
     nro_doc: dataForm?.nro_doc,
     direccion: dataForm?.direccion,
@@ -53,7 +53,7 @@ const FormClient = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "onBlur",
+    mode: "all",
     resolver: joiResolver(usuarioSchema),
     defaultValues: {
       ...usuarioDataUpdate,
@@ -112,9 +112,12 @@ const FormClient = () => {
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
       <form
-        className={`container d-flex flex-column align-items-center p-4 pt-5 rounded-3 ${styles.formContainer} `}
+        className={`container d-flex flex-column align-items-center pb-4 rounded-3 ${styles.formContainer} `}
         onSubmit={handleSubmit(onSubmit)}
       >
+        <Typography variant="h4" sx={{ paddingBottom: "20px", paddingTop: "20px" }}>
+          Usuarios
+        </Typography>
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
@@ -176,26 +179,28 @@ const FormClient = () => {
             error={errors.telefono?.message}
           />
         </div>
-        <div
-          className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
-        >
-          <Input
-            labelText={`Contraseña`}
-            placeholder={`Contraseña123`}
-            type={`Password`}
-            name={"password"}
-            register={register}
-            error={errors.password?.message}
-          />
-          <Input
-            labelText="Repetir Contraseña"
-            placeholder={`Contraseña123`}
-            type={`Password`}
-            name={`repeatPassword`}
-            register={register}
-            error={errors.repeatPassword?.message}
-          />
-        </div>
+        {!dataForm?.email && (
+          <div
+            className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
+          >
+            <Input
+              labelText={`Contraseña`}
+              placeholder={`Contraseña123`}
+              type={`Password`}
+              name={"password"}
+              register={register}
+              error={errors.password?.message}
+            />
+            <Input
+              labelText="Repetir Contraseña"
+              placeholder={`Contraseña123`}
+              type={`Password`}
+              name={`repeatPassword`}
+              register={register}
+              error={errors.repeatPassword?.message}
+            />
+          </div>
+        )}
         <ButtonSubmit
           msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
           clickAction={() => {}}
