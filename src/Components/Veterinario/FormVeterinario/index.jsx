@@ -9,6 +9,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { addVet, updateVet } from "../../../redux/veterinarios/thunks.js";
+import Typography from "@mui/material/Typography";
 
 const FormVeterinario = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,8 +28,7 @@ const FormVeterinario = () => {
     telefono: dataForm?.telefono,
     email: dataForm?.email,
     nro_doc: dataForm?.nro_doc,
-    password: dataForm?.password,
-    rol: dataForm?.rol || "65334db548ec52ff5e08c85b",
+    rol: dataForm?.rol || process.env.REACT_APP_USER_TYPE_ID,
   };
 
   const {
@@ -36,7 +36,7 @@ const FormVeterinario = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    mode: "onBlur",
+    mode: "all",
     resolver: joiResolver(veterinarioSchema),
     defaultValues: {
       ...veterinarioDataUpdate,
@@ -91,9 +91,12 @@ const FormVeterinario = () => {
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
       <form
-        className={`container d-flex flex-column align-items-center p-4 pt-5 rounded-3 ${styles.formContainer} `}
+        className={`container d-flex flex-column align-items-center p-4  rounded-3 ${styles.formContainer} `}
         onSubmit={handleSubmit(onSubmit)}
       >
+        <Typography variant="h4" pb={4}>
+          Veterinario
+        </Typography>
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
@@ -155,26 +158,28 @@ const FormVeterinario = () => {
             error={errors.nro_doc?.message}
           />
         </div>
-        <div
-          className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
-        >
-          <Input
-            labelText={`Contraseña`}
-            placeholder={`Contraseña`}
-            type={`password`}
-            name={"password"}
-            register={register}
-            error={errors.password?.message}
-          />
-          <Input
-            labelText={`Repetir Contraseña`}
-            placeholder={`Repetir Contraseña`}
-            type={`password`}
-            name={`repeatPassword`}
-            register={register}
-            error={errors.repeatPassword?.message}
-          />
-        </div>
+        {!dataForm?.email && (
+          <div
+            className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
+          >
+            <Input
+              labelText={`Contraseña`}
+              placeholder={`Contraseña`}
+              type={`password`}
+              name={"password"}
+              register={register}
+              error={errors.password?.message}
+            />
+            <Input
+              labelText={`Repetir Contraseña`}
+              placeholder={`Repetir Contraseña`}
+              type={`password`}
+              name={`repeatPassword`}
+              register={register}
+              error={errors.repeatPassword?.message}
+            />
+          </div>
+        )}
         <ButtonSubmit
           msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
           clickAction={() => {}}

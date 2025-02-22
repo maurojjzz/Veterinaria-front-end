@@ -41,7 +41,6 @@ const FormClient = () => {
     nombre: dataForm?.nombre,
     apellido: dataForm?.apellido,
     email: dataForm?.email,
-    // password: dataForm?.password,  habria q quitarlo ya que un admin no cambiaria password de otro
     telefono: dataForm?.telefono,
     nro_doc: dataForm?.nro_doc,
     direccion: dataForm?.direccion,
