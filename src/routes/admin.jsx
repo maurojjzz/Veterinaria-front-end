@@ -10,7 +10,8 @@ import Practica from "../Components/Practica";
 import FormPractica from "../Components/Practica/Form";
 import Atencion from '../Components/Atencion';
 import AtencionForm from "../Components/Atencion/Form";
-
+import Pets from "../Components/Mascotas"
+import PetsForm from "../Components/Mascotas/Form"
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch();
@@ -39,7 +40,13 @@ const AdminRoutes = () => {
       path: '/admin/atenciones',
       image: 'order-history.png',
       alt: 'icono de historial de atenciones'
-    }
+    },
+    {
+      name: "Mascotas",
+      path: "/admin/mascotas",
+      image: "pet.png",
+      alt: "icono de mascotas",
+    },
   ];
 
   
@@ -54,6 +61,8 @@ const AdminRoutes = () => {
         <Route path={`${url}/practicas/form/:id?`} component={FormPractica} />
         <Route exact path={`${url}/atenciones`} component={Atencion} />
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
+        <Route exact path={`${url}/mascotas`} component={Pets} />
+        <Route path={`${url}/mascotas/form/:id?`} component={PetsForm} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />
       </Switch>
