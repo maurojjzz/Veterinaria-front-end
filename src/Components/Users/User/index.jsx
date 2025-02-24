@@ -5,7 +5,7 @@ const Dashboard = () => {
   const history = useHistory()
 
   const handleOptionClick = (path) => {
-    history.push(path) // Redirige a la ruta correspondiente
+    history.push(path)
   }
 
   return (
