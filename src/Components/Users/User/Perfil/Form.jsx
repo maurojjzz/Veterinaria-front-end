@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Box } from "@mui/material";
 import { Input, ButtonSubmit, ModalAlert } from "../../../Shared";
 import { useForm } from "react-hook-form";
@@ -14,9 +15,8 @@ const Form = ({ dataForm }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState(null);
 
-//   console.log(dataForm, "data forma")
-
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     setIsLoading(false);
@@ -48,6 +48,12 @@ const Form = ({ dataForm }) => {
     }
   }, [dataForm, reset]);
 
+  const goBackToTable = (message, type = "Success") => {
+    setTimeout(() => {
+      history.push("/user/perfil", { state: { message, type } });
+    }, 2000);
+  };
+
   const onSubmit = (data) => {
     setFormData(data);
     setShowModal(true);
@@ -55,22 +61,21 @@ const Form = ({ dataForm }) => {
 
   const confirmAction = async () => {
     setIsLoading(true);
-    console.log(formData, "OTROOOOO");
     const newData = { ...formData, id: dataForm.id };
     try {
       await dispatch(updateUser(newData));
-
+      goBackToTable("Usuario actualizado correctamente");
     } catch (error) {
-
-        console.log(error);
+      console.log(error);
+      goBackToTable("Error al actualizar usuario", "Error");
     } finally {
+      setShowModal(false);
       setTimeout(() => {
         setIsLoading(false);
-        setShowModal(false);
       }, 2000);
-
     }
   };
+
 
   return (
     <Box
