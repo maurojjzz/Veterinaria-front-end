@@ -2,12 +2,23 @@ import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import AvatarLetras from "./AvatarLetras";
 import { decodeToken } from "../../../../Functions/utiities.js";
+import { LoaderShort } from "../../../Shared";
 
 const Perfil = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState("");
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
-    setUser(decodeToken(localStorage.getItem("token"))?.name);
+    try {
+      setUser(decodeToken(localStorage.getItem("token"))?.name);
+    } catch (error) {
+      console.error(error);
+      setUser("");
+    } finally {
+      setTimeout(() => {
+        setLoad(false);
+      }, 2000);
+    }
   }, [user]);
 
   return (
@@ -32,16 +43,15 @@ const Perfil = () => {
           alignItems: "center",
         }}
       >
-        <Box
-          sx={{
-
-          }}
-        >
+        <Box>
           <AvatarLetras user={user} />
-          <Typography variant="h4">{user}</Typography>
+          <Typography variant="h4" textAlign={"center"}>
+            {user}
+          </Typography>
         </Box>
 
         <Box component={`form`}>El formu aca</Box>
+        <LoaderShort load={load}/>
       </Box>
     </Box>
   );
