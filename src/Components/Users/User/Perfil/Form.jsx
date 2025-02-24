@@ -1,44 +1,81 @@
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
-import { Input, ButtonSubmit } from "../../../Shared";
+import { Input, ButtonSubmit, ModalAlert } from "../../../Shared";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { usuarioSchema } from "../../../../Validations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../../../../redux/users/thunks.js";
 
 const Form = ({ dataForm }) => {
-    
   const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState(null);
 
-  const usuarioDataUpdate = {
-    nombre: dataForm?.nombre,
-    apellido: dataForm?.apellido,
-    email: dataForm?.email,
-    telefono: dataForm?.telefono,
-    nro_doc: dataForm?.nro_doc,
-    direccion: dataForm?.direccion,
-    rol: dataForm?.rol || process.env.REACT_APP_USER_TYPE_ID,
-    mascotas: dataForm?.mascotas,
-  };
+//   console.log(dataForm, "data forma")
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, []);
 
   const {
     register,
-    // handleSubmit,
+    handleSubmit,
     formState: { errors },
-    // reset,
+    reset,
   } = useForm({
     mode: "all",
     resolver: joiResolver(usuarioSchema),
-    defaultValues: {
-      ...usuarioDataUpdate,
-    },
   });
+
+  useEffect(() => {
+    if (dataForm) {
+      const usuarioDataUpdate = {
+        nombre: dataForm?.nombre,
+        apellido: dataForm?.apellido,
+        email: dataForm?.email,
+        telefono: dataForm?.telefono,
+        nro_doc: dataForm?.nro_doc,
+        direccion: dataForm?.direccion,
+        rol: dataForm?.rol || process.env.REACT_APP_USER_TYPE_ID,
+        mascotas: dataForm?.mascotas,
+      };
+      reset(usuarioDataUpdate);
+    }
+  }, [dataForm, reset]);
+
+  const onSubmit = (data) => {
+    setFormData(data);
+    setShowModal(true);
+  };
+
+  const confirmAction = async () => {
+    setIsLoading(true);
+    console.log(formData, "OTROOOOO");
+    const newData = { ...formData, id: dataForm.id };
+    try {
+      await dispatch(updateUser(newData));
+
+    } catch (error) {
+
+        console.log(error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+        setShowModal(false);
+      }, 2000);
+
+    }
+  };
 
   return (
     <Box
       component={`form`}
+      onSubmit={handleSubmit(onSubmit)}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -132,6 +169,12 @@ const Form = ({ dataForm }) => {
         />
       </Box>
       <ButtonSubmit type={"submit"} msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ACTUALIZAR`} />
+      <ModalAlert
+        text={"Usted va a actualizar los datos de su cuenta"}
+        clickAction={confirmAction}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
     </Box>
   );
 };
