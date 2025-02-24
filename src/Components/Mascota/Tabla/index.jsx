@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import styles from "./tabla-mascotas.module.css"
+import styles from "./tabla-mascota.module.css"
 
 function MascotasTable({ onNavigate }) {
   const [pets, setPets] = useState([])

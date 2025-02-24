@@ -3,7 +3,7 @@
 import { useState } from "react"
 import MascotasTable from "./Tabla"
 import MascotasForm from "./Form"
-import styles from "./mascotas.module.css"
+import styles from "./mascota.module.css"
 
 function Mascotas() {
   const [currentView, setCurrentView] = useState("table")

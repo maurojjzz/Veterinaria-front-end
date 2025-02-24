@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import styles from "./form-mascotas.module.css"
+import styles from "./form-mascota.module.css"
 
 function MascotasForm({ id, onNavigate }) {
   const [formData, setFormData] = useState({
