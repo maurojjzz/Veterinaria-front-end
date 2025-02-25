@@ -86,7 +86,6 @@ const Form = ({ dataForm }) => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        border: "1px solid red",
         width: "100%",
         maxWidth: "900px",
         paddingBottom: "50px",

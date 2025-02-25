@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
+import KeyIcon from "@mui/icons-material/Key";
 import AvatarLetras from "./AvatarLetras";
 import Form from "./Form";
 import { decodeToken } from "../../../../Functions/utiities.js";
@@ -67,7 +68,6 @@ const Perfil = () => {
     >
       <Box
         sx={{
-          border: "1px solid blue",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -83,6 +83,20 @@ const Perfil = () => {
           <Typography variant="h4" textAlign={"center"}>
             {user?.nombre} {user?.apellido}
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            marginBottom: "20px",
+            width: "100%",
+            display: "flex",
+            justifyContent: { xs: "center", md: "flex-end" },
+            maxWidth: "750px",
+            paddingRight:{ xs: "0px", md: "50px" },
+          }}
+        >
+          <Button variant="outlined" color="success" endIcon={<KeyIcon />}>
+            Cambiar contraseña
+          </Button>
         </Box>
 
         <Form dataForm={user} setLoad={setLoad} />
