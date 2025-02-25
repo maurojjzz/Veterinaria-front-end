@@ -1,13 +1,14 @@
-import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom"
-import Layout from "../Components/Layout"
-import DasboardUser from "../Components/Users/User"
-import NotAllowed from "../Components/Auth/Not-Allowed"
-import Atencion from "../Components/Atencion"
-import AtencionesPendientesPago from "../Components/Users/User/AtencionesPendientesPago"
-import HistorialAtenciones from "../Components/Users/User/HistorialAtenciones"
+import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
+import Layout from "../Components/Layout";
+import DasboardUser from "../Components/Users/User";
+import NotAllowed from "../Components/Auth/Not-Allowed";
+import Atencion from "../Components/Atencion";
+import AtencionesPendientesPago from "../Components/Users/User/AtencionesPendientesPago";
+import HistorialAtenciones from "../Components/Users/User/HistorialAtenciones";
+import Perfil from "../Components/Users/User/Perfil/Perfil";
 
 const UsuarioRoutes = () => {
-  const { url } = useRouteMatch()
+  const { url } = useRouteMatch();
 
   const routes = [
     {
@@ -33,8 +34,13 @@ const UsuarioRoutes = () => {
       path: "/user/historial-atenciones",
       image: "history.png",
       alt: "history icon",
+    },{
+      name: "Perfil",
+      path: "/user/perfil",
+      image: "order-history.png",
+      alt: "Perfil icon",
     },
-  ]
+  ];
 
   return (
     <Layout routes={routes}>
@@ -43,14 +49,12 @@ const UsuarioRoutes = () => {
         <Route exact path={`${url}/atencion`} component={Atencion} />
         <Route exact path={`${url}/atenciones-pendientes`} component={AtencionesPendientesPago} />
         <Route exact path={`${url}/historial-atenciones`} component={HistorialAtenciones} />
+        <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/dash`} />
       </Switch>
     </Layout>
-  )
-}
+  );
+};
 
-export default UsuarioRoutes
-
-
-
+export default UsuarioRoutes;

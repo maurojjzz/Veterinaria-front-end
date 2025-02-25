@@ -65,7 +65,6 @@ const userSchema = Joi.object({
     .min(8)
     .max(25)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)
-    .required()
     .messages({
       "string.base": "La contraseña debe ser una cadena de texto",
       "string.empty": "La contraseña es un campo requerido",
@@ -74,7 +73,7 @@ const userSchema = Joi.object({
       "string.pattern.base":
         "La contraseña debe contener al menos una letra mayúscula, una letra minúscula y un número",
     }),
-  repeatPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+  repeatPassword: Joi.string().valid(Joi.ref("password")).messages({
     "string.base": "La contraseña debe ser una cadena de texto",
     "string.empty": "La contraseña es un campo requerido",
     "any.only": "Las contraseñas no coinciden"
