@@ -10,6 +10,7 @@ import Practica from "../Components/Practica";
 import FormPractica from "../Components/Practica/Form";
 import Atencion from '../Components/Atencion';
 import AtencionForm from "../Components/Atencion/Form";
+import Perfil from "../Components/Users/Admin//Perfil/Perfil";
 
 
 const AdminRoutes = () => {
@@ -39,7 +40,13 @@ const AdminRoutes = () => {
       path: '/admin/atenciones',
       image: 'order-history.png',
       alt: 'icono de historial de atenciones'
-    }
+    },
+    {
+      name: "Perfil",
+      path: "/admin/perfil",
+      image: "user.png",
+      alt: "Perfil icon",
+    },
   ];
 
   
@@ -54,6 +61,7 @@ const AdminRoutes = () => {
         <Route path={`${url}/practicas/form/:id?`} component={FormPractica} />
         <Route exact path={`${url}/atenciones`} component={Atencion} />
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
+        <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />
       </Switch>
