@@ -4,12 +4,14 @@ import { Box, Typography, Button } from "@mui/material";
 import KeyIcon from "@mui/icons-material/Key";
 import AvatarLetras from "./AvatarLetras";
 import Form from "./Form";
+import Password from "./Password/Password.jsx";
 import { decodeToken } from "../../../../Functions/utiities.js";
 import { LoaderShort, Toast } from "../../../Shared";
 import { useDispatch, useSelector } from "react-redux";
 import { initUsers } from "../../../../redux/users/thunks.js";
 
 const Perfil = () => {
+  const [password, setPassword] = useState(false);
   const [user, setUser] = useState("");
   const [load, setLoad] = useState(true);
   const [showToast, setShowToast] = useState(false);
@@ -53,6 +55,18 @@ const Perfil = () => {
     }
   }, [location, history]);
 
+  useEffect(() => {
+    if (password) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [password]);
+
   return (
     <Box
       sx={{
@@ -91,10 +105,10 @@ const Perfil = () => {
             display: "flex",
             justifyContent: { xs: "center", md: "flex-end" },
             maxWidth: "750px",
-            paddingRight:{ xs: "0px", md: "50px" },
+            paddingRight: { xs: "0px", md: "50px" },
           }}
         >
-          <Button variant="outlined" color="success" endIcon={<KeyIcon />}>
+          <Button variant="outlined" color="success" endIcon={<KeyIcon />} onClick={() => setPassword(true)}>
             Cambiar contraseña
           </Button>
         </Box>
@@ -104,6 +118,7 @@ const Perfil = () => {
         <LoaderShort load={load} />
         {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
       </Box>
+      {password && <Password setPassword={setPassword} id={user.id} />}
     </Box>
   );
 };
