@@ -26,18 +26,18 @@ const UsuarioRoutes = () => {
     {
       name: "Atenciones Pendientes de Pago",
       path: "/user/atenciones-pendientes",
-      image: "pending-payment.png",
+      image: "practica2.png",
       alt: "pending payments icon",
     },
     {
       name: "Historial de Atenciones por Fecha",
       path: "/user/historial-atenciones",
-      image: "history.png",
+      image: "practica2.png",
       alt: "history icon",
     },{
       name: "Perfil",
       path: "/user/perfil",
-      image: "order-history.png",
+      image: "user.png",
       alt: "Perfil icon",
     },
   ];
