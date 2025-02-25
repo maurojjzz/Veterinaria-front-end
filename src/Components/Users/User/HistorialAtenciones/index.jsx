@@ -21,78 +21,70 @@ const HistorialAtenciones = () => {
     dispatch(getAtenciones())
   }, [dispatch])
 
-  // Función para sumar un día a una fecha
   const addOneDay = (date) => {
     const newDate = new Date(date)
     newDate.setDate(newDate.getDate() + 1)
     return newDate
   }
 
-  // Validar fechas cuando cambian startDate o endDate
   const handleDateChange = (type, value) => {
-    const today = new Date() // Fecha actual
-    today.setHours(0, 0, 0, 0) // Normalizar la fecha actual a medianoche
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) 
 
     if (type === "start") {
       const newStartDate = value
       const start = newStartDate ? new Date(newStartDate) : null
       const end = endDate ? new Date(endDate) : null
 
-      // Validar si la fecha de inicio es posterior a la fecha actual
       if (start && start > today) {
         setError("No puede haber atenciones que hayan sido realizadas después del presente.")
-        setIsModalOpen(true) // Mostrar el modal de advertencia
-        return // No actualizar el estado
+        setIsModalOpen(true) 
+        return 
       }
 
-      // Validar si la fecha de inicio es mayor que la fecha de fin
       if (end && start > end) {
         setError("La fecha de inicio no puede ser posterior a la fecha de fin.")
-        setIsModalOpen(true) // Mostrar el modal de advertencia
-        return // No actualizar el estado
+        setIsModalOpen(true) 
+        return 
       }
 
       setError("")
       setIsModalOpen(false)
-      setStartDate(newStartDate) // Actualizar startDate solo si es válida
+      setStartDate(newStartDate) 
     } else if (type === "end") {
       const newEndDate = value
       const start = startDate ? new Date(startDate) : null
       const end = newEndDate ? new Date(newEndDate) : null
 
-      // Validar si la fecha de fin es posterior a la fecha actual
       if (end && end > today) {
         setError("No puede haber atenciones que hayan sido realizadas después del presente.")
-        setIsModalOpen(true) // Mostrar el modal de advertencia
-        return // No actualizar el estado
+        setIsModalOpen(true) 
+        return
       }
 
-      // Validar si la fecha de fin es menor que la fecha de inicio
       if (start && end < start) {
         setError("La fecha de fin no puede ser anterior a la fecha de inicio.")
-        setIsModalOpen(true) // Mostrar el modal de advertencia
-        return // No actualizar el estado
+        setIsModalOpen(true) 
+        return 
       }
 
       setError("")
       setIsModalOpen(false)
-      setEndDate(newEndDate) // Actualizar endDate solo si es válida
+      setEndDate(newEndDate) 
     }
   }
 
-  // Filtrar las atenciones del usuario logueado
+
   const atencionesUsuario = atenciones.filter((atencion) => atencion.usuario_id === usuario?.id)
 
-  // Filtrar por fecha y ordenar las atenciones
   const atencionesFiltradasYOrdenadas = atencionesUsuario
     .filter((atencion) => {
-      const atencionDate = new Date(atencion.fecha_hora_atencion) // Fecha de la atención
-      const start = startDate ? new Date(startDate) : null // Fecha de inicio
-      const end = endDate ? addOneDay(new Date(endDate)) : null // Fecha de fin (sumamos un día)
+      const atencionDate = new Date(atencion.fecha_hora_atencion) 
+      const start = startDate ? new Date(startDate) : null 
+      const end = endDate ? addOneDay(new Date(endDate)) : null 
 
-      // Comparar fechas
       const isAfterStart = !start || atencionDate >= start
-      const isBeforeEnd = !end || atencionDate < end // Usamos "<" porque sumamos un día a endDate
+      const isBeforeEnd = !end || atencionDate < end 
 
       return isAfterStart && isBeforeEnd
     })
@@ -116,8 +108,7 @@ const HistorialAtenciones = () => {
           className={styles.dateInput}
         />
       </div>
-
-      {/* Modal de advertencia */}
+      
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
