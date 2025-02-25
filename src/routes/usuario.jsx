@@ -34,6 +34,11 @@ const UsuarioRoutes = () => {
       path: "/user/historial-atenciones",
       image: "history.png",
       alt: "history icon",
+    },{
+      name: "Perfil",
+      path: "/user/perfil",
+      image: "order-history.png",
+      alt: "Perfil icon",
     },
   ];
 
