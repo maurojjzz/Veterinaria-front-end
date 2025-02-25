@@ -12,6 +12,8 @@ import Atencion from '../Components/Atencion';
 import AtencionForm from "../Components/Atencion/Form";
 import Pets from "../Components/Mascotas"
 import PetsForm from "../Components/Mascotas/Form"
+import Especies from '../Components/Especie';
+import EspeciesForm from '../Components/Especie/Form';
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch();
@@ -43,11 +45,15 @@ const AdminRoutes = () => {
     },
     {
       name: "Mascotas",
-      path: "/admin/mascotas",
-      image: "pet.png",
+      path: "/admin/mascota",
+      image: "Mascota.png",
       alt: "icono de mascotas",
-    },
-  ];
+    },{
+    name: "Especies",
+      path: "/admin/especie",
+      image: "Especie.png",
+      alt: "icono de especie",
+},];
 
   
   return (
@@ -61,8 +67,10 @@ const AdminRoutes = () => {
         <Route path={`${url}/practicas/form/:id?`} component={FormPractica} />
         <Route exact path={`${url}/atenciones`} component={Atencion} />
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
-        <Route exact path={`${url}/mascotas`} component={Pets} />
-        <Route path={`${url}/mascotas/form/:id?`} component={PetsForm} />
+        <Route exact path={`${url}/mascota`} component={Pets} />
+        <Route path={`${url}/mascota/form/:id?`} component={PetsForm} />
+        <Route exact path={`${url}/especie`} component={Especies} />
+        <Route path={`${url}/especie/form/:id?`} component={EspeciesForm} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />
       </Switch>

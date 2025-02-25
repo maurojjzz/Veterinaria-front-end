@@ -50,18 +50,26 @@ export const addEspecie = (especie) => {
 export const updateEspecie = (especie) => {
   return async (dispatch) => {
     dispatch(updateEspeciePending(true));
+
     try {
+      console.log("Especie a actualizar:", especie); 
+
+      if (!especie.id) {
+        throw new Error("El ID de la especie es undefined o null.");
+      }
+
       const { data } = await axios.put(`/especies/${especie.id}`, especie);
       dispatch(updateEspecieSuccess(data.data));
       dispatch(updateEspecieError(undefined));
     } catch (error) {
+      console.error("Error al actualizar especie:", error);
       dispatch(updateEspecieError(error.response?.data?.message || "Failed to update species"));
-      throw error;
     } finally {
       dispatch(updateEspeciePending(false));
     }
   };
 };
+
 
 export const deleteEspecie = (id) => {
   return async (dispatch) => {
