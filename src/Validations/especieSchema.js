@@ -9,4 +9,4 @@ const especieSchema = Joi.object({
   }),
 });
 
-export default especieSchema; // 👈 Exportación por defecto
+export default especieSchema; 

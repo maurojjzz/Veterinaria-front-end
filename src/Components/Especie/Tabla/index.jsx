@@ -22,13 +22,25 @@ const TablaEspecies = () => {
   }, [dispatch]);
 
   const agregarEspecie = async () => {
-    if (!nuevaEspecie.trim()) {
+    const descripcionLimpia = nuevaEspecie.trim();
+  
+    if (descripcionLimpia.length === 0) {
       mostrarToast("La descripción no puede estar vacía", "Error");
       return;
     }
-
+  
+    // Verificar si ya existe una especie con la misma descripción
+    const existe = especies.some(
+      (e) => e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase()
+    );
+  
+    if (existe) {
+      mostrarToast("La especie ya existe", "Error");
+      return;
+    }
+  
     try {
-      await dispatch(addEspecie({ descripcion: nuevaEspecie }));
+      await dispatch(addEspecie({ descripcion: descripcionLimpia }));
       setNuevaEspecie("");
       mostrarToast("Especie agregada correctamente", "Success");
       dispatch(getEspecie());
@@ -43,13 +55,27 @@ const TablaEspecies = () => {
   };
 
   const guardarEdicion = async (id) => {
-    if (!descripcionEditada.trim()) {
+    const descripcionLimpia = descripcionEditada.trim();
+  
+    if (descripcionLimpia.length === 0) {
       mostrarToast("La descripción no puede estar vacía", "Error");
       return;
     }
-
+  
+    // Verificar si ya existe otra especie con la misma descripción
+    const existe = especies.some(
+      (e) =>
+        e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase() &&
+        e.id !== id
+    );
+  
+    if (existe) {
+      mostrarToast("Ya existe una especie con esta descripción", "Error");
+      return;
+    }
+  
     try {
-      await dispatch(updateEspecie(id, { descripcion: descripcionEditada }));
+      await dispatch(updateEspecie({ id, descripcion: descripcionLimpia }));
       setEditandoEspecie(null);
       mostrarToast("Especie editada correctamente", "Success");
       dispatch(getEspecie());
@@ -152,4 +178,5 @@ const TablaEspecies = () => {
 };
 
 export default TablaEspecies;
+
 
