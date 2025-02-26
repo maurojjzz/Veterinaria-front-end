@@ -32,6 +32,23 @@ export const initUsers = () => {
   };
 };
 
+export const initAdmins = () => {
+  return async (dispatch) => {
+    dispatch(getUsersPending(true));
+    try {
+      const { data } = await axios.get('/usuarios');
+
+      const usuarios = data.data.filter((u) => u.rol.descripcion === 'Admin');
+      dispatch(getUsersSuccess(usuarios));
+      dispatch(getUsersError(undefined));
+    } catch (error) {
+      dispatch(getUsersError(error.response?.data?.message || 'Failed to fetch users'));
+    } finally {
+      dispatch(getUsersPending(false));
+    }
+  };
+};
+
 export const addUser = (user) => {
   return async (dispatch) => {
     dispatch(addUserPending(true));

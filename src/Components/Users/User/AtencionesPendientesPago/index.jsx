@@ -30,7 +30,6 @@ const AtencionesPendientesPago = () => {
     )
   }
 
-  // Filtrar las atenciones pendientes del usuario logueado
   const atencionesUsuario = atenciones.filter(isAtencionPendienteDePago)
 
   return (
