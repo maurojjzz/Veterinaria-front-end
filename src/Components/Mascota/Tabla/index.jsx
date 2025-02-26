@@ -1,122 +1,97 @@
-"use client"
+import { useState } from "react";
+import styles from "./tabla-mascota.module.css";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteMascota } from "../../../redux/mascotas/thunks.js";
+import { ModalAlert, Toast } from "../../Shared";
+import { justFecha } from "../../../Functions/utiities.js";
 
-import { useEffect, useState, useCallback } from "react"
-import styles from "./tabla-mascota.module.css"
+const TablaVeterinario = ({ data, setData, especies }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [idVMas, setIdMas] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
-function MascotasTable({ onNavigate }) {
-  const [pets, setPets] = useState([])
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [petToDelete, setPetToDelete] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const fetchPets = useCallback(async () => {
+  const handleEdit = (mascota) => {
+    history.push(`/admin/mascota/form/${mascota.id}`, {
+      params: { ...mascota },
+    });
+  };
+
+  const handleDelete = async (id) => {
     try {
-      const baseUrl = process.env.REACT_APP_API_URL || ""
-      const response = await fetch(`${baseUrl}/api/mascotas`)
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`)
-      }
-
-      const data = await response.json()
-      setPets(data)
+      await dispatch(deleteMascota(id));
+      setData((prevData) => {
+        if (Array.isArray(prevData)) {
+          return prevData.filter((masco) => masco.id !== id);
+        }
+        return [];
+      });
+      setToastMessage("Mascota eliminada correctamente");
+      setToastType("Info");
     } catch (error) {
-      console.error("Error al cargar mascotas:", error)
-      alert("No se pudieron cargar las mascotas")
+      console.log(error);
+      setToastMessage("Error al eliminar mascota");
+      setToastType("Error");
     } finally {
-      setIsLoading(false)
+      setShowToast(true);
+      setIdMas(null);
+      setShowModal(false);
     }
-  }, [])
-
-  useEffect(() => {
-    fetchPets()
-  }, [fetchPets])
-
-  const handleEdit = (id) => {
-    onNavigate("form", id)
-  }
-
-  const handleDelete = async () => {
-    if (!petToDelete) return
-
-    try {
-      const baseUrl = process.env.REACT_APP_API_URL || ""
-      const response = await fetch(`${baseUrl}/api/mascotas/${petToDelete}`, {
-        method: "DELETE",
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`)
-      }
-
-      alert("Mascota eliminada correctamente")
-      await fetchPets()
-    } catch (error) {
-      console.error("Error al eliminar:", error)
-      alert("No se pudo eliminar la mascota")
-    } finally {
-      setDeleteDialogOpen(false)
-      setPetToDelete(null)
-    }
-  }
-
-  if (isLoading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}>⌛</div>
-        <p>Cargando mascotas...</p>
-      </div>
-    )
-  }
+  };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.title}>Mascotas</h2>
-        <button onClick={() => onNavigate("form")} className={styles.newButton}>
-          Agregar Mascota
-        </button>
-      </div>
-
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead className={styles.tableHeader}>
+    <div className={`d-flex justify-content-center`}>
+      <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
+        <table className={`table table-hover ${styles.tabla}`}>
+          <thead>
             <tr>
-              <th className={styles.tableCell}>Nombre</th>
-              <th className={styles.tableCell}>Sexo</th>
-              <th className={`${styles.tableCell} ${styles.hiddenMobile}`}>Fecha Nacimiento</th>
-              <th className={styles.tableCell}>Dueño</th>
-              <th className={`${styles.tableCell} ${styles.hiddenMobile}`}>Raza</th>
-              <th className={`${styles.tableCell} ${styles.actionsCell}`}>Acciones</th>
+              <th>Nombre</th>
+              <th>Sexo</th>
+              <th>Especie</th>
+              <th className={`d-none d-sm-table-cell`}>Raza</th>
+              <th className={`d-none d-sm-table-cell`}>Fecha Nacimiento</th>
+              <th className={`d-none d-sm-table-cell`}>Dueño</th>
+              <th className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>Dueño email</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {pets.map((pet) => (
-              <tr key={pet.id} className={styles.tableRow}>
-                <td className={`${styles.tableCell} ${styles.bold}`}>{pet.nombre}</td>
-                <td className={styles.tableCell}>{pet.sexo}</td>
-                <td className={`${styles.tableCell} ${styles.hiddenMobile}`}>
-                  {new Date(pet.fecha_nacimiento).toLocaleDateString()}
+            {data.map((mas, index) => (
+              <tr key={index} className={`${styles.fila}`}>
+                <td>{mas?.nombre}</td>
+                <td>{mas?.sexo}</td>
+                <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
+                <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
+                <td className={`d-none d-sm-table-cell`}>{ justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
+                <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>{mas?.owner?.nombre} {mas?.owner?.apellido}</td>
+                <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
+                <td>
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                    <img
+                      onClick={() => handleEdit(mas)}
+                      className={`${styles.tableIcon}`}
+                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                      alt="update icon button"
+                    />
+                  </div>
                 </td>
-                <td className={styles.tableCell}>{`${pet.owner.nombre} ${pet.owner.apellido}`}</td>
-                <td className={`${styles.tableCell} ${styles.hiddenMobile}`}>{pet.raza.descripcion}</td>
-                <td className={styles.tableCell}>
-                  <div className={styles.actionsContainer}>
-                    <button
-                      onClick={() => handleEdit(pet.id)}
-                      className={`${styles.actionButton} ${styles.editButton}`}
-                    >
-                      ✏️
-                    </button>
-                    <button
+                <td>
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                    <img
+                      className={`${styles.tableIcon}`}
                       onClick={() => {
-                        setPetToDelete(pet.id)
-                        setDeleteDialogOpen(true)
+                        setShowModal(true);
+                        setIdMas(mas.id);
                       }}
-                      className={`${styles.actionButton} ${styles.deleteButton}`}
-                    >
-                      🗑️
-                    </button>
+                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                      alt="delete icon button"
+                    />
                   </div>
                 </td>
               </tr>
@@ -124,30 +99,28 @@ function MascotasTable({ onNavigate }) {
           </tbody>
         </table>
       </div>
-
-      {deleteDialogOpen && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <h3 className={styles.modalTitle}>¿Está seguro?</h3>
-            <p className={styles.modalText}>
-              Esta acción no se puede deshacer. Se eliminará permanentemente la mascota.
-            </p>
-            <div className={styles.modalActions}>
-              <button onClick={() => setDeleteDialogOpen(false)} className={styles.cancelButton}>
-                Cancelar
-              </button>
-              <button onClick={handleDelete} className={styles.deleteButton}>
-                Eliminar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ModalAlert
+        text="¿Desea eliminar el veterinario?"
+        clickAction={() => handleDelete(idVMas)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
-  )
-}
+  );
+};
 
-export default MascotasTable
+export default TablaVeterinario;
+
+
+
+
+
+
+
+
+
+
 
 
 
