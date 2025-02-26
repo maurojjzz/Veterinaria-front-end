@@ -29,7 +29,6 @@ const TablaEspecies = () => {
       return;
     }
   
-    // Verificar si ya existe una especie con la misma descripción
     const existe = especies.some(
       (e) => e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase()
     );
@@ -62,7 +61,6 @@ const TablaEspecies = () => {
       return;
     }
   
-    // Verificar si ya existe otra especie con la misma descripción
     const existe = especies.some(
       (e) =>
         e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase() &&
@@ -120,7 +118,7 @@ const TablaEspecies = () => {
             placeholder="Nueva especie"
             className="form-control me-2"
           />
-          <button onClick={agregarEspecie} className="btn btn-success">➕ Agregar</button>
+          <button onClick={agregarEspecie} className={styles.addUserBtn}>Agregar especie</button>
         </div>
 
         <table className={`table table-hover ${styles.tabla}`}>
@@ -151,13 +149,23 @@ const TablaEspecies = () => {
                       💾 Guardar
                     </button>
                   ) : (
-                    <button onClick={() => iniciarEdicion(especie)} className="btn btn-warning">
-                      ✏️ Editar
-                    </button>
+                    <div className={styles.iconCont}>
+                      <img
+                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                        alt="update icon button"
+                        className={styles.tableIcon}
+                        onClick={() => iniciarEdicion(especie)}
+                      />
+                    </div>
                   )}
-                  <button onClick={() => confirmarEliminacion(especie.id)} className="btn btn-danger ms-2">
-                    🗑️ Eliminar
-                  </button>
+                  <div className={styles.iconCont}>
+                    <img
+                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                      alt="delete icon button"
+                      className={styles.tableIcon}
+                      onClick={() => confirmarEliminacion(especie.id)}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -178,5 +186,3 @@ const TablaEspecies = () => {
 };
 
 export default TablaEspecies;
-
-

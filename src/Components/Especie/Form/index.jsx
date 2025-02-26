@@ -20,7 +20,7 @@ const FormEspecie = () => {
   const dataForm = location.state?.params;
 
   const especieDataUpdate = {
-    id: dataForm?.id || id, // ✅ Asegura que el ID esté presente
+    id: dataForm?.id || id, 
     descripcion: dataForm?.descripcion || "",
   };
 
@@ -54,7 +54,7 @@ const FormEspecie = () => {
 
   const updateEspecieHandler = async (data) => {
     try {
-      console.log("Enviando datos para actualizar:", data); // ✅ Debug ID
+      console.log("Enviando datos para actualizar:", data); 
       await dispatch(updateEspecie(data));
       console.log("Especie actualizada correctamente");
       goBackToTable();
@@ -68,7 +68,7 @@ const FormEspecie = () => {
   const onSubmit = (data) => {
     setIsLoading(true);
     if (id) {
-      updateEspecieHandler({ ...data, id }); // ✅ Asegura que el ID esté presente
+      updateEspecieHandler({ ...data, id }); 
     } else {
       addEspecieHandler(data);
     }
