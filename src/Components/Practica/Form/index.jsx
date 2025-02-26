@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { addPract, updatePract } from "../../../redux/practicas/thunks.js";
+import { Typography } from "@mui/material";
 
 const FormPractica = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -84,9 +85,12 @@ const FormPractica = () => {
   return (
     <div className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 `}>
       <form
-        className={`container d-flex flex-column align-items-center p-4 pt-5 rounded-3 ${styles.formContainer} `}
+        className={`container d-flex flex-column align-items-center pb-4  rounded-3 ${styles.formContainer} `}
         onSubmit={handleSubmit(onSubmit)}
       >
+        <Typography variant="h4" pb={4} pt={3}>
+          Practica
+        </Typography>
         <div
           className={`d-flex flex-column flex-md-row align-items-center justify-content-evenly ${styles.groupInput}`}
         >
