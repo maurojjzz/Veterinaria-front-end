@@ -8,7 +8,7 @@ import Password from "./Password/Password.jsx";
 import { decodeToken } from "../../../../Functions/utiities.js";
 import { LoaderShort, Toast } from "../../../Shared";
 import { useDispatch, useSelector } from "react-redux";
-import { initUsers } from "../../../../redux/users/thunks.js";
+import { initAdmins } from "../../../../redux/users/thunks.js";
 
 const Perfil = () => {
   const [password, setPassword] = useState(false);
@@ -25,7 +25,7 @@ const Perfil = () => {
   const { users } = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(initUsers());
+    dispatch(initAdmins());
   }, [dispatch]);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const Perfil = () => {
       setToastMessage(location.state?.state?.message);
       setToastType(location.state?.state.type);
       setShowToast(true);
-      history.replace("/user/perfil", {});
+      history.replace("/admin/perfil", {});
     }
   }, [location, history]);
 

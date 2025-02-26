@@ -50,7 +50,7 @@ const Form = ({ dataForm }) => {
 
   const goBackToTable = (message, type = "Success") => {
     setTimeout(() => {
-      history.push("/user/perfil", { state: { message, type } });
+      history.push("/admin/perfil", { state: { message, type } });
     }, 2000);
   };
 
