@@ -1,0 +1,85 @@
+.tablaContainer {
+  width: 100%;
+  margin-left: 80px; /* Adjust based on your sidebar width */
+  width: calc(100% - 80px);
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .tablaContainer {
+    margin-left: 250px; /* Wider margin for larger screens */
+    width: calc(100% - 250px);
+  }
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tabla td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e9ecef;
+  color: #212529;
+}
+
+.fila:last-child td {
+  border-bottom: none;
+}
+
+.fila:hover {
+  background-color: #f8f9fa;
+}
+
+.editBtn {
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease-in-out;
+  margin-right: 5px;
+}
+
+.editBtn:hover {
+  background-color: #138496;
+}
+
+.deleteBtn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.deleteBtn:hover {
+  background-color: #c82333;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 30px;
+  color: #6c757d;
+  font-style: italic;
+}
+
