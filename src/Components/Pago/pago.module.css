@@ -1,0 +1,154 @@
+.pagosContainer {
+  padding: 20px;
+  margin-left: 80px;
+  width: calc(100% - 80px);
+  transition: all 0.3s ease;
+  background: linear-gradient(to bottom right, #f0f9ff, #ffffff);
+}
+
+@media (max-width: 768px) {
+  .pagosContainer {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.pagosHeader {
+  margin-bottom: 30px;
+  color: #1e3a8a;
+  font-size: 2rem;
+  font-weight: 600;
+  border-bottom: 3px solid #93c5fd;
+  padding-bottom: 10px;
+}
+
+.pagosTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 30px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.pagosTable th {
+  background-color: #1e40af;
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 15px;
+}
+
+.pagosTable td {
+  padding: 15px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+}
+
+.pagosTable tr:hover {
+  background-color: #f0f9ff;
+}
+
+.pagosForm {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .pagosForm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  color: #1e40af;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #60a5fa;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
+.submitBtn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.deleteBtn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #dc2626;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-style: italic;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.formActions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+
