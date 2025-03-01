@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Autocomplete, TextField, Box, ListItem } from "@mui/material";
 import { initUsers } from "../../../../redux/users/thunks.js";
 
-const SelectUser = ({ labelText, placeholder, error, register, name }) => {
+const SelectUser = ({ labelText, placeholder, error, register, name, defaultValue }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.users);
@@ -11,6 +11,17 @@ const SelectUser = ({ labelText, placeholder, error, register, name }) => {
   useEffect(() => {
     dispatch(initUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+      if (defaultValue) {
+        const s_usu = users.find((u) => u.id === defaultValue);
+        if (s_usu) {
+          setSelectedUser(s_usu);
+        } else{
+          setSelectedUser(null)
+        }
+      }
+    }, [defaultValue, users]);
 
   return (
     <Autocomplete

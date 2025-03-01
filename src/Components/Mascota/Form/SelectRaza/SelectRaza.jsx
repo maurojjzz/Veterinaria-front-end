@@ -3,7 +3,7 @@ import { Box, Autocomplete, TextField, ListItem } from "@mui/material";
 import { getEspecie } from "../../../../redux/especies/thunks.js";
 import { useDispatch, useSelector } from "react-redux";
 
-const SelectRaza = ({ onChangeEspecie, onChangeRaza, errorRaza, register }) => {
+const SelectRaza = ({ onChangeEspecie, onChangeRaza, errorRaza, register, defaultValue }) => {
   const [selectedEspecie, setSelectedEspecie] = useState(null);
   const [selectedRaza, setSelectedRaza] = useState(null);
   const [razasFiltradas, setRazasFiltradas] = useState([]);
@@ -23,6 +23,19 @@ const SelectRaza = ({ onChangeEspecie, onChangeRaza, errorRaza, register }) => {
       setSelectedRaza(null);
     }
   }, [selectedEspecie]);
+
+
+  useEffect(() => {
+    if (defaultValue) {
+      const s_especie = especies.find((es) => es.id === defaultValue.especie);
+      if (s_especie) {
+        setSelectedEspecie(s_especie);
+        setSelectedRaza(defaultValue)
+      } else{
+        setSelectedEspecie(null)
+      }
+    }
+  }, [defaultValue, especies]);
 
   const textFieldStyles = (error) => ({
     "& .MuiOutlinedInput-root": {

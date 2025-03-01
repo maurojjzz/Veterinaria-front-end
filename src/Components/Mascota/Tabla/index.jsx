@@ -17,6 +17,8 @@ const TablaVeterinario = ({ data, setData, especies }) => {
   const dispatch = useDispatch();
 
   const handleEdit = (mascota) => {
+    mascota = { ...mascota, fecha_nacimiento: justFecha(mascota.fecha_nacimiento) };
+    // console.log(mascota);
     history.push(`/admin/mascota/form/${mascota.id}`, {
       params: { ...mascota },
     });

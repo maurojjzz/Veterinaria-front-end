@@ -33,9 +33,11 @@ const MascotasForm = () => {
 
   const dataForm = location.state?.params;
 
+
   const { pending, error } = useSelector((state) => state.veterinarios);
   const { users } = useSelector((state) => state.users);
 
+  
   const mascotaDataUpdate = {
     fecha_nacimiento: dataForm?.fecha_nacimiento,
     nombre: dataForm?.nombre,
@@ -156,6 +158,7 @@ const MascotasForm = () => {
             errorRaza={errors.raza?.message}
             onChangeEspecie={handleEspecieChange}
             onChangeRaza={handleRazaChange}
+            defaultValue={dataForm?.raza}
           />
         </Box>
 
@@ -171,6 +174,7 @@ const MascotasForm = () => {
           <SexoRadioGroup 
             register={register} 
             error={errors.sexo?.message} 
+            defaultValue={dataForm?.sexo} 
           />
           <Input
             labelText={`Nombre`}
@@ -206,6 +210,7 @@ const MascotasForm = () => {
             name={"owner"}
             error={errors.owner?.message}
             register={register}
+            defaultValue={dataForm?.owner?.id}
           />
         </Box>
 
