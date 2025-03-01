@@ -11,9 +11,6 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
 
   const { users } = useSelector((state) => state.users);
 
-  // console.log(defaultValue);
-
-
   useEffect(() => {
     dispatch(initUsers());
   }, [dispatch]);

@@ -22,6 +22,7 @@ const TablaVeterinario = ({ data, setData, especies }) => {
     });
   };
 
+
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteMascota(id));
@@ -62,40 +63,44 @@ const TablaVeterinario = ({ data, setData, especies }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((mas, index) => (
-              <tr key={index} className={`${styles.fila}`}>
-                <td>{mas?.nombre}</td>
-                <td>{mas?.sexo}</td>
-                <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
-                <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
-                <td className={`d-none d-sm-table-cell`}>{ justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
-                <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>{mas?.owner?.nombre} {mas?.owner?.apellido}</td>
-                <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      onClick={() => handleEdit(mas)}
-                      className={`${styles.tableIcon}`}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                      alt="update icon button"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      className={`${styles.tableIcon}`}
-                      onClick={() => {
-                        setShowModal(true);
-                        setIdMas(mas.id);
-                      }}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="delete icon button"
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {data
+              .filter((mas) => mas?.owner && typeof mas?.owner === "object")
+              .map((mas, index) => (
+                <tr key={index} className={`${styles.fila}`}>
+                  <td>{mas?.nombre}</td>
+                  <td>{mas?.sexo}</td>
+                  <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
+                  <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
+                  <td className={`d-none d-sm-table-cell`}>{justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
+                  <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>
+                    {mas?.owner?.nombre} {mas?.owner?.apellido}
+                  </td>
+                  <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        onClick={() => handleEdit(mas)}
+                        className={`${styles.tableIcon}`}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                        alt="update icon button"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        className={`${styles.tableIcon}`}
+                        onClick={() => {
+                          setShowModal(true);
+                          setIdMas(mas.id);
+                        }}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                        alt="delete icon button"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -111,17 +116,3 @@ const TablaVeterinario = ({ data, setData, especies }) => {
 };
 
 export default TablaVeterinario;
-
-
-
-
-
-
-
-
-
-
-
-
-
-

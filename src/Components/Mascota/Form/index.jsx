@@ -1,243 +1,230 @@
-"use client"
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Input, ButtonSubmit, Toast, ModalAlert } from "../../Shared";
+import styles from "./form-mascota.module.css";
+import { mascotaSchema } from "../../../Validations";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { addMascota, updateMascota } from "../../../redux/mascotas/thunks.js";
+import { Box, Typography } from "@mui/material";
+import { justFecha } from "../../../Functions/utiities.js";
+import SelectUser from "./SelectUser/SelectUser";
+import SelectRaza from "./SelectRaza/SelectRaza.jsx";
+import SexoRadioGroup from "./SelectSexo/SelectSexo.jsx";
 
-import { useEffect, useState, useCallback } from "react"
-import styles from "./form-mascota.module.css"
+const MascotasForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [especieElegida, setEspecieElegida] = useState({});
+  const [razaElegida, setRazaElegida] = useState({});
 
-function MascotasForm({ id, onNavigate }) {
-  const [formData, setFormData] = useState({
-    nombre: "",
-    sexo: "",
-    fecha_nacimiento: "",
-    owner: "",
-    raza: "",
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [owners, setOwners] = useState([])
-  const [razas, setRazas] = useState([])
-  const [errors, setErrors] = useState({})
-  const [isLoadingData, setIsLoadingData] = useState(true)
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
 
-  const fetchData = useCallback(async () => {
-    setIsLoadingData(true)
-    try {
-      const baseUrl = process.env.REACT_APP_API_URL || ""
+  const dataForm = location.state?.params;
 
-      const [ownersRes, razasRes] = await Promise.all([fetch(`${baseUrl}/api/clientes`), fetch(`${baseUrl}/api/razas`)])
+  const { pending, error } = useSelector((state) => state.veterinarios);
+  const { users } = useSelector((state) => state.users);
 
-      if (!ownersRes.ok || !razasRes.ok) {
-        throw new Error("Error al obtener datos del servidor")
-      }
+  const mascotaDataUpdate = {
+    fecha_nacimiento: dataForm?.fecha_nacimiento,
+    nombre: dataForm?.nombre,
+    owner: dataForm?.owner,
+    raza: dataForm?.raza,
+    sexo: dataForm?.sexo,
+  };
 
-      const [ownersData, razasData] = await Promise.all([ownersRes.json(), razasRes.json()])
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "all",
+    resolver: joiResolver(mascotaSchema),
+    defaultValues: {
+      ...mascotaDataUpdate,
+    },
+  });
 
-      setOwners(ownersData)
-      setRazas(razasData)
+  const handleEspecieChange = (especie) => {
+    setEspecieElegida(especie);
+  };
 
-      if (id) {
-        const petRes = await fetch(`${baseUrl}/api/mascotas/${id}`)
-        if (!petRes.ok) {
-          throw new Error(`Error al obtener mascota: ${petRes.status}`)
-        }
-        const petData = await petRes.json()
-        setFormData({
-          nombre: petData.nombre || "",
-          sexo: petData.sexo || "",
-          fecha_nacimiento: petData.fecha_nacimiento ? petData.fecha_nacimiento.split("T")[0] : "",
-          owner: petData.owner?.id || "",
-          raza: petData.raza?.id || "",
-        })
-      }
-    } catch (error) {
-      console.error("Error en fetchData:", error)
-      alert(`Error al cargar los datos: ${error.message}`)
-    } finally {
-      setIsLoadingData(false)
-    }
-  }, [id])
+  const handleRazaChange = (raza) => {
+    setRazaElegida(raza);
+    setValue("raza", raza.id);
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
+    if (!pending && error) {
+      setToastMessage(error);
+      setToastType("Error");
+      setShowToast(true);
+    }
+  }, [error, pending]);
 
-  const validateForm = () => {
-    const newErrors = {}
-    if (!formData.nombre) newErrors.nombre = "El nombre es requerido"
-    if (!formData.sexo) newErrors.sexo = "El sexo es requerido"
-    if (!formData.fecha_nacimiento) newErrors.fecha_nacimiento = "La fecha es requerida"
-    if (!formData.owner) newErrors.owner = "El dueño es requerido"
-    if (!formData.raza) newErrors.raza = "La raza es requerida"
+  const goBackToTable = (message, type = "Success") => {
+    setTimeout(() => {
+      history.push("/admin/mascota", { state: { message, type } });
+    }, 2000);
+  };
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!validateForm()) return
-
-    setIsLoading(true)
+  const mascotaAdd = async (data) => {
     try {
-      const baseUrl = process.env.REACT_APP_API_URL || ""
-      const response = await fetch(`${baseUrl}/api/mascotas${id ? `/${id}` : ""}`, {
-        method: id ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          owner_id: formData.owner,
-          raza_id: formData.raza,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`)
-      }
-
-      alert(`Mascota ${id ? "actualizada" : "creada"} correctamente`)
-      onNavigate("table")
+      await dispatch(addMascota(data));
+      goBackToTable("Mascota creada exitosamente");
     } catch (error) {
-      console.error("Error en handleSubmit:", error)
-      alert(`Error al ${id ? "actualizar" : "crear"} la mascota: ${error.message}`)
+      console.error("Error al crear mascota", error);
     } finally {
-      setIsLoading(false)
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
-  }
+  };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: null,
-      }))
+  const mascotaUpdate = async (data) => {
+    setIsLoading(true);
+    try {
+      await dispatch(updateMascota(data));
+      goBackToTable("Mascota actualizada correctamente");
+    } catch (error) {
+      console.error("Error al actualizar mascota", error);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
-  }
+  };
 
-  if (isLoadingData) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div className={styles.loadingSpinner}>⌛</div>
-        <p>Cargando datos...</p>
-      </div>
-    )
-  }
+  const onSubmit = async (data) => {
+    if (id) {
+      data.id = id;
+    }
+    const userElegido = await users.find((user) => user.email === data.owner);
+    const dateFormated = await justFecha(data.fecha_nacimiento);
+    data = { ...data, raza: razaElegida.id, owner: userElegido.id, fecha_nacimiento: dateFormated };
+    setFormData(data);
+    setShowModal(true);
+  };
+
+  const confirmAction = () => {
+    setIsLoading(true);
+    setShowModal(false);
+    if (!id) {
+      mascotaAdd(formData);
+    } else {
+      mascotaUpdate(formData);
+    }
+  };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.formContainer}>
-        <div className={styles.formHeader}>
-          <h2 className={styles.title}>{id ? "Editar" : "Nueva"} Mascota</h2>
-        </div>
+    <div
+      className={`flex-grow-1 d-flex flex-column align-items-center justify-content-center py-5 ${styles.container}`}
+    >
+      <form
+        className={`container d-flex flex-column align-items-center p-4  rounded-3 ${styles.formContainer} `}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Typography variant="h4" pb={4}>
+          Mascota
+        </Typography>
 
-        <form onSubmit={handleSubmit} className={styles.formGroup}>
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Nombre</label>
-            <input
-              type="text"
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              className={`${styles.formInput} ${errors.nombre ? styles.errorInput : ""}`}
-              placeholder="Nombre de la mascota"
-            />
-            {errors.nombre && <span className={styles.errorMessage}>{errors.nombre}</span>}
-          </div>
+        <Box
+          sx={{
+            minWidth: "180px",
+            maxWidth: "300px",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "23px",
+          }}
+        >
+          <SelectRaza
+            register={register}
+            errorEspecie={errors.especie?.message}
+            errorRaza={errors.raza?.message}
+            onChangeEspecie={handleEspecieChange}
+            onChangeRaza={handleRazaChange}
+          />
+        </Box>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Sexo</label>
-            <select
-              name="sexo"
-              value={formData.sexo}
-              onChange={handleChange}
-              className={`${styles.formInput} ${errors.sexo ? styles.errorInput : ""}`}
-            >
-              <option value="">Seleccione el sexo</option>
-              <option value="Macho">Macho</option>
-              <option value="Hembra">Hembra</option>
-            </select>
-            {errors.sexo && <span className={styles.errorMessage}>{errors.sexo}</span>}
-          </div>
+        <Box
+          sx={{
+            minWidth: "180px",
+            maxWidth: "300px",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <SexoRadioGroup 
+            register={register} 
+            error={errors.sexo?.message} 
+          />
+          <Input
+            labelText={`Nombre`}
+            placeholder={`Lola`}
+            type={`text`}
+            name={"nombre"}
+            register={register}
+            error={errors.nombre?.message}
+          />
+        </Box>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Fecha de Nacimiento</label>
-            <input
-              type="date"
-              name="fecha_nacimiento"
-              value={formData.fecha_nacimiento}
-              onChange={handleChange}
-              className={`${styles.formInput} ${errors.fecha_nacimiento ? styles.errorInput : ""}`}
-            />
-            {errors.fecha_nacimiento && <span className={styles.errorMessage}>{errors.fecha_nacimiento}</span>}
-          </div>
+        <Box
+          sx={{
+            minWidth: "180px",
+            maxWidth: "300px",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: "40px",
+          }}
+        >
+          <Input
+            labelText={`Fecha Nacimiento`}
+            type={`date`}
+            name={"fecha_nacimiento"}
+            register={register}
+            error={errors.fecha_nacimiento?.message}
+          />
 
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Dueño</label>
-            <select
-              name="owner"
-              value={formData.owner}
-              onChange={handleChange}
-              className={`${styles.formInput} ${errors.owner ? styles.errorInput : ""}`}
-            >
-              <option value="">Seleccione el dueño</option>
-              {owners && owners.length > 0 ? (
-                owners.map((owner) => (
-                  <option key={owner.id} value={owner.id}>
-                    {`${owner.nombre} ${owner.apellido}`}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  No hay dueños disponibles
-                </option>
-              )}
-            </select>
-            {errors.owner && <span className={styles.errorMessage}>{errors.owner}</span>}
-          </div>
+          <SelectUser
+            labelText={`Dueño`}
+            placeholder={`Seleccione el dueño`}
+            name={"owner"}
+            error={errors.owner?.message}
+            register={register}
+          />
+        </Box>
 
-          <div className={styles.inputGroup}>
-            <label className={styles.inputLabel}>Raza</label>
-            <select
-              name="raza"
-              value={formData.raza}
-              onChange={handleChange}
-              className={`${styles.formInput} ${errors.raza ? styles.errorInput : ""}`}
-            >
-              <option value="">Seleccione la raza</option>
-              {razas && razas.length > 0 ? (
-                razas.map((raza) => (
-                  <option key={raza.id} value={raza.id}>
-                    {raza.descripcion}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  No hay razas disponibles
-                </option>
-              )}
-            </select>
-            {errors.raza && <span className={styles.errorMessage}>{errors.raza}</span>}
-          </div>
-
-          <div className={styles.buttonGroup}>
-            <button type="button" onClick={() => onNavigate("table")} className={styles.cancelButton}>
-              Cancelar
-            </button>
-            <button type="submit" disabled={isLoading} className={styles.submitButton}>
-              {isLoading ? <span className={styles.loadingSpinner}>⌛</span> : null}
-              {id ? "Actualizar" : "Crear"} Mascota
-            </button>
-          </div>
-        </form>
-      </div>
+        <ButtonSubmit
+          msg={isLoading ? <FontAwesomeIcon icon={faSpinner} spin /> : `ENVIAR`}
+          clickAction={() => {}}
+          type={`submit`}
+          disabled={isLoading}
+        />
+      </form>
+      <ModalAlert
+        text={id ? "¿Desea actualizar la mascota?" : "¿Desea crear la mascota?"}
+        clickAction={confirmAction}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
-  )
-}
+  );
+};
 
-export default MascotasForm
-
-
+export default MascotasForm;

@@ -20,9 +20,6 @@ const Mascotas = () => {
   const { mascotas } = useSelector((state) => state.mascotas);
   const { especies } = useSelector((state) => state.especies);
 
-  console.log(mascotas);
-  console.log(especies);
-
   useEffect(() => {
     dispatch(getMascotas());
     dispatch(getEspecie());

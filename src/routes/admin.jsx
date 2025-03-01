@@ -11,7 +11,6 @@ import FormPractica from "../Components/Practica/Form";
 import Atencion from "../Components/Atencion";
 import AtencionForm from "../Components/Atencion/Form";
 import Perfil from "../Components/Users/Admin//Perfil/Perfil";
-
 import Mascotas from "../Components/Mascota";
 import MascotasForm from "../Components/Mascota/Form";
 import Especies from "../Components/Especie";
