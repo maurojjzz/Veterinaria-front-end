@@ -3,6 +3,7 @@ import styles from "./tabla-especie.module.css";
 import { Toast, ModalAlert } from "../../Shared";
 import { useDispatch, useSelector } from "react-redux";
 import { getEspecie, addEspecie, updateEspecie, deleteEspecie } from "../../../redux/especies/thunks.js";
+import { addRaza } from "../../../redux/razas/thunks.js";
 
 const TablaEspecies = () => {
   const [nuevaEspecie, setNuevaEspecie] = useState("");
@@ -23,29 +24,28 @@ const TablaEspecies = () => {
 
   const agregarEspecie = async () => {
     const descripcionLimpia = nuevaEspecie.trim();
-  
+
     if (descripcionLimpia.length === 0) {
       mostrarToast("La descripción no puede estar vacía", "Error");
       return;
     }
-  
-    const existe = especies.some(
-      (e) => e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase()
-    );
-  
+
+    const existe = especies.some((e) => e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase());
+
     if (existe) {
       mostrarToast("La especie ya existe", "Error");
       return;
     }
-  
+
     try {
-      await dispatch(addEspecie({ descripcion: descripcionLimpia }));
+      const esp = await dispatch(addEspecie({ descripcion: descripcionLimpia }));
       setNuevaEspecie("");
+      await dispatch(getEspecie());
+      await dispatch(addRaza({ especie: esp.id, descripcion: "Sin raza" }));
       mostrarToast("Especie agregada correctamente", "Success");
-      dispatch(getEspecie());
     } catch (error) {
       mostrarToast("Error al agregar especie", "Error");
-    }
+    } 
   };
 
   const iniciarEdicion = (especie) => {
@@ -55,23 +55,19 @@ const TablaEspecies = () => {
 
   const guardarEdicion = async (id) => {
     const descripcionLimpia = descripcionEditada.trim();
-  
+
     if (descripcionLimpia.length === 0) {
       mostrarToast("La descripción no puede estar vacía", "Error");
       return;
     }
-  
-    const existe = especies.some(
-      (e) =>
-        e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase() &&
-        e.id !== id
-    );
-  
+
+    const existe = especies.some((e) => e.descripcion.toLowerCase() === descripcionLimpia.toLowerCase() && e.id !== id);
+
     if (existe) {
       mostrarToast("Ya existe una especie con esta descripción", "Error");
       return;
     }
-  
+
     try {
       await dispatch(updateEspecie({ id, descripcion: descripcionLimpia }));
       setEditandoEspecie(null);
@@ -118,7 +114,9 @@ const TablaEspecies = () => {
             placeholder="Nueva especie"
             className="form-control me-2"
           />
-          <button onClick={agregarEspecie} className={styles.addUserBtn}>Agregar especie</button>
+          <button onClick={agregarEspecie} className={styles.addUserBtn}>
+            Agregar especie
+          </button>
         </div>
 
         <table className={`table table-hover ${styles.tabla}`}>
