@@ -1,14 +1,13 @@
 import { useState } from "react";
-import styles from "./tabla-mascota.module.css";
+import styles from "./table-practica.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteMascota } from "../../../redux/mascotas/thunks.js";
+import { deleteRaza } from "../../../redux/razas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
-import { justFecha } from "../../../Functions/utiities.js";
 
-const TablaMascota = ({ data, setData, especies }) => {
+const TablaRaza = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
-  const [idVMas, setIdMas] = useState(null);
+  const [idRaza, setIdRaza] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
@@ -16,32 +15,30 @@ const TablaMascota = ({ data, setData, especies }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleEdit = (mascota) => {
-    mascota = { ...mascota, fecha_nacimiento: justFecha(mascota.fecha_nacimiento) };
-    history.push(`/admin/mascota/form/${mascota.id}`, {
-      params: { ...mascota },
+  const handleEdit = (raza) => {
+    history.push(`/admin/raza/form/${raza.id}`, {
+      params: { ...raza },
     });
   };
 
-
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteMascota(id));
+      await dispatch(deleteRaza(id));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
-          return prevData.filter((masco) => masco.id !== id);
+          return prevData.filter((raza) => raza.id !== id);
         }
         return [];
       });
-      setToastMessage("Mascota eliminada correctamente");
+      setToastMessage("Raza eliminada correctamente");
       setToastType("Info");
     } catch (error) {
       console.log(error);
-      setToastMessage("Error al eliminar mascota");
+      setToastMessage("Error al eliminar raza");
       setToastType("Error");
     } finally {
       setShowToast(true);
-      setIdMas(null);
+      setIdRaza(null);
       setShowModal(false);
     }
   };
@@ -52,35 +49,21 @@ const TablaMascota = ({ data, setData, especies }) => {
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Sexo</th>
               <th>Especie</th>
-              <th className={`d-none d-sm-table-cell`}>Raza</th>
-              <th className={`d-none d-sm-table-cell`}>Fecha Nacimiento</th>
-              <th className={`d-none d-sm-table-cell`}>Dueño</th>
-              <th className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>Dueño email</th>
+              <th>Raza</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data
-              .filter((mas) => mas?.owner && typeof mas?.owner === "object")
-              .map((mas, index) => (
+            {data.map((raz, index) => (
                 <tr key={index} className={`${styles.fila}`}>
-                  <td>{mas?.nombre}</td>
-                  <td>{mas?.sexo}</td>
-                  <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
-                  <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
-                  <td className={`d-none d-sm-table-cell`}>{justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
-                  <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>
-                    {mas?.owner?.nombre} {mas?.owner?.apellido}
-                  </td>
-                  <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
+                  <td>{raz?.especie?.descripcion}</td>
+                  <td>{raz?.descripcion}</td>
                   <td>
                     <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                       <img
-                        onClick={() => handleEdit(mas)}
+                        onClick={() => handleEdit(raz)}
                         className={`${styles.tableIcon}`}
                         src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                         alt="update icon button"
@@ -93,7 +76,7 @@ const TablaMascota = ({ data, setData, especies }) => {
                         className={`${styles.tableIcon}`}
                         onClick={() => {
                           setShowModal(true);
-                          setIdMas(mas.id);
+                          setIdRaza(raz.id);
                         }}
                         src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                         alt="delete icon button"
@@ -106,8 +89,8 @@ const TablaMascota = ({ data, setData, especies }) => {
         </table>
       </div>
       <ModalAlert
-        text="¿Desea eliminar el veterinario?"
-        clickAction={() => handleDelete(idVMas)}
+        text="¿Desea eliminar la raza?"
+        clickAction={() => handleDelete(idRaza)}
         showModal={showModal}
         setShowModal={setShowModal}
       />
@@ -116,4 +99,4 @@ const TablaMascota = ({ data, setData, especies }) => {
   );
 };
 
-export default TablaMascota;
+export default TablaRaza;
