@@ -1,7 +1,9 @@
 .tableContainer{
     max-width: 950px;
 }
-
+.clienteContainer{
+    margin-top: 80px;
+}
 .addUserBtn{
     border:2px solid #1BBCB6;
     color: #1BBCB6;

@@ -4,6 +4,9 @@
     cursor: pointer;
     transition: all ease-out 0.4s;
 }
+.clienteContainer{
+    margin-top: 80px;
+}
 
 .addUserBtn:hover{
     background-color:#1BBCB6;
