@@ -12,7 +12,14 @@ const practicaSchema = Joi.object({
       "string.max": "Nombre como maximo 25 caracteres",
       "string.pattern.base": "Nombre solo debe contener letras",
     })
-   .required()
+    .required(),
+
+  precio: Joi.number().min(0).max(5000000).required().messages({
+      "number.base": "El importe debe ser un número",
+      "number.min": "El importe debe ser como mínimo 1",
+      "number.max": "El importe debe ser como máximo 5 millones",
+      "any.required": "Este es un campo requerido",
+    }),
 });
 
 export default practicaSchema;

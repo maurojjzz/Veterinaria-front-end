@@ -38,6 +38,7 @@ export const addPract = (practica) => {
       const { data } = await axios.post("/practicas", practica);
       dispatch(addPracticaSuccess(data.data));
       dispatch(addPracticaError(undefined));
+      return data.data;
     } catch (error) {
       dispatch(addPracticaError(error.response?.data?.message || "Failed to add practica"));
       throw error;
