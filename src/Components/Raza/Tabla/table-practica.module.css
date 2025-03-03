@@ -1,5 +1,6 @@
 .tablaContainer {
   max-width: 950px;
+  width: 80%;
   overflow-x: auto;
 }
 
