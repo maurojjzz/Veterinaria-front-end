@@ -1,39 +1,25 @@
 .tablaContainer {
   max-width: 950px;
+  width: 95%;
+  overflow-x: auto;
 }
 
 .tabla {
   border-collapse: collapse;
   overflow: hidden;
-  box-shadow: 0px 6px 20px -7px rgba(0, 0, 0, 0.301);
-  width: 80vw;
-  max-width: 800px;
+  box-shadow: 0px 6px 20px -7px rgba(0, 0, 0, 0.75);
 }
 
-.tabla tr td,
-.tabla tr th {
+.tabla tr th,
+.tabla tr td {
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 600px;
-  max-width: 60%;
+  max-width: 170px;
   transition: all 0.1s;
 }
 
-.tabla tr th:first-child,
-.tabla tr td:first-child {
-  width: 80%;
-}
-
-
-.tabla tr td:nth-child(2),
-.tabla tr th:nth-child(2),
-.tabla tr td:nth-child(2),
-.tabla tr th:nth-child(3) {
-  width: 5%;
-  max-width: 55px;
-}
 
 
 .iconCont {
@@ -54,10 +40,13 @@
 .tableIcon:hover {
   transform: scale(1.1);
 }
+
 .iconCont:hover {
-  background-color: #3fb88596;
+  background-color: #a9c3b896;
 }
 
-.fila {
-  cursor: pointer;
+@media (min-width: 576px) and (max-width: 658px) {
+  .hiddenOnSm {
+    display: none !important;
+  }
 }

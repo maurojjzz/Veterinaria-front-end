@@ -1,32 +1,58 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import styles from "./table-practica.module.css";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getPract, deletePract } from "../../../redux/practicas/thunks.js";
+import { useDispatch } from "react-redux";
+import { deletePract } from "../../../redux/practicas/thunks.js";
+import { ModalAlert, Toast } from "../../Shared";
 
-const TablaPractica = () => {
+const TablaPractica = ({ data, setData }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [idPractica, setIdPractica] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+
   const history = useHistory();
-
   const dispatch = useDispatch();
 
-  const { practicas, pending, error } = useSelector((state) => state.practicas);
-
   const handleEdit = (practica) => {
-    history.push(`/admin/practicas/form/${practica.id}`, { params: { ...practica } });
+    history.push(`/admin/practicas/form/${practica.id}`, {
+      params: { ...practica },
+    });
   };
-
-  useEffect(() => {
-    dispatch(getPract());
-  }, [dispatch]);
 
   const handleDelete = async (id) => {
     try {
       await dispatch(deletePract(id));
-      console.log("Eliminada correctamente");
-      await dispatch(getPract());
+      setData((prevData) => {
+        if (Array.isArray(prevData)) {
+          return prevData.filter((raza) => raza.id !== id);
+        }
+        return [];
+      });
+      setToastMessage("Practica eliminada correctamente");
+      setToastType("Info");
     } catch (error) {
-      console.error("Error al eliminar la practica", error);
+      console.log(error);
+      setToastMessage("Error al eliminar practica");
+      setToastType("Error");
+    } finally {
+      setShowToast(true);
+      setIdPractica(null);
+      setShowModal(false);
     }
+  };
+
+  const getNearestPrice = (precios) => {
+    if (!precios || precios.length === 0) return "Sin precio";
+  
+    const today = new Date();
+    
+    const nearest = precios
+      .map((p) => ({ ...p, fecha: new Date(p.fecha) }))
+      .sort((a, b) => Math.abs(a.fecha - today) - Math.abs(b.fecha - today))[0];
+  
+    return nearest ? nearest.valor : "Sin precio";
   };
 
   return (
@@ -35,40 +61,52 @@ const TablaPractica = () => {
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
-              <th>Descripcion</th>
+              <th>Practica</th>
+              <th>Precio</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {practicas.map((practica, index) => (
-              <tr key={index} className={`${styles.fila}`}>
-                <td>{practica.descripcion}</td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      onClick={() => handleEdit(practica)}
-                      className={`${styles.tableIcon}`}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                      alt="update icon button"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      className={`${styles.tableIcon}`}
-                      onClick={() => handleDelete(practica.id)}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="delete icon button"
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {data.map((pra, index) => (
+                <tr key={index} className={`${styles.fila}`}>
+                  <td>{pra?.descripcion}</td>
+                  <td>$ {getNearestPrice(pra.precios)}</td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        onClick={() => handleEdit(pra)}
+                        className={`${styles.tableIcon}`}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                        alt="update icon button"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        className={`${styles.tableIcon}`}
+                        onClick={() => {
+                          setShowModal(true);
+                          setIdPractica(pra.id);
+                        }}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                        alt="delete icon button"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
+      <ModalAlert
+        text="¿Desea eliminar la practica?"
+        clickAction={() => handleDelete(idPractica)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
