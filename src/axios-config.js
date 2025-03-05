@@ -1,22 +1,36 @@
-import axios from 'axios';
+import axios from "axios";
+import store from "./redux/store";
+import { sessionExpired } from "./redux/auth/actions.js";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_KEY,
 });
 
-// Agrega un interceptor para las solicitudes salientes
-instance.interceptors.request.use(config => {
-  // Obtiene el token de autenticación de donde lo estés almacenando (por ejemplo, en localStorage)
-  const authToken = localStorage.getItem('token');
+instance.interceptors.request.use(
+  (config) => {
+    const authToken = localStorage.getItem("token");
 
-  // Si hay un token de autenticación, agrega al encabezado de la solicitud
-  if (authToken) {
-    config.headers.Authorization = `Bearer ${authToken}`;
+    if (authToken) {
+      config.headers.Authorization = `Bearer ${authToken}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.warn("Token Expirado. Cerrando Sesion automaticamente .....");
+      localStorage.clear();
+      store.dispatch(sessionExpired())
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default instance;

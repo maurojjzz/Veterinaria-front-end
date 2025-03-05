@@ -8,6 +8,7 @@ import {
   LOGOUT_PENDING,
   LOGOUT_SUCCESS,
   LOGOUT_ERROR,
+  SESSION_EXPIRED,
 } from "./constants";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   authenticated: false,
   pending: false,
   error: undefined,
+  sessionExpired: false,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -41,6 +43,7 @@ const authReducer = (state = initialState, action) => {
         token: action.payload.token,
         role: action.payload.role,
         authenticated: true,
+        sessionExpired: false,
       };
     case SIGN_UP_SUCCESS:
       return {
@@ -55,6 +58,15 @@ const authReducer = (state = initialState, action) => {
         token: undefined,
         role: undefined,
         authenticated: false,
+        sessionExpired: false,
+      };
+    case SESSION_EXPIRED:
+      return {
+        ...state,
+        sessionExpired: true, 
+        authenticated: false,
+        token: undefined,
+        role: undefined,
       };
 
     default:
