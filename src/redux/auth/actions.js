@@ -71,3 +71,8 @@ export const logoutError = (error) => {
     payload: error,
   };
 };
+
+export const sessionExpired = () => ({
+  type: "SESSION_EXPIRED",
+});
+
