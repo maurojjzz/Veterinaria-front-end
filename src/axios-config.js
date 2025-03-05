@@ -25,6 +25,7 @@ instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      console.warn("Sesion expirada .....");
       localStorage.clear();
       store.dispatch(sessionExpired())
     }

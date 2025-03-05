@@ -60,7 +60,7 @@ const TablaVeterinario = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((vet, index) => (
+            {data?.map((vet, index) => (
               <tr key={index} className={`${styles.fila}`}>
                 <td>{vet.matricula}</td>
                 <td>{vet.email}</td>
