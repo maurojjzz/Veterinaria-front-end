@@ -6,6 +6,7 @@ import Atencion from "../Components/Atencion";
 import AtencionesPendientesPago from "../Components/Users/User/AtencionesPendientesPago";
 import HistorialAtenciones from "../Components/Users/User/HistorialAtenciones";
 import Perfil from "../Components/Users/User/Perfil/Perfil";
+import Mascotas from "../Components/Users/User/Mascota/Mascota";
 
 const UsuarioRoutes = () => {
   const { url } = useRouteMatch();
@@ -36,6 +37,12 @@ const UsuarioRoutes = () => {
       alt: "history icon",
     },
     {
+      name: "Mascotas",
+      path: "/user/mascotas",
+      image: "canino.png",
+      alt: "pets icon",
+    },
+    {
       name: "Perfil",
       path: "/user/perfil",
       image: "user.png",
@@ -50,6 +57,7 @@ const UsuarioRoutes = () => {
         <Route exact path={`${url}/atencion`} component={Atencion} />
         <Route exact path={`${url}/atenciones-pendientes`} component={AtencionesPendientesPago} />
         <Route exact path={`${url}/historial-atenciones`} component={HistorialAtenciones} />
+        <Route exact path={`${url}/mascotas`} component={Mascotas} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/dash`} />

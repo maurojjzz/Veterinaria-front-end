@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { DashboardOption } from "../../Shared";
 import styles from "./userDashboard.module.css";
+import BloqueoMascota from "./Mascota/BloqueoMascota/BloqueoMascota";
 
 const Dashboard = () => {
   return (
@@ -15,6 +16,7 @@ const Dashboard = () => {
         <DashboardOption icon="💳" text="Atenciones pendientes" path="/user/atenciones-pendientes" />
         <DashboardOption icon="🐾" text="Mascotas" path="/user/mascotas" />
       </div>
+      <BloqueoMascota />
     </div>
   );
 };
