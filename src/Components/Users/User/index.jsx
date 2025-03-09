@@ -1,16 +1,5 @@
-import { useHistory } from "react-router-dom";
+import { DashboardOption } from "../../Shared";
 import styles from "./userDashboard.module.css";
-
-const DashboardOption = ({ icon, text, path }) => {
-  const history = useHistory();
-
-  return (
-    <div className={styles.optionCard} onClick={() => history.push(path)}>
-      <div className={styles.icon}>{icon}</div>
-      <p>{text}</p>
-    </div>
-  );
-};
 
 const Dashboard = () => {
   return (
