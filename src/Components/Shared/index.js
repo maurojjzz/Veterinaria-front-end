@@ -15,4 +15,5 @@ export { default as SelectPet } from './SelectPet';
 export { default as SelectUser } from './SelectUser';
 export { default as SelectVet } from './SelectVet';
 export { default as Toast } from './Toast';
+export { default as DashboardOption } from "./DashboardOption";
 export * from './index';
