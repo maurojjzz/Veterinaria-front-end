@@ -10,26 +10,23 @@ export const decodeToken = (token) => {
   }
 };
 
-
-export const handleDate = (fecha)=>{
-  if(fecha){
+export const handleDate = (fecha) => {
+  if (fecha) {
     return new Date(fecha).toLocaleString();
-  }else{
-    return 'No'
+  } else {
+    return "No";
   }
-}
+};
 
 export const formateoFecha = (date, hour) => {
   const fecha = new Date(date);
-  
-  const dia = fecha.getDate()+1;
+
+  const dia = fecha.getDate() + 1;
   const mes = fecha.getMonth() + 1;
   const anio = fecha.getFullYear();
 
   return `${anio}-${mes}-${dia} ${hour}`;
-
-}
-
+};
 
 // export const justFecha = (date) =>{
 //   const fecha = new Date(date);
@@ -48,16 +45,37 @@ export const justFecha = (date) => {
 
     return `${anio}-${mesFormateado}-${diaFormateado}`;
   } catch (error) {
-    return undefined; 
+    return undefined;
   }
 };
 
 export const justHour = (date) => {
   try {
     const hora = new Date(date);
-    const horaFormateada = hora.toISOString().split('T')[1].substring(0, 5);
+    const horaFormateada = hora.toISOString().split("T")[1].substring(0, 5);
     return horaFormateada;
   } catch (error) {
-    return undefined; 
+    return undefined;
   }
+};
+
+export const calcularEdad = (fechaNacimiento) => {
+  if (!fechaNacimiento) return "Fecha inválida";
+
+  const nacimiento = new Date(fechaNacimiento);
+  const hoy = new Date();
+
+  const diferenciaAnios = hoy.getFullYear() - nacimiento.getFullYear();
+  const diferenciaMeses = hoy.getMonth() - nacimiento.getMonth();
+  const diferenciaDias = hoy.getDate() - nacimiento.getDate();
+
+  if (diferenciaAnios > 0) {
+    return diferenciaAnios === 1 ? "1 año" : `${diferenciaAnios} años`;
+  }
+
+  if (diferenciaMeses > 0) {
+    return diferenciaMeses === 1 ? "1 mes" : `${diferenciaMeses} meses`;
+  }
+
+  return diferenciaDias === 1 ? "1 día" : `${Math.abs(diferenciaDias)} días`;
 };
