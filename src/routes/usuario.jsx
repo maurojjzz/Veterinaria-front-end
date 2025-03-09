@@ -24,13 +24,13 @@ const UsuarioRoutes = () => {
       alt: "atenciones icon",
     },
     {
-      name: "Atenciones Pendientes de Pago",
+      name: "Atenciones Pendientes",
       path: "/user/atenciones-pendientes",
       image: "practica2.png",
       alt: "pending payments icon",
     },
     {
-      name: "Historial de Atenciones por Fecha",
+      name: "Historial de Atenciones",
       path: "/user/historial-atenciones",
       image: "practica2.png",
       alt: "history icon",
