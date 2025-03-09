@@ -23,7 +23,6 @@ const Mascota = () => {
 
   const me = token ? decodeToken(token || localStorage.getItem("token")) : null;
 
-console.log(data);
   useEffect(() => {
     dispatch(initUsers());
   }, [dispatch]);

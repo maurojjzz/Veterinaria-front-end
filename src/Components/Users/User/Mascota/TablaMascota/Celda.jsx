@@ -3,13 +3,18 @@ import { Box, Avatar, Typography, IconButton, Tooltip } from "@mui/material";
 import { getRazas } from "../../../../../redux/razas/thunks.js";
 import { useDispatch, useSelector } from "react-redux";
 import { calcularEdad } from "../../../../../Functions/utiities.js";
+import { deleteMascota } from "../../../../../redux/mascotas/thunks.js";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useHistory } from "react-router-dom";
+import { ModalAlert } from "../../../../Shared";
 
-const Celda = ({ item }) => {
+const Celda = ({ item, setData }) => {
+  const [showModal, setShowModal] = useState(false);
   const [dataAnimal, setDataAnimal] = useState("");
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const { razas } = useSelector((state) => state.razas);
 
@@ -37,6 +42,23 @@ const Celda = ({ item }) => {
   useEffect(() => {
     setDataAnimal(razas.find((r) => r.id === item.raza));
   }, [item.raza, razas]);
+
+  const goBackToTable = (message, type = "Success") => {
+    setTimeout(() => {
+      history.push("/user/mascotas", { state: { message, type } });
+    }, 2000);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteMascota(id));
+      setData((prevData) => (Array.isArray(prevData) ? prevData.filter((masco) => masco.id !== id) : []));
+      goBackToTable("Mascota eliminada correctamente", "Info");
+    } catch (error) {
+      console.log(error);
+      goBackToTable("Error al eliminar mascota", "Error");
+    }
+  };
 
   return (
     <Box
@@ -168,7 +190,7 @@ const Celda = ({ item }) => {
           <IconButton
             size="large"
             onClick={() => {
-              console.log("editar");
+              console.log("editar item: ", item.id);
             }}
           >
             <ModeEditIcon color="info" />
@@ -179,13 +201,19 @@ const Celda = ({ item }) => {
           <IconButton
             size="large"
             onClick={() => {
-              console.log("borrar");
+              setShowModal(true);
             }}
           >
             <DeleteIcon color="error" />
           </IconButton>
         </Tooltip>
       </Box>
+      <ModalAlert
+        text="¿Desea eliminar la mascota?"
+        clickAction={() => handleDelete(item.id)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
     </Box>
   );
 };

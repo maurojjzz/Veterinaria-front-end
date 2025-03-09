@@ -17,7 +17,7 @@ const TablaMascota = ({ data, setData }) => {
       }}
     >
       {data.length > 0 ? (
-        data.map((item, index) => <Celda key={index} item={item} />)
+        data.map((item, index) => <Celda key={index} item={item} setData={setData} />)
       ) : (
         <Typography variant="h5" sx={{ width: "100%", textAlign: "center", color: "#1BBCB6" }}>
           No hay mascotas registradas. Ingrese una.
