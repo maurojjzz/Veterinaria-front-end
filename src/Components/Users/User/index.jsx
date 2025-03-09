@@ -1,41 +1,32 @@
-import { useHistory } from "react-router-dom"
-import styles from "./userDashboard.module.css"
+import { useHistory } from "react-router-dom";
+import styles from "./userDashboard.module.css";
+
+const DashboardOption = ({ icon, text, path }) => {
+  const history = useHistory();
+
+  return (
+    <div className={styles.optionCard} onClick={() => history.push(path)}>
+      <div className={styles.icon}>{icon}</div>
+      <p>{text}</p>
+    </div>
+  );
+};
 
 const Dashboard = () => {
-  const history = useHistory()
-
-  const handleOptionClick = (path) => {
-    history.push(path)
-  }
-
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>Dashboard Cliente - Veterinaria</header>
       <div className={styles.optionsGrid}>
-        <div className={styles.optionCard} onClick={() => handleOptionClick("/user/atenciones-pendientes")}>
-          <div className={styles.icon}>💳</div>
-          <p>Atenciones Pendientes de Pago</p>
-        </div>
-
-        <div className={styles.optionCard} onClick={() => handleOptionClick("/user/atencion")}>
-          <div className={styles.icon}>📋</div>
-          <p>Atenciones</p>
-        </div>
-
-        <div className={styles.optionCard} onClick={() => handleOptionClick("/user/historial-atenciones")}>
-          <div className={styles.icon}>📜</div>
-          <p>Historial de Atenciones por Fecha</p>
-        </div>
-
-        <div className={styles.optionCard} onClick={() => handleOptionClick("/user/mascotas")}>
-          <div className={styles.icon}>🐾</div>
-          <p>Mascotas</p>
-        </div>
+        <DashboardOption icon="💳" text="Atenciones Pendientes de Pago" path="/user/atenciones-pendientes" />
+        <DashboardOption icon="📋" text="Atenciones" path="/user/atencion" />
+        <DashboardOption icon="📜" text="Historial de Atenciones por Fecha" path="/user/historial-atenciones" />
+        <DashboardOption icon="🐾" text="Mascotas" path="/user/mascotas" />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
+
 
 
