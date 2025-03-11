@@ -10,27 +10,59 @@ import Practica from "../Components/Practica";
 import FormPractica from "../Components/Practica/Form";
 import Atencion from "../Components/Atencion";
 import AtencionForm from "../Components/Atencion/Form";
-import Perfil from "../Components/Users/Admin/Perfil/Perfil";
+import Perfil from "../Components/Users/Admin//Perfil/Perfil";
 
 import Pets from "../Components/Mascotas";
 import PetsForm from "../Components/Mascotas/Form";
 import Especies from "../Components/Especie";
 import EspeciesForm from "../Components/Especie/Form";
-import Pagos from "../Components/Pago";
-import PagoForm from "../Components/Pago/Form";
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch();
 
   const routes = [
-    { name: "Usuarios", path: "/admin/usuarios", image: "group.png", alt: "users icon" },
-    { name: "Veterinarios", path: "/admin/veterinarios", image: "veterinary.png", alt: "icono de veterinario" },
-    { name: "Prácticas", path: "/admin/practicas", image: "practica2.png", alt: "icono de practicas" },
-    { name: "Atenciones", path: "/admin/atenciones", image: "order-history.png", alt: "icono de historial de atenciones" },
-    { name: "Pagos", path: "/admin/pagos", image: "pagos.png", alt: "icono de pagos" },
-    { name: "Perfil", path: "/admin/perfil", image: "user.png", alt: "Perfil icon" },
-    { name: "Mascotas", path: "/admin/mascota", image: "Mascota.png", alt: "icono de mascotas" },
-    { name: "Especies", path: "/admin/especie", image: "Especie.png", alt: "icono de especie" },
+    {
+      name: "Usuarios",
+      path: "/admin/usuarios",
+      image: "group.png",
+      alt: "users icon",
+    },
+    {
+      name: "Veterinarios",
+      path: "/admin/veterinarios",
+      image: "veterinary.png",
+      alt: "icono de veterinario",
+    },
+    {
+      name: "Practicas",
+      path: "/admin/practicas",
+      image: "practica2.png",
+      alt: "icono de practicas",
+    },
+    {
+      name: "Atenciones",
+      path: "/admin/atenciones",
+      image: "order-history.png",
+      alt: "icono de historial de atenciones",
+    },
+    {
+      name: "Perfil",
+      path: "/admin/perfil",
+      image: "user.png",
+      alt: "Perfil icon",
+    },
+    {
+      name: "Mascotas",
+      path: "/admin/mascota",
+      image: "Mascota.png",
+      alt: "icono de mascotas",
+    },
+    {
+      name: "Especies",
+      path: "/admin/especie",
+      image: "Especie.png",
+      alt: "icono de especie",
+    },
   ];
 
   return (
@@ -46,19 +78,8 @@ const AdminRoutes = () => {
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
         <Route exact path={`${url}/mascota`} component={Pets} />
         <Route path={`${url}/mascota/form/:id?`} component={PetsForm} />
-
-        {/* 🔹 Rutas para Especies */}
         <Route exact path={`${url}/especie`} component={Especies} />
-        <Route path={`${url}/especie/:descripcion`} component={Especies} />
-        <Route exact path={`${url}/especie/form`} component={EspeciesForm} />
-        <Route path={`${url}/especie/form/:id`} component={EspeciesForm} />
-
-        {/* 🔹 Rutas para Pagos */}
-        <Route exact path={`${url}/pagos`} component={Pagos} /> 
-        <Route path={`${url}/pagos/:id`} component={Pagos} /> 
-        <Route exact path={`${url}/pagos/form`} component={PagoForm} />
-        <Route path={`${url}/pagos/form/:id`} component={PagoForm} /> 
-
+        <Route path={`${url}/especie/form/:id?`} component={EspeciesForm} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />

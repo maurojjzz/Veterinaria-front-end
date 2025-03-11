@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import styles from "./practica.module.css";
+import styles from "./raza.module.css";
 import { Toast } from "../Shared";
-import TablaPracticas from "./Tabla";
-import {getPract} from "../../redux/practicas/thunks.js";
+import { getRazas } from "../../redux/razas/thunks.js";
+import { useDispatch, useSelector } from "react-redux";
+import TablaRaza from "./Tabla/Tabla.jsx";
 
-const Practica = () => {
+const Raza = () => {
   const [data, setData] = useState([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -16,20 +16,20 @@ const Practica = () => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const { practicas } = useSelector((state) => state.practicas);
+  const { razas } = useSelector((state) => state.razas);
 
   useEffect(() => {
-    dispatch(getPract());
+    dispatch(getRazas());
   }, [dispatch]);
 
   useEffect(() => {
-    if (practicas) {
-      setData(practicas);
+    if (razas) {
+      setData(razas);
     }
-  }, [practicas]);
+  }, [razas]);
 
-  const handlePractica = () => {
-    history.push("/admin/practicas/form");
+  const handleRaza = () => {
+    history.push("/admin/raza/form");
   };
 
   useEffect(() => {
@@ -37,27 +37,28 @@ const Practica = () => {
       setToastMessage(location.state?.state?.message);
       setToastType(location.state?.state.type);
       setShowToast(true);
-      history.replace("/admin/practicas", {});
+      history.replace("/admin/raza", {});
     }
   }, [location, history]);
 
   return (
-    <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.clienteContainer}`}>
-      <h1 className={`mb-5 ms-2`}>Practicas</h1>
+    <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.razaContainer}`}>
+      <h1 className={`mb-5 ms-2`}>Raza</h1>
       <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
         <div
           onClick={() => {
-            handlePractica();
+            handleRaza();
           }}
-          className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addPracticaBtn} `}
+          className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
         >
-          <h3>Agregar Practica</h3>
+          <h3>Agregar Raza</h3>
         </div>
-        <TablaPracticas data={data} setData={setData} />
+        <TablaRaza data={data} setData={setData} />
       </div>
+
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
 
-export default Practica;
+export default Raza;

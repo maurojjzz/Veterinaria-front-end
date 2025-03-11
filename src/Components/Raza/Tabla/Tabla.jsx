@@ -2,12 +2,12 @@ import { useState } from "react";
 import styles from "./table-practica.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deletePract } from "../../../redux/practicas/thunks.js";
+import { deleteRaza } from "../../../redux/razas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 
-const TablaPractica = ({ data, setData }) => {
+const TablaRaza = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
-  const [idPractica, setIdPractica] = useState(null);
+  const [idRaza, setIdRaza] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
@@ -15,44 +15,32 @@ const TablaPractica = ({ data, setData }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleEdit = (practica) => {
-    history.push(`/admin/practicas/form/${practica.id}`, {
-      params: { ...practica },
+  const handleEdit = (raza) => {
+    history.push(`/admin/raza/form/${raza.id}`, {
+      params: { ...raza },
     });
   };
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deletePract(id));
+      await dispatch(deleteRaza(id));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
           return prevData.filter((raza) => raza.id !== id);
         }
         return [];
       });
-      setToastMessage("Practica eliminada correctamente");
+      setToastMessage("Raza eliminada correctamente");
       setToastType("Info");
     } catch (error) {
       console.log(error);
-      setToastMessage("Error al eliminar practica");
+      setToastMessage("Error al eliminar raza");
       setToastType("Error");
     } finally {
       setShowToast(true);
-      setIdPractica(null);
+      setIdRaza(null);
       setShowModal(false);
     }
-  };
-
-  const getNearestPrice = (precios) => {
-    if (!precios || precios.length === 0) return "Sin precio";
-  
-    const today = new Date();
-    
-    const nearest = precios
-      .map((p) => ({ ...p, fecha: new Date(p.fecha) }))
-      .sort((a, b) => Math.abs(a.fecha - today) - Math.abs(b.fecha - today))[0];
-  
-    return nearest ? nearest.valor : "Sin precio";
   };
 
   return (
@@ -61,21 +49,21 @@ const TablaPractica = ({ data, setData }) => {
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
-              <th>Practica</th>
-              <th>Precio</th>
+              <th>Especie</th>
+              <th>Raza</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.map((pra, index) => (
+            {data.map((raz, index) => (
                 <tr key={index} className={`${styles.fila}`}>
-                  <td>{pra?.descripcion}</td>
-                  <td>$ {getNearestPrice(pra.precios)}</td>
+                  <td>{raz?.especie?.descripcion}</td>
+                  <td>{raz?.descripcion}</td>
                   <td>
                     <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                       <img
-                        onClick={() => handleEdit(pra)}
+                        onClick={() => handleEdit(raz)}
                         className={`${styles.tableIcon}`}
                         src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                         alt="update icon button"
@@ -88,7 +76,7 @@ const TablaPractica = ({ data, setData }) => {
                         className={`${styles.tableIcon}`}
                         onClick={() => {
                           setShowModal(true);
-                          setIdPractica(pra.id);
+                          setIdRaza(raz.id);
                         }}
                         src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                         alt="delete icon button"
@@ -101,8 +89,8 @@ const TablaPractica = ({ data, setData }) => {
         </table>
       </div>
       <ModalAlert
-        text="¿Desea eliminar la practica?"
-        clickAction={() => handleDelete(idPractica)}
+        text="¿Desea eliminar la raza?"
+        clickAction={() => handleDelete(idRaza)}
         showModal={showModal}
         setShowModal={setShowModal}
       />
@@ -111,4 +99,4 @@ const TablaPractica = ({ data, setData }) => {
   );
 };
 
-export default TablaPractica;
+export default TablaRaza;

@@ -1,13 +1,14 @@
 import { useState } from "react";
-import styles from "./table-practica.module.css";
+import styles from "./tabla-mascota.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deletePract } from "../../../redux/practicas/thunks.js";
+import { deleteMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
+import { justFecha } from "../../../Functions/utiities.js";
 
-const TablaPractica = ({ data, setData }) => {
+const TablaMascota = ({ data, setData, especies }) => {
   const [showModal, setShowModal] = useState(false);
-  const [idPractica, setIdPractica] = useState(null);
+  const [idVMas, setIdMas] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
@@ -15,44 +16,34 @@ const TablaPractica = ({ data, setData }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const handleEdit = (practica) => {
-    history.push(`/admin/practicas/form/${practica.id}`, {
-      params: { ...practica },
+  const handleEdit = (mascota) => {
+    mascota = { ...mascota, fecha_nacimiento: justFecha(mascota.fecha_nacimiento) };
+    history.push(`/admin/mascota/form/${mascota.id}`, {
+      params: { ...mascota },
     });
   };
 
+
   const handleDelete = async (id) => {
     try {
-      await dispatch(deletePract(id));
+      await dispatch(deleteMascota(id));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
-          return prevData.filter((raza) => raza.id !== id);
+          return prevData.filter((masco) => masco.id !== id);
         }
         return [];
       });
-      setToastMessage("Practica eliminada correctamente");
+      setToastMessage("Mascota eliminada correctamente");
       setToastType("Info");
     } catch (error) {
       console.log(error);
-      setToastMessage("Error al eliminar practica");
+      setToastMessage("Error al eliminar mascota");
       setToastType("Error");
     } finally {
       setShowToast(true);
-      setIdPractica(null);
+      setIdMas(null);
       setShowModal(false);
     }
-  };
-
-  const getNearestPrice = (precios) => {
-    if (!precios || precios.length === 0) return "Sin precio";
-  
-    const today = new Date();
-    
-    const nearest = precios
-      .map((p) => ({ ...p, fecha: new Date(p.fecha) }))
-      .sort((a, b) => Math.abs(a.fecha - today) - Math.abs(b.fecha - today))[0];
-  
-    return nearest ? nearest.valor : "Sin precio";
   };
 
   return (
@@ -61,21 +52,35 @@ const TablaPractica = ({ data, setData }) => {
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
-              <th>Practica</th>
-              <th>Precio</th>
+              <th>Nombre</th>
+              <th>Sexo</th>
+              <th>Especie</th>
+              <th className={`d-none d-sm-table-cell`}>Raza</th>
+              <th className={`d-none d-sm-table-cell`}>Fecha Nacimiento</th>
+              <th className={`d-none d-sm-table-cell`}>Dueño</th>
+              <th className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>Dueño email</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.map((pra, index) => (
+            {data
+              .filter((mas) => mas?.owner && typeof mas?.owner === "object")
+              .map((mas, index) => (
                 <tr key={index} className={`${styles.fila}`}>
-                  <td>{pra?.descripcion}</td>
-                  <td>$ {getNearestPrice(pra.precios)}</td>
+                  <td>{mas?.nombre}</td>
+                  <td>{mas?.sexo}</td>
+                  <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
+                  <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
+                  <td className={`d-none d-sm-table-cell`}>{justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
+                  <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>
+                    {mas?.owner?.nombre} {mas?.owner?.apellido}
+                  </td>
+                  <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
                   <td>
                     <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                       <img
-                        onClick={() => handleEdit(pra)}
+                        onClick={() => handleEdit(mas)}
                         className={`${styles.tableIcon}`}
                         src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                         alt="update icon button"
@@ -88,7 +93,7 @@ const TablaPractica = ({ data, setData }) => {
                         className={`${styles.tableIcon}`}
                         onClick={() => {
                           setShowModal(true);
-                          setIdPractica(pra.id);
+                          setIdMas(mas.id);
                         }}
                         src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                         alt="delete icon button"
@@ -101,8 +106,8 @@ const TablaPractica = ({ data, setData }) => {
         </table>
       </div>
       <ModalAlert
-        text="¿Desea eliminar la practica?"
-        clickAction={() => handleDelete(idPractica)}
+        text="¿Desea eliminar el veterinario?"
+        clickAction={() => handleDelete(idVMas)}
         showModal={showModal}
         setShowModal={setShowModal}
       />
@@ -111,4 +116,4 @@ const TablaPractica = ({ data, setData }) => {
   );
 };
 
-export default TablaPractica;
+export default TablaMascota;

@@ -38,6 +38,7 @@ export const addEspecie = (especie) => {
       const { data } = await axios.post("/especies", especie);
       dispatch(addEspecieSuccess(data.data));
       dispatch(addEspecieError(undefined));
+      return data.data;
     } catch (error) {
       dispatch(addEspecieError(error.response?.data?.message || "Failed to add species"));
       throw error;

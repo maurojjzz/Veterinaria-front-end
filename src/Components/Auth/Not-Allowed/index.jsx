@@ -1,11 +1,10 @@
-import React from 'react'
-
+import { Box } from "@mui/material";
 const NotAllowed = () => {
   return (
-    <div>
+    <Box sx={{ marginTop: "100px" }}>
       <h1>Not Allowed</h1>
-    </div>
-  )
-}
+    </Box>
+  );
+};
 
-export default NotAllowed
+export default NotAllowed;

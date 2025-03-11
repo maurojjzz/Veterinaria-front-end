@@ -24,10 +24,6 @@ function Especie() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <div className={styles.titleContainer}>
-          <span className={styles.icon}>🐾</span>
-          <h1 className={styles.title}>Especie</h1>
-        </div>
       </div>
       {currentView === "table" ? (
         <EspecieTable onNavigate={handleNavigate} refreshKey={refreshKey} />

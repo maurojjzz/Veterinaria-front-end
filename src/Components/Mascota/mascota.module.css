@@ -1,20 +1,21 @@
-.clienteContainer {
-  margin-top: 85px;
-}
-
 .tableContainer {
   max-width: 950px;
 }
 
+
+.clienteContainer{
+  margin-top: 85px;
+}
+
 .addUserBtn {
-  border: 2px solid #1bbcb6;
-  color: #1bbcb6;
+  border: 2px solid #1BBCB6;
+  color: #1BBCB6;
   cursor: pointer;
   transition: all ease-out 0.4s;
 }
 
 .addUserBtn:hover {
-  background-color: #1bbcb6;
+  background-color: #1BBCB6;
   color: white;
   transform: scale(1.05);
 }
