@@ -49,6 +49,10 @@ const Celda = ({ item, setData }) => {
     }, 2000);
   };
 
+  const handleEdit = (mascota) => {
+    history.push(`/user/mascotas/form/${mascota.id}`, { params: { ...mascota } });
+  };
+
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteMascota(id));
@@ -190,7 +194,7 @@ const Celda = ({ item, setData }) => {
           <IconButton
             size="large"
             onClick={() => {
-              console.log("editar item: ", item.id);
+              handleEdit(item);
             }}
           >
             <ModeEditIcon color="info" />

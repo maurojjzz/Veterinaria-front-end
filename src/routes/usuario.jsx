@@ -7,6 +7,7 @@ import AtencionesPendientesPago from "../Components/Users/User/AtencionesPendien
 import HistorialAtenciones from "../Components/Users/User/HistorialAtenciones";
 import Perfil from "../Components/Users/User/Perfil/Perfil";
 import Mascotas from "../Components/Users/User/Mascota/Mascota";
+import MascotasForm from "../Components/Users/User/Mascota/Form";
 
 const UsuarioRoutes = () => {
   const { url } = useRouteMatch();
@@ -58,6 +59,7 @@ const UsuarioRoutes = () => {
         <Route exact path={`${url}/atenciones-pendientes`} component={AtencionesPendientesPago} />
         <Route exact path={`${url}/historial-atenciones`} component={HistorialAtenciones} />
         <Route exact path={`${url}/mascotas`} component={Mascotas} />
+        <Route path={`${url}/mascotas/form/:id?`} component={MascotasForm} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/dash`} />

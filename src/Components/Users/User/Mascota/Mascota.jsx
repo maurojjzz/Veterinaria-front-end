@@ -45,7 +45,7 @@ const Mascota = () => {
   }, [mascotas]);
 
   const handleMascota = () => {
-    history.push("/user/mascotas/form");
+    history.push("/user/mascotas/form", { params: { ...me } });
   };
 
   useEffect(() => {

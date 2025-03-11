@@ -14,6 +14,7 @@ const TablaMascota = ({ data, setData }) => {
         overflowY: "auto",
         borderRadius: "10px",
         border: "1px solid #1BBCB6",
+        boxShadow: "10px 7px 10px 1px rgba(27, 188, 182, 0.18)",
       }}
     >
       {data.length > 0 ? (
