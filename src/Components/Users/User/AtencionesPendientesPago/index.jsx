@@ -1,36 +1,37 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getAtenciones } from "../../../../redux/atenciones/thunks.js"
-import { decodeToken } from "../../../../Functions/utiities.js"
-import "./AtencionesPendientesPago.css"
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAtenciones } from "../../../../redux/atenciones/thunks.js";
+import { decodeToken } from "../../../../Functions/utiities.js";
+import "./AtencionesPendientesPago.css";
+import BloqueoMascota from "../Mascota/BloqueoMascota/BloqueoMascota.jsx";
 
 const AtencionesPendientesPago = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const { atenciones = [] } = useSelector((state) => state.atenciones)
-  const token = useSelector((state) => state.auth.token)
-  const usuario = token ? decodeToken(token) : null
+  const { atenciones = [] } = useSelector((state) => state.atenciones);
+  const token = useSelector((state) => state.auth.token);
+  const usuario = token ? decodeToken(token) : null;
 
   useEffect(() => {
-    dispatch(getAtenciones())
-  }, [dispatch])
+    dispatch(getAtenciones());
+  }, [dispatch]);
 
   const isAtencionPendienteDePago = (atencion) => {
-    if (!usuario || !atencion) return false
+    if (!usuario || !atencion) return false;
 
-    if (atencion.usuario_id !== usuario.id) return false
+    if (atencion.usuario_id !== usuario.id) return false;
 
     return (
       !atencion.fecha_hora_pago ||
       atencion.fecha_hora_pago === "null" ||
       atencion.fecha_hora_pago === null ||
       atencion.fecha_hora_pago === ""
-    )
-  }
+    );
+  };
 
-  const atencionesUsuario = atenciones.filter(isAtencionPendienteDePago)
+  const atencionesUsuario = atenciones.filter(isAtencionPendienteDePago);
 
   return (
     <div className="container">
@@ -54,12 +55,9 @@ const AtencionesPendientesPago = () => {
       ) : (
         <p className="no-data">No hay atenciones pendientes de pago.</p>
       )}
+      <BloqueoMascota />
     </div>
-  )
-}
+  );
+};
 
-export default AtencionesPendientesPago
-
-
-
-
+export default AtencionesPendientesPago;

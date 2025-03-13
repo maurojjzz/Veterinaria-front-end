@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getAtenciones } from "../../../../redux/atenciones/thunks.js"
 import { decodeToken } from "../../../../Functions/utiities.js"
 import styles from "./HistorialAtenciones.module.css"
+import BloqueoMascota from "../Mascota/BloqueoMascota/BloqueoMascota.jsx"
 
 const HistorialAtenciones = () => {
   const dispatch = useDispatch()
@@ -149,6 +150,7 @@ const HistorialAtenciones = () => {
       ) : (
         !error && <p className={styles.noData}>No hay atenciones registradas en el período seleccionado.</p>
       )}
+      <BloqueoMascota />
     </div>
   )
 }
