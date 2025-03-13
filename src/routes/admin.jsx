@@ -11,11 +11,12 @@ import FormPractica from "../Components/Practica/Form";
 import Atencion from "../Components/Atencion";
 import AtencionForm from "../Components/Atencion/Form";
 import Perfil from "../Components/Users/Admin//Perfil/Perfil";
-
-import Pets from "../Components/Mascotas";
-import PetsForm from "../Components/Mascotas/Form";
+import Mascotas from "../Components/Mascota";
+import MascotasForm from "../Components/Mascota/Form";
 import Especies from "../Components/Especie";
 import EspeciesForm from "../Components/Especie/Form";
+import Pagos from "../Components/Pago";
+import PagoForm from "../Components/Pago/Form";
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch();
@@ -44,6 +45,12 @@ const AdminRoutes = () => {
       path: "/admin/atenciones",
       image: "order-history.png",
       alt: "icono de historial de atenciones",
+    },
+    { 
+      name: "Pagos", 
+      path: "/admin/pagos", 
+      image: "pagos.png", 
+      alt: "icono de pagos" 
     },
     {
       name: "Perfil",
@@ -76,10 +83,14 @@ const AdminRoutes = () => {
         <Route path={`${url}/practicas/form/:id?`} component={FormPractica} />
         <Route exact path={`${url}/atenciones`} component={Atencion} />
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
-        <Route exact path={`${url}/mascota`} component={Pets} />
-        <Route path={`${url}/mascota/form/:id?`} component={PetsForm} />
+        <Route exact path={`${url}/mascota`} component={Mascotas} />
+        <Route path={`${url}/mascota/form/:id?`} component={MascotasForm} />
         <Route exact path={`${url}/especie`} component={Especies} />
         <Route path={`${url}/especie/form/:id?`} component={EspeciesForm} />
+        <Route exact path={`${url}/pagos`} component={Pagos} />
+        <Route path={`${url}/pagos/:id`} component={Pagos} />
+        <Route exact path={`${url}/pagos/form`} component={PagoForm} />
+        <Route path={`${url}/pagos/form/:id`} component={PagoForm} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />

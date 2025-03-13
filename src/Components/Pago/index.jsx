@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import axios from "axios"
+import axios from "../../axios-config"
 import styles from "./pago.module.css"
 
 const Pagos = () => {
@@ -22,19 +22,24 @@ const Pagos = () => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const [pagosResponse, atencionesResponse] = await Promise.all([
-          axios.get("http://localhost:3080/api/pagos"),
-          axios.get("http://localhost:3080/api/atenciones"),
-        ])
+        const [pagosResponse, atencionesResponse] = await Promise.all([axios.get("/pagos"), axios.get("/atenciones")])
 
         const pagosData = Array.isArray(pagosResponse.data) ? pagosResponse.data : []
         const atencionesData = Array.isArray(atencionesResponse.data) ? atencionesResponse.data : []
 
-        console.log("Pagos fetched:", pagosData)
-        console.log("Atenciones fetched:", atencionesData)
+        // Normalizar IDs (asegurarse de que todos usen 'id' en lugar de '_id')
+        const normalizedPagos = pagosData.map((pago) => ({
+          ...pago,
+          id: pago.id || pago._id,
+        }))
 
-        setPagos(pagosData)
-        setAtenciones(atencionesData)
+        const normalizedAtenciones = atencionesData.map((atencion) => ({
+          ...atencion,
+          id: atencion.id || atencion._id,
+        }))
+
+        setPagos(normalizedPagos)
+        setAtenciones(normalizedAtenciones)
         setError(null)
       } catch (err) {
         console.error("Error fetching data:", err)
@@ -51,10 +56,11 @@ const Pagos = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3080/api/pagos/${id}`)
-      setPagos(pagos.filter((pago) => pago._id !== id))
-    } catch (error) {
-      console.error("Error al eliminar el pago", error)
+      await axios.delete(`/pagos/${id}`)
+      setPagos(pagos.filter((pago) => pago.id !== id))
+      setError(null)
+    } catch (err) {
+      console.error("Error al eliminar el pago", err)
       setError("Error al eliminar el pago. Por favor, intente nuevamente.")
     }
   }
@@ -62,17 +68,30 @@ const Pagos = () => {
   const handleCreate = async (e) => {
     e.preventDefault()
     try {
+      // Validar campos requeridos
+      if (!nuevoPago.forma_de_pago || !nuevoPago.importe || !nuevoPago.atencion) {
+        setError("Por favor complete todos los campos requeridos.")
+        return
+      }
+
       const pagoToCreate = {
         ...nuevoPago,
         importe: Number.parseFloat(nuevoPago.importe),
-        cuotas: Number.parseInt(nuevoPago.cuotas),
-        nro_cuota: Number.parseInt(nuevoPago.nro_cuota),
+        cuotas: Number.parseInt(nuevoPago.cuotas.toString()),
+        nro_cuota: Number.parseInt(nuevoPago.nro_cuota.toString()),
       }
 
-      const response = await axios.post("http://localhost:3080/api/pagos", pagoToCreate)
+      const response = await axios.post("/pagos", pagoToCreate)
 
-      setPagos([...pagos, response.data])
+      // Normalizar ID
+      const newPago = {
+        ...response.data,
+        id: response.data.id || response.data._id,
+      }
 
+      setPagos([...pagos, newPago])
+
+      // Resetear formulario
       setNuevoPago({
         forma_de_pago: "",
         importe: "",
@@ -83,9 +102,9 @@ const Pagos = () => {
       })
 
       setError(null)
-    } catch (error) {
-      console.error("Error al crear el pago", error)
-      setError("Error al crear el pago. Por favor, intente nuevamente.")
+    } catch (err) {
+      console.error("Error al crear el pago", err)
+      setError(err.response?.data?.message || "Error al crear el pago. Por favor, intente nuevamente.")
     }
   }
 
@@ -120,14 +139,14 @@ const Pagos = () => {
                 </thead>
                 <tbody>
                   {pagos.map((pago) => (
-                    <tr key={pago._id}>
+                    <tr key={pago.id}>
                       <td>{pago.forma_de_pago}</td>
                       <td>${typeof pago.importe === "number" ? pago.importe.toLocaleString() : pago.importe}</td>
                       <td>{pago.cuotas}</td>
                       <td>{pago.nro_cuota}</td>
                       <td>{new Date(pago.fecha_hora_pago).toLocaleString()}</td>
                       <td>
-                        <button className={styles.deleteBtn} onClick={() => handleDelete(pago._id)}>
+                        <button className={styles.deleteBtn} onClick={() => handleDelete(pago.id)}>
                           Eliminar
                         </button>
                       </td>
@@ -149,6 +168,7 @@ const Pagos = () => {
                 value={nuevoPago.forma_de_pago}
                 onChange={(e) => setNuevoPago({ ...nuevoPago, forma_de_pago: e.target.value })}
                 required
+                className={styles.formSelect}
               >
                 <option value="">Seleccione una forma de pago</option>
                 <option value="Debito">Débito</option>
@@ -163,10 +183,12 @@ const Pagos = () => {
               <input
                 id="importe"
                 type="number"
+                step="0.01"
                 placeholder="Importe"
                 value={nuevoPago.importe}
                 onChange={(e) => setNuevoPago({ ...nuevoPago, importe: e.target.value })}
                 required
+                className={styles.formInput}
               />
             </div>
 
@@ -177,10 +199,12 @@ const Pagos = () => {
                   <input
                     id="cuotas"
                     type="number"
+                    min="1"
                     placeholder="Cuotas"
                     value={nuevoPago.cuotas}
-                    onChange={(e) => setNuevoPago({ ...nuevoPago, cuotas: e.target.value })}
+                    onChange={(e) => setNuevoPago({ ...nuevoPago, cuotas: Number.parseInt(e.target.value) || 1 })}
                     required
+                    className={styles.formInput}
                   />
                 </div>
 
@@ -189,10 +213,12 @@ const Pagos = () => {
                   <input
                     id="nro_cuota"
                     type="number"
+                    min="1"
                     placeholder="Número de Cuota"
                     value={nuevoPago.nro_cuota}
-                    onChange={(e) => setNuevoPago({ ...nuevoPago, nro_cuota: e.target.value })}
+                    onChange={(e) => setNuevoPago({ ...nuevoPago, nro_cuota: Number.parseInt(e.target.value) || 1 })}
                     required
+                    className={styles.formInput}
                   />
                 </div>
               </>
@@ -205,11 +231,12 @@ const Pagos = () => {
                 value={nuevoPago.atencion}
                 onChange={(e) => setNuevoPago({ ...nuevoPago, atencion: e.target.value })}
                 required
+                className={styles.formSelect}
               >
                 <option value="">Seleccione una atención</option>
                 {atenciones.map((atencion) => (
-                  <option key={atencion._id} value={atencion._id}>
-                    {atencion.descripcion || atencion.paciente?.nombre || atencion._id}
+                  <option key={atencion.id} value={atencion.id}>
+                    {atencion.descripcion || atencion.paciente?.nombre || atencion.id}
                   </option>
                 ))}
               </select>
@@ -223,6 +250,7 @@ const Pagos = () => {
                 value={nuevoPago.fecha_hora_pago}
                 onChange={(e) => setNuevoPago({ ...nuevoPago, fecha_hora_pago: e.target.value })}
                 required
+                className={styles.formInput}
               />
             </div>
 
@@ -239,6 +267,8 @@ const Pagos = () => {
 }
 
 export default Pagos
+
+
 
 
 

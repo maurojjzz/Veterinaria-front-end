@@ -7,6 +7,18 @@ import { Toast, ModalAlert } from "../../Shared"
 import { useDispatch, useSelector } from "react-redux"
 import { getPagos, deletePago } from "../../../redux/pagos/thunks.js"
 
+// Función selectora segura
+const selectPagosState = (state) => {
+  if (!state || typeof state !== "object") return { pagos: [], loading: false, error: null }
+
+  const pagosState = state.pagos || {}
+  return {
+    pagos: Array.isArray(pagosState.pagos) ? pagosState.pagos : [],
+    loading: Boolean(pagosState.loading),
+    error: pagosState.error || null,
+  }
+}
+
 const TablaPagos = () => {
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
@@ -18,17 +30,16 @@ const TablaPagos = () => {
   const history = useHistory()
   const dispatch = useDispatch()
 
-  // Get pagos from Redux store and ensure it's an array
-  const pagosState = useSelector((state) => state.pagos)
-  const pagos = Array.isArray(pagosState.pagos) ? pagosState.pagos : []
-  const isLoading = pagosState.loading
-  const error = pagosState.error
+  // Uso de la función selectora
+  const { pagos, loading: isLoading, error } = useSelector(selectPagosState)
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
         await dispatch(getPagos())
+      } catch (err) {
+        console.error("Error fetching pagos:", err)
       } finally {
         setLoading(false)
       }
@@ -38,10 +49,13 @@ const TablaPagos = () => {
   }, [dispatch])
 
   const handleEdit = (pago) => {
+    if (!pago || !pago.id) return
     history.push(`/admin/pagos/form/${pago.id}`, { params: { ...pago } })
   }
 
   const handleDelete = async (id) => {
+    if (!id) return
+
     try {
       await dispatch(deletePago(id))
       setShowToast(true)
@@ -49,11 +63,13 @@ const TablaPagos = () => {
       setToastType("Success")
       dispatch(getPagos())
     } catch (error) {
+      console.error("Error deleting pago:", error)
       setShowToast(true)
       setToastMessage("Error al eliminar el pago")
       setToastType("Error")
     } finally {
       setShowModalAlert(false)
+      setIdToEliminate(null)
     }
   }
 
@@ -99,7 +115,7 @@ const TablaPagos = () => {
                 </thead>
                 <tbody>
                   {pagos.map((pago, index) => (
-                    <tr key={index} className={styles.fila}>
+                    <tr key={pago.id || index} className={styles.fila}>
                       <td>{pago.forma_de_pago}</td>
                       <td>${typeof pago.importe === "number" ? pago.importe.toLocaleString() : pago.importe}</td>
                       <td>{pago.cuotas}</td>
@@ -134,7 +150,7 @@ const TablaPagos = () => {
 
       <ModalAlert
         text="¿Está seguro que desea eliminar este pago?"
-        clickAction={() => handleDelete(idToEliminate)}
+        clickAction={() => idToEliminate && handleDelete(idToEliminate)}
         showModal={showModalAlert}
         setShowModal={setShowModalAlert}
       />
@@ -145,6 +161,7 @@ const TablaPagos = () => {
 }
 
 export default TablaPagos
+
 
 
 
