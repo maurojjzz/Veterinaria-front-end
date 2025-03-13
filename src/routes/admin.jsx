@@ -16,7 +16,6 @@ import MascotasForm from "../Components/Mascota/Form";
 import Especies from "../Components/Especie";
 import EspeciesForm from "../Components/Especie/Form";
 import Pagos from "../Components/Pago";
-import PagoForm from "../Components/Pago/Form";
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch();
@@ -88,9 +87,6 @@ const AdminRoutes = () => {
         <Route exact path={`${url}/especie`} component={Especies} />
         <Route path={`${url}/especie/form/:id?`} component={EspeciesForm} />
         <Route exact path={`${url}/pagos`} component={Pagos} />
-        <Route path={`${url}/pagos/:id`} component={Pagos} />
-        <Route exact path={`${url}/pagos/form`} component={PagoForm} />
-        <Route path={`${url}/pagos/form/:id`} component={PagoForm} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />
