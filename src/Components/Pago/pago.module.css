@@ -51,6 +51,13 @@
   background-color: #f0f9ff;
 }
 
+@media (max-width: 768px) {
+  .pagosTable th:not(:nth-child(2)):not(:nth-child(3)):not(:last-child),
+  .pagosTable td:not(:nth-child(2)):not(:nth-child(3)):not(:last-child) {
+    display: none;
+  }
+}
+
 .pagosForm {
   background: white;
   padding: 30px;
@@ -93,62 +100,62 @@
 .formGroup select:focus {
   border-color: #60a5fa;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.75);
 }
 
-.submitBtn {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  grid-column: 1 / -1;
+.pagosForm {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: grid;
+  gap: 15px;
+}
+
+.pagosForm .formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pagosForm .formGroup label {
+  font-weight: bold;
+}
+
+.pagosForm .formGroup input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pagosForm .formGroup select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pagosForm .formGroup:last-child {
   justify-self: end;
 }
 
-.submitBtn:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+.pagosTable th,
+.pagosTable td {
+  padding: 10px;
+  text-align: left;
 }
 
-.deleteBtn {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
+.pagosTable th:last-child,
+.pagosTable td:last-child {
+  text-align: right;
+  width: 80px;
 }
 
-.deleteBtn:hover {
-  background-color: #dc2626;
+@media (max-width: 768px) {
+  .pagosTable tr th:nth-child(3),
+  .pagosTable td:nth-child(3),
+  .pagosTable th:nth-child(4),
+  .pagosTable td:nth-child(4) {
+    display: none;
+  }
 }
-
-.emptyState {
-  text-align: center;
-  padding: 40px;
-  color: #6b7280;
-  font-style: italic;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.formActions {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 10px;
-}
-
 
