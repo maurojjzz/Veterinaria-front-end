@@ -8,6 +8,7 @@ import HistorialAtenciones from "../Components/Users/User/HistorialAtenciones";
 import Perfil from "../Components/Users/User/Perfil/Perfil";
 import Mascotas from "../Components/Users/User/Mascota/Mascota";
 import MascotasForm from "../Components/Users/User/Mascota/Form";
+import Turno from "../Components/Users/User/Turno/Turno";
 
 const UsuarioRoutes = () => {
   const { url } = useRouteMatch();
@@ -24,6 +25,12 @@ const UsuarioRoutes = () => {
       path: "/user/atencion",
       image: "order-history.png",
       alt: "atenciones icon",
+    },
+    {
+      name: "Turno",
+      path: "/user/turno",
+      image: "order-history.png",
+      alt: "turno icon",
     },
     {
       name: "Atenciones Pendientes",
@@ -62,6 +69,7 @@ const UsuarioRoutes = () => {
         <Route path={`${url}/mascotas/form/:id?`} component={MascotasForm} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
+        <Route exact path={`${url}/turno`} component={Turno} />
         <Redirect to={`${url}/dash`} />
       </Switch>
     </Layout>
