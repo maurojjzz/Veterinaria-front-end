@@ -32,6 +32,21 @@ export const initUsers = () => {
   };
 };
 
+export const getUserById = (id) => {
+  return async (dispatch) => {
+    dispatch(getUsersPending(true));
+    try {
+      const { data } = await axios.get(`/usuarios/${id}`);
+      dispatch(getUsersError(undefined));
+      return data.data;
+    } catch (error) {
+      
+    } finally {
+      dispatch(getUsersPending(false));
+    }
+  };
+}
+
 export const initAdmins = () => {
   return async (dispatch) => {
     dispatch(getUsersPending(true));
