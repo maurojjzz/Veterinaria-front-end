@@ -1,1 +1,0 @@
-<h1>Para codificar pantallas del veterinario</h1>
