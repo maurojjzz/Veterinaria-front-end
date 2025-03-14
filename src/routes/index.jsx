@@ -9,6 +9,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/
 const AuthRoute = React.lazy(() => import("./auth"));
 const AdminRoutes = React.lazy(() => import("./admin"));
 const UsuarioRoutes = React.lazy(() => import("./usuario"));
+const VeterinarioRoutes = React.lazy(() => import("./veterinario"));
 
 const Routes = () => {
   const { sessionExpired } = useSelector((state) => state.auth);
@@ -31,7 +32,7 @@ const Routes = () => {
         <Switch>
           <PrivateRoute path="/admin" role="Admin" component={AdminRoutes} />
           <PrivateRoute path="/user" role="Usuario" component={UsuarioRoutes} />
-          <PrivateRoute path="/vet" role="Veterinario" />
+          <PrivateRoute path="/vet" role="Veterinario" component={VeterinarioRoutes} />
           <Route path="/auth" component={AuthRoute} />
           <Redirect to="/auth" />
         </Switch>

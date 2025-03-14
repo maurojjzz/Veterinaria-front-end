@@ -31,6 +31,20 @@ export const getVet = () => {
   };
 };
 
+export const getVetById = (id) => {
+  return async (dispatch) => {
+    dispatch(getVetPending(true));
+    try {
+      const { data } = await axios.get(`/veterinarios/${id}`);
+      dispatch(getVetError(undefined));
+      return data.data;
+    } catch (error) {
+    } finally {
+      dispatch(getVetPending(false));
+    }
+  };
+};
+
 export const addVet = (veterinario) => {
   return async (dispatch) => {
     dispatch(addVetPending(true));
