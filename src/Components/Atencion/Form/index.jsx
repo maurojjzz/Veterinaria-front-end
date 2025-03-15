@@ -134,7 +134,7 @@ const AtencionForm = () => {
           />
           <Input
             labelText={`Hora`}
-            placeholder={`Messi`}
+            placeholder={`10:00`}
             type={`time`}
             name={"hora"}
             register={register}
