@@ -75,8 +75,8 @@ const TablaAtencion = () => {
               <th>Dueño</th>
               <th>Mascota</th>
               <th className={`d-none d-sm-table-cell `}>Especie</th>
-              <th className={`d-none d-sm-table-cell `}>Veterinario</th>
               <th className={`d-none d-sm-table-cell `}>Fecha</th>
+              <th className={`d-none d-sm-table-cell `}>Veterinario</th>
               <th className={`d-none d-md-table-cell `}>Practicas</th>
               <th className={`d-none d-lg-table-cell `}>Importe</th>
               <th className={`d-none d-lg-table-cell `}>Abonó</th>
@@ -95,24 +95,24 @@ const TablaAtencion = () => {
                   setModal(!modal);
                 }}
               >
-                <td>{findOwner(ate.mascota.owner)}</td>
-                <td>{ate.mascota.nombre}</td>
-                <td className={`d-none d-sm-table-cell `}>{findSpecie(ate.mascota.raza)}</td>
+                <td>{findOwner(ate?.mascota?.owner)}</td>
+                <td>{ate?.mascota?.nombre}</td>
+                <td className={`d-none d-sm-table-cell `}>{findSpecie(ate?.mascota?.raza)}</td>
+                <td className={`d-none d-sm-table-cell `}>{handleDate(ate?.fecha_hora_atencion)}</td>
                 <td className={`d-none d-sm-table-cell `}>
-                  {ate.veterinario.apellido} {ate.veterinario.nombre}
+                  {ate?.veterinario?.apellido} {ate?.veterinario?.nombre}
                 </td>
-                <td className={`d-none d-sm-table-cell `}>{handleDate(ate.fecha_hora_atencion)}</td>
                 <td className={`d-none d-md-flex gap-2 ${styles.practicas}`}>
-                  <p>{ate.practicas[0].descripcion}</p>
-                  {ate.practicas.length > 1 ? (
+                  <p>{ate?.practicas[0]?.descripcion}</p>
+                  {ate?.practicas?.length > 1 ? (
                     <p className={`${styles.masPracticas}`}> + {ate.practicas.length - 1}</p>
                   ) : (
                     ""
                   )}
                 </td>
-                <td className={`d-none d-lg-table-cell `}>$ {ate.importe}</td>
-                <td className={`d-none d-lg-table-cell `}>{ate.forma_de_pago}</td>
-                <td className={`d-none d-lg-table-cell `}>{handleDate(ate.pagos[0]?.fecha_hora_pago)}</td>
+                <td className={`d-none d-lg-table-cell `}>$ {ate?.importe}</td>
+                <td className={`d-none d-lg-table-cell `}>{ate?.forma_de_pago}</td>
+                <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img

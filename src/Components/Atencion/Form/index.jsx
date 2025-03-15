@@ -126,7 +126,7 @@ const AtencionForm = () => {
         >
           <Input
             labelText={`Fecha Atencion`}
-            placeholder={`Lionel`}
+            placeholder={`25/05/2022`}
             type={`date`}
             name={"fecha"}
             register={register}

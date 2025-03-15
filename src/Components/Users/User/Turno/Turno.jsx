@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import Fecha from "./Fecha/Fecha";
 import Hora from "./Hora/Hora";
+import SelectPet from "./SelectPet";
 
 const Turno = () => {
   return (
@@ -22,20 +23,35 @@ const Turno = () => {
         component={"form"}
         sx={{
           border: "1px solid red",
-          height: "500px",
+          minHeight: "500px",
           width: "90%",
           maxWidth: "700px",
           minWidth: "250px",
           mb: "30px",
         }}
       >
-        <Fecha />
-        <Hora
-          labelText={`Hora`}
-          placeholder={`10:00`}
-          type={`time`}
-          name={"hora"}
+        <Fecha
+          labelText={`Fecha Atencion`}
+          placeholder={`25/05/2022`}
+          type={`date`}
+          name={"fecha"}
+          // register={register}
+          // error={errors.fecha?.message}
+        />
+        <Hora 
+          labelText={`Hora`} 
+          placeholder={`10:00`} 
+          type={`time`} 
+          name={"hora"} 
+          error={"Hora requerida"}
+        />
+
+        <SelectPet
+          // mascotas={userPet.mascotas}
           error={""}
+          // register={register}
+          // name={`mascota`}
+          // defaultValue={atencionDataUpdate.mascota}
         />
       </Box>
     </Box>
