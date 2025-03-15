@@ -1,0 +1,107 @@
+.pagosContainer {
+  padding: 20px;
+  margin-left: 80px;
+  width: calc(100% - 80px);
+  transition: all 0.3s ease;
+  background: linear-gradient(to bottom right, #f0f9ff, #ffffff);
+}
+
+@media (max-width: 768px) {
+  .pagosContainer {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.pagosHeader {
+  margin-bottom: 30px;
+  color: #1e3a8a;
+  font-size: 2rem;
+  font-weight: 600;
+  border-bottom: 3px solid #93c5fd;
+  padding-bottom: 10px;
+}
+
+.pagosTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 30px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.pagosTable th {
+  background-color: #1e40af;
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 15px;
+}
+
+.pagosTable td {
+  padding: 15px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #1f2937;
+}
+
+.pagosTable tr:hover {
+  background-color: #f0f9ff;
+}
+
+/* Mostrar solo Atención, Forma de Pago y Fecha en dispositivos móviles */
+@media (max-width: 768px) {
+  .pagosTable th:nth-child(3),
+  .pagosTable td:nth-child(3),
+  .pagosTable th:nth-child(4),
+  .pagosTable td:nth-child(4),
+  .pagosTable th:nth-child(5),
+  .pagosTable td:nth-child(5) {
+    display: none;
+  }
+}
+
+/* Mantener visible la columna de acciones */
+.pagosTable th:last-child,
+.pagosTable td:last-child {
+  text-align: center;
+  width: 120px;
+}
+
+/* Botón de eliminar rojo y atractivo */
+.deleteBtn {
+  background-color: #dc2626;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  text-align: center;
+  display: inline-block;
+}
+
+.deleteBtn:hover {
+  background-color: #b91c1c;
+  transform: scale(1.05);
+}
+
+.deleteBtn:active {
+  background-color: #991b1b;
+  transform: scale(1);
+}
+
+/* Asegurar que el botón de eliminar sea visible y grande en móviles */
+@media (max-width: 768px) {
+  .deleteBtn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+}
+
+

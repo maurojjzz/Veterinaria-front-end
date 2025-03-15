@@ -13,10 +13,11 @@ import AtencionForm from "../Components/Atencion/Form";
 import Perfil from "../Components/Users/Admin//Perfil/Perfil";
 import Mascotas from "../Components/Mascota";
 import MascotasForm from "../Components/Mascota/Form";
-import Especies from "../Components/Especie";
-import EspeciesForm from "../Components/Especie/Form";
 import Raza from "../Components/Raza/Raza";
 import RazaForm from "../Components/Raza/Form/Form";
+import Especies from "../Components/Especie";
+import EspeciesForm from "../Components/Especie/Form";
+import Pagos from "../Components/Pago";
 
 const AdminRoutes = () => {
   const { url } = useRouteMatch();
@@ -46,6 +47,12 @@ const AdminRoutes = () => {
       image: "order-history.png",
       alt: "icono de historial de atenciones",
     },
+    { 
+      name: "Pagos", 
+      path: "/admin/pagos", 
+      image: "pagos.png", 
+      alt: "icono de pagos" 
+    },
     {
       name: "Perfil",
       path: "/admin/perfil",
@@ -58,19 +65,18 @@ const AdminRoutes = () => {
       image: "Mascota.png",
       alt: "icono de mascotas",
     },
+    {name: "Razas",
+      path: "/admin/raza",
+      image: "Especie.png",
+      alt: "icono de especie",
+  },
     {
       name: "Especies",
       path: "/admin/especie",
       image: "Especie.png",
       alt: "icono de especie",
     },
-    {
-      name: "Razas",
-      path: "/admin/raza",
-      image: "Especie.png",
-      alt: "icono de especie",
-    },
-  ];
+];
 
   return (
     <Layout routes={routes}>
@@ -84,11 +90,12 @@ const AdminRoutes = () => {
         <Route exact path={`${url}/atenciones`} component={Atencion} />
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
         <Route exact path={`${url}/mascota`} component={Mascotas} />
+        <Route exact path={`${url}/raza`} component={Raza} />
+        <Route path={`${url}/raza/form/:id?`} component={RazaForm} />
         <Route path={`${url}/mascota/form/:id?`} component={MascotasForm} />
         <Route exact path={`${url}/especie`} component={Especies} />
         <Route path={`${url}/especie/form/:id?`} component={EspeciesForm} />
-        <Route exact path={`${url}/raza`} component={Raza} />
-        <Route path={`${url}/raza/form/:id?`} component={RazaForm} />
+        <Route exact path={`${url}/pagos`} component={Pagos} />
         <Route exact path={`${url}/perfil`} component={Perfil} />
         <Route exact path={`${url}/not-allowed`} component={NotAllowed} />
         <Redirect to={`${url}/usuarios`} />
