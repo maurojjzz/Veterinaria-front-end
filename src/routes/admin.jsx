@@ -13,6 +13,8 @@ import AtencionForm from "../Components/Atencion/Form";
 import Perfil from "../Components/Users/Admin//Perfil/Perfil";
 import Mascotas from "../Components/Mascota";
 import MascotasForm from "../Components/Mascota/Form";
+import Raza from "../Components/Raza";
+import RazaForm from "../Components/Raza/Form";
 import Especies from "../Components/Especie";
 import EspeciesForm from "../Components/Especie/Form";
 import Pagos from "../Components/Pago";
@@ -63,13 +65,18 @@ const AdminRoutes = () => {
       image: "Mascota.png",
       alt: "icono de mascotas",
     },
+    {name: "Razas",
+      path: "/admin/raza",
+      image: "Especie.png",
+      alt: "icono de especie",
+  },
     {
       name: "Especies",
       path: "/admin/especie",
       image: "Especie.png",
       alt: "icono de especie",
     },
-  ];
+];
 
   return (
     <Layout routes={routes}>
@@ -83,6 +90,8 @@ const AdminRoutes = () => {
         <Route exact path={`${url}/atenciones`} component={Atencion} />
         <Route path={`${url}/atenciones/form/:id?`} component={AtencionForm} />
         <Route exact path={`${url}/mascota`} component={Mascotas} />
+        <Route exact path={`${url}/raza`} component={Raza} />
+        <Route path={`${url}/raza/form/:id?`} component={RazaForm} />
         <Route path={`${url}/mascota/form/:id?`} component={MascotasForm} />
         <Route exact path={`${url}/especie`} component={Especies} />
         <Route path={`${url}/especie/form/:id?`} component={EspeciesForm} />
