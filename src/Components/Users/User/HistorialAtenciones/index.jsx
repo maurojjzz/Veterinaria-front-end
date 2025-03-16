@@ -1,95 +1,109 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { getAtenciones } from "../../../../redux/atenciones/thunks.js"
-import { decodeToken } from "../../../../Functions/utiities.js"
-import styles from "./HistorialAtenciones.module.css"
-import BloqueoMascota from "../Mascota/BloqueoMascota/BloqueoMascota.jsx"
+import { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAtenciones } from "../../../../redux/atenciones/thunks.js";
+import { decodeToken } from "../../../../Functions/utiities.js";
+import styles from "./HistorialAtenciones.module.css";
+import BloqueoMascota from "../Mascota/BloqueoMascota/BloqueoMascota.jsx";
+import { Toast } from "../../../Shared";
 
 const HistorialAtenciones = () => {
-  const dispatch = useDispatch()
-  const { atenciones = [] } = useSelector((state) => state.atenciones)
-  const token = useSelector((state) => state.auth.token)
-  const usuario = token ? decodeToken(token) : null
+  const dispatch = useDispatch();
+  const { atenciones = [] } = useSelector((state) => state.atenciones);
+  const token = useSelector((state) => state.auth.token);
+  const usuario = token ? decodeToken(token) : null;
 
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
-  const [error, setError] = useState("")
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const history = useHistory();
+  const location = useLocation();
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
   useEffect(() => {
-    dispatch(getAtenciones())
-  }, [dispatch])
+    dispatch(getAtenciones());
+  }, [dispatch]);
 
   const addOneDay = (date) => {
-    const newDate = new Date(date)
-    newDate.setDate(newDate.getDate() + 1)
-    return newDate
-  }
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    return newDate;
+  };
+
+  useEffect(() => {
+    if (location.state?.state?.message) {
+      setToastMessage(location.state?.state?.message);
+      setToastType(location.state?.state.type);
+      setShowToast(true);
+      history.replace("/user/historial-atenciones", {});
+    }
+  }, [location, history]);
 
   const handleDateChange = (type, value) => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0) 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
     if (type === "start") {
-      const newStartDate = value
-      const start = newStartDate ? new Date(newStartDate) : null
-      const end = endDate ? new Date(endDate) : null
+      const newStartDate = value;
+      const start = newStartDate ? new Date(newStartDate) : null;
+      const end = endDate ? new Date(endDate) : null;
 
       if (start && start > today) {
-        setError("No puede haber atenciones que hayan sido realizadas después del presente.")
-        setIsModalOpen(true) 
-        return 
+        setError("No puede haber atenciones que hayan sido realizadas después del presente.");
+        setIsModalOpen(true);
+        return;
       }
 
       if (end && start > end) {
-        setError("La fecha de inicio no puede ser posterior a la fecha de fin.")
-        setIsModalOpen(true) 
-        return 
+        setError("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        setIsModalOpen(true);
+        return;
       }
 
-      setError("")
-      setIsModalOpen(false)
-      setStartDate(newStartDate) 
+      setError("");
+      setIsModalOpen(false);
+      setStartDate(newStartDate);
     } else if (type === "end") {
-      const newEndDate = value
-      const start = startDate ? new Date(startDate) : null
-      const end = newEndDate ? new Date(newEndDate) : null
+      const newEndDate = value;
+      const start = startDate ? new Date(startDate) : null;
+      const end = newEndDate ? new Date(newEndDate) : null;
 
       if (end && end > today) {
-        setError("No puede haber atenciones que hayan sido realizadas después del presente.")
-        setIsModalOpen(true) 
-        return
+        setError("No puede haber atenciones que hayan sido realizadas después del presente.");
+        setIsModalOpen(true);
+        return;
       }
 
       if (start && end < start) {
-        setError("La fecha de fin no puede ser anterior a la fecha de inicio.")
-        setIsModalOpen(true) 
-        return 
+        setError("La fecha de fin no puede ser anterior a la fecha de inicio.");
+        setIsModalOpen(true);
+        return;
       }
 
-      setError("")
-      setIsModalOpen(false)
-      setEndDate(newEndDate) 
+      setError("");
+      setIsModalOpen(false);
+      setEndDate(newEndDate);
     }
-  }
+  };
 
-
-  const atencionesUsuario = atenciones.filter((atencion) => atencion.usuario_id === usuario?.id)
+  const atencionesUsuario = atenciones.filter((atencion) => atencion.usuario_id === usuario?.id);
 
   const atencionesFiltradasYOrdenadas = atencionesUsuario
     .filter((atencion) => {
-      const atencionDate = new Date(atencion.fecha_hora_atencion) 
-      const start = startDate ? new Date(startDate) : null 
-      const end = endDate ? addOneDay(new Date(endDate)) : null 
+      const atencionDate = new Date(atencion.fecha_hora_atencion);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? addOneDay(new Date(endDate)) : null;
 
-      const isAfterStart = !start || atencionDate >= start
-      const isBeforeEnd = !end || atencionDate < end 
+      const isAfterStart = !start || atencionDate >= start;
+      const isBeforeEnd = !end || atencionDate < end;
 
-      return isAfterStart && isBeforeEnd
+      return isAfterStart && isBeforeEnd;
     })
-    .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime())
+    .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime());
 
   return (
     <div className={styles.container}>
@@ -109,7 +123,7 @@ const HistorialAtenciones = () => {
           className={styles.dateInput}
         />
       </div>
-      
+
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
@@ -129,8 +143,7 @@ const HistorialAtenciones = () => {
               </div>
               <div className={styles.cardContent}>
                 <p>
-                  <strong>Fecha de Atención:</strong>{" "}
-                  {new Date(atencion.fecha_hora_atencion).toLocaleDateString()}
+                  <strong>Fecha de Atención:</strong> {new Date(atencion.fecha_hora_atencion).toLocaleDateString()}
                 </p>
                 <p>
                   <strong>Mascota:</strong> {atencion.mascota.nombre}
@@ -151,8 +164,9 @@ const HistorialAtenciones = () => {
         !error && <p className={styles.noData}>No hay atenciones registradas en el período seleccionado.</p>
       )}
       <BloqueoMascota />
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
-  )
-}
+  );
+};
 
-export default HistorialAtenciones
+export default HistorialAtenciones;

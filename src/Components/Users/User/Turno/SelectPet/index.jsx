@@ -27,8 +27,7 @@ const SelectPet = ({ error, register, name, defaultValue }) => {
           }
           id="floatingSelect"
           aria-label="Floating label select example"
-          // {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
-          // defaultValue={defaultValue}
+          {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
         >
           <option disabled>Selecciona una mascota</option>
           {mascotas?.length > 0 ? (

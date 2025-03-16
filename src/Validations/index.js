@@ -6,5 +6,6 @@ export { default as mascotaSchema } from './mascotaSchema';
 export { default as passwordSchema } from './passwordSchema';
 export { default as practicaSchema } from './practicaSchema';
 export { default as razaSchema } from './razaSchema';
+export { default as turnoSchema } from './turnoSchema';
 export { default as usuarioSchema } from './usuarioSchema';
 export { default as veterinarioSchema } from './veterinarioSchema';
