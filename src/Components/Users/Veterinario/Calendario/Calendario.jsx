@@ -7,9 +7,12 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridWeek from "@fullcalendar/timegrid";
 import { useDispatch, useSelector } from "react-redux";
 import { getAtenciones } from "../../../../redux/atenciones/thunks.js";
+import ModalCalendario from "./ModalCalendario/ModalCalendario";
 
 const Calendario = () => {
   const [eventos, setEventos] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -29,6 +32,8 @@ const Calendario = () => {
         title: `Atención - ${turno?.mascota?.nombre}`,
         start: turno?.fecha_hora_atencion,
         color: turno?.veterinario ? "#1BBCB6" : "#bc331b",
+        atencionData: turno,
+
       }));
       setEventos(eventosFormateados);
     }
@@ -76,7 +81,14 @@ const Calendario = () => {
           isMobile ? { year: "numeric", month: "short" } : { year: "numeric", month: "short", day: "numeric" }
         }
         contentHeight={isMobile ? "auto" : "auto"}
-        eventClick={(info) => alert("atencion")}
+        eventClick={(info) => {
+          setSelectedEvent(info.event);
+          setOpenModal(true);
+        }}
+        dateClick={(info) => {
+          const calendarApi = info.view.calendar;
+          calendarApi.changeView("timeGridDay", info.dateStr);
+        }}
       />
       <Box
         sx={{
@@ -125,6 +137,10 @@ const Calendario = () => {
           <Typography variant="h6">Sin atender</Typography>
         </Box>
       </Box>
+      {openModal && (
+         <ModalCalendario  onClose={() => setOpenModal(false)}  selectedEvent={selectedEvent} /> 
+      )}
+      
     </Box>
   );
 };

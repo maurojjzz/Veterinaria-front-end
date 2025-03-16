@@ -5,7 +5,6 @@
   background-color: #a9c3b8fd;
   height: 100vh;
   padding-top: 75px;
-  border: 1px solid red;
   z-index: 1000;
 }
 .sidebar.expanded {
