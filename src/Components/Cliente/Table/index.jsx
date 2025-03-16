@@ -3,7 +3,8 @@ import styles from "./table-cliente.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/users/thunks.js";
-import { ModalAlert, Toast } from "../../Shared";
+import { Toast } from "../../Shared";
+import DetalleCliente from "../Modal/modalCliente";
 
 const TablaCliente = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,7 @@ const TablaCliente = ({ data, setData }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -22,12 +24,7 @@ const TablaCliente = ({ data, setData }) => {
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteUser(id));
-      setData((prevData) => {
-        if (Array.isArray(prevData)) {
-          return prevData.filter((usuario) => usuario.id !== id);
-        }
-        return [];
-      });
+      setData((prevData) => prevData.filter((usuario) => usuario.id !== id));
       setToastMessage("Usuario eliminado correctamente");
       setToastType("Info");
     } catch (error) {
@@ -59,17 +56,30 @@ const TablaCliente = ({ data, setData }) => {
           </thead>
           <tbody>
             {data.map((use, index) => (
-              <tr key={index} className={`${styles.fila}`}>
-                <td>{use.email}</td>
-                <td>{use.nombre}</td>
-                <td className={`d-none d-sm-table-cell `}>{use.apellido}</td>
-                <td className={`d-none d-sm-table-cell`}>{use.nro_doc}</td>
-                <td className={`d-none d-md-table-cell`}>{use.direccion}</td>
-                <td className={`d-none d-md-table-cell`}>{use.telefono}</td>
+              <tr 
+                key={index} 
+                className={`${styles.fila}`} 
+                onClick={() => {
+                  if (use) {
+                    setIdUser(use.id);
+                    setSelectedUser(use);
+                    setShowModal(true);
+                  } 
+                }}
+              >
+                <td>{use?.email}</td>
+                <td>{use?.nombre}</td>
+                <td className={`d-none d-sm-table-cell `}>{use?.apellido}</td>
+                <td className={`d-none d-sm-table-cell`}>{use?.nro_doc}</td>
+                <td className={`d-none d-md-table-cell`}>{use?.direccion}</td>
+                <td className={`d-none d-md-table-cell`}>{use?.telefono}</td>
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={() => handleEdit(use)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(use);
+                      }}
                       className={`${styles.tableIcon}`}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                       alt="update icon button"
@@ -80,9 +90,10 @@ const TablaCliente = ({ data, setData }) => {
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={() => {
-                        setShowModal(true);
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setIdUser(use.id);
+                        setShowModal(true);
                       }}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
@@ -94,12 +105,16 @@ const TablaCliente = ({ data, setData }) => {
           </tbody>
         </table>
       </div>
-      <ModalAlert
-        text="¿Desea eliminar al usuario?"
-        clickAction={() => handleDelete(idUser)}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
+      {selectedUser && showModal && (
+        <DetalleCliente 
+          user={selectedUser} 
+          onClose={() => setShowModal(false)} 
+          onEdit={handleEdit} 
+          onDelete={handleDelete}
+          setToastMessage={setToastMessage}
+          setToastType={setToastType} 
+        />
+      )}
       {showToast && 
         <Toast 
           title={toastType} 
