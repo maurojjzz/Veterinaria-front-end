@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { deleteMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import { justFecha } from "../../../Functions/utiities.js";
+import DetalleMascota from "../Modal/modalMascota.jsx";
 
 const TablaMascota = ({ data, setData, especies }) => {
   const [showModal, setShowModal] = useState(false);
@@ -12,6 +13,9 @@ const TablaMascota = ({ data, setData, especies }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+
+  const [showDetalleModal, setShowDetalleModal] = useState(false);
+  const [selectedMascota, setSelectedMascota] = useState(null);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -23,20 +27,14 @@ const TablaMascota = ({ data, setData, especies }) => {
     });
   };
 
-
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteMascota(id));
-      setData((prevData) => {
-        if (Array.isArray(prevData)) {
-          return prevData.filter((masco) => masco.id !== id);
-        }
-        return [];
-      });
+      setData((prevData) => prevData.filter((masco) => masco.id !== id));
       setToastMessage("Mascota eliminada correctamente");
       setToastType("Info");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setToastMessage("Error al eliminar mascota");
       setToastType("Error");
     } finally {
@@ -67,7 +65,14 @@ const TablaMascota = ({ data, setData, especies }) => {
             {data
               .filter((mas) => mas?.owner && typeof mas?.owner === "object")
               .map((mas, index) => (
-                <tr key={index} className={`${styles.fila}`}>
+                <tr
+                  key={index}
+                  className={`${styles.fila}`}
+                  onClick={() => {
+                    setSelectedMascota(mas);
+                    setShowDetalleModal(true);
+                  }}
+                >
                   <td>{mas?.nombre}</td>
                   <td>{mas?.sexo}</td>
                   <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
@@ -80,7 +85,10 @@ const TablaMascota = ({ data, setData, especies }) => {
                   <td>
                     <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                       <img
-                        onClick={() => handleEdit(mas)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(mas);
+                        }}
                         className={`${styles.tableIcon}`}
                         src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                         alt="update icon button"
@@ -91,7 +99,8 @@ const TablaMascota = ({ data, setData, especies }) => {
                     <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                       <img
                         className={`${styles.tableIcon}`}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setShowModal(true);
                           setIdMas(mas.id);
                         }}
@@ -106,12 +115,23 @@ const TablaMascota = ({ data, setData, especies }) => {
         </table>
       </div>
       <ModalAlert
-        text="¿Desea eliminar el veterinario?"
+        text="¿Desea eliminar la mascota?"
         clickAction={() => handleDelete(idVMas)}
         showModal={showModal}
         setShowModal={setShowModal}
       />
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
+
+      {selectedMascota && showDetalleModal && (
+        <DetalleMascota
+          mascota={selectedMascota}
+          setData={setData}
+          onClose={() => setShowDetalleModal(false)}
+          setToastMessage={setToastMessage}
+          setToastType={setToastType}
+          especies={especies}
+        />
+      )}
     </div>
   );
 };
