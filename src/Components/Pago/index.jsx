@@ -4,7 +4,7 @@ import { getPagos, deletePago } from "../../redux/pagos/thunks.js";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "../Shared/Toast";
 import ModalAlert from "../Shared/ModalAlert";
-import PagoDetalle from "../../Components/Pago/modal/modalPago.js"
+import PagoDetalle from "../../Components/Pago/modal/modalPago.jsx"
 
 const Pagos = () => {
   const [loading, setLoading] = useState(true);

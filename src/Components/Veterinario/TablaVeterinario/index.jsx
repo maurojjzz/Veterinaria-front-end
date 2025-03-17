@@ -4,10 +4,11 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteVet } from "../../../redux/veterinarios/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
+import DetalleVeterinario from "../Modal/modalVeterinario.jsx";
 
 const TablaVeterinario = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
-  const [idVet, setIdVet] = useState(null);
+  const [selectedVet, setSelectedVet] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
@@ -24,70 +25,79 @@ const TablaVeterinario = ({ data, setData }) => {
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteVet(id));
-      setData((prevData) => {
-        if (Array.isArray(prevData)) {
-          return prevData.filter((veterinario) => veterinario.id !== id);
-        }
-        return [];
-      });
+      setData((prevData) => prevData.filter((vet) => vet.id !== id));
       setToastMessage("Veterinario eliminado correctamente");
       setToastType("Info");
     } catch (error) {
       console.log(error);
-      setToastMessage("Error al eliminar Veterinario");
+      setToastMessage("Error al eliminar veterinario");
       setToastType("Error");
     } finally {
       setShowToast(true);
-      setIdVet(null);
       setShowModal(false);
     }
   };
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className="d-flex justify-content-center">
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
               <th>Matrícula</th>
               <th>Email</th>
-              <th className={`d-none d-sm-table-cell`}>Nombre</th>
-              <th className={`d-none d-sm-table-cell`}>Apellido</th>
-              <th className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>Teléfono</th>
-              <th className={`d-none d-md-table-cell`}>DNI</th>
+              <th className="d-none d-sm-table-cell">Nombre</th>
+              <th className="d-none d-sm-table-cell">Apellido</th>
+              <th className="d-none d-sm-table-cell">Teléfono</th>
+              <th className="d-none d-md-table-cell">DNI</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data?.map((vet, index) => (
-              <tr key={index} className={`${styles.fila}`}>
+            {data.map((vet, index) => (
+              <tr
+                key={index}
+                className={styles.fila}
+                onClick={() => {
+                  setSelectedVet(vet);
+                  setShowModal(true);
+                }}
+              >
                 <td>{vet.matricula}</td>
                 <td>{vet.email}</td>
-                <td className={`d-none d-sm-table-cell`}>{vet.nombre}</td>
-                <td className={`d-none d-sm-table-cell`}>{vet.apellido}</td>
-                <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
-                <td className={`d-none d-md-table-cell`}>{vet.nro_doc}</td>
+                <td className="d-none d-sm-table-cell">{vet.nombre}</td>
+                <td className="d-none d-sm-table-cell">{vet.apellido}</td>
+                <td className="d-none d-sm-table-cell">{vet.telefono}</td>
+                <td className="d-none d-md-table-cell">{vet.nro_doc}</td>
                 <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                  <div
+                    className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}
+                  >
                     <img
-                      onClick={() => handleEdit(vet)}
-                      className={`${styles.tableIcon}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(vet);
+                      }}
+                      className={styles.tableIcon}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                      alt="update icon button"
+                      alt="Editar"
                     />
                   </div>
                 </td>
                 <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                  <div
+                    className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}
+                  >
                     <img
-                      className={`${styles.tableIcon}`}
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedVet(vet);
                         setShowModal(true);
-                        setIdVet(vet.id);
                       }}
+                      className={styles.tableIcon}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="delete icon button"
+                      alt="Eliminar"
                     />
                   </div>
                 </td>
@@ -96,15 +106,23 @@ const TablaVeterinario = ({ data, setData }) => {
           </tbody>
         </table>
       </div>
-      <ModalAlert
-        text="¿Desea eliminar el veterinario?"
-        clickAction={() => handleDelete(idVet)}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
-      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
+
+      {selectedVet && showModal && (
+        <DetalleVeterinario
+          vet={selectedVet}
+          onClose={() => setShowModal(false)}
+          onDelete={handleDelete}
+          setToastMessage={setToastMessage}
+          setToastType={setToastType}
+        />
+      )}
+
+      {showToast && (
+        <Toast title={toastType} message={toastMessage} setError={setShowToast} />
+      )}
     </div>
   );
 };
 
 export default TablaVeterinario;
+
