@@ -48,17 +48,18 @@ const LoggedInfo = () => {
   }, [user]);
 
   const redirections = () => {
-    switch (user.rol.descripcion) {
+    const role = localStorage.getItem("role");
+    switch (role) {
       case "Admin": {
-        history.push("/admin");
+        history.push("/admin/perfil");
         break;
       }
       case "Usuario": {
-        history.push("/user");
+        history.push("/user/perfil");
         break;
       }
       case "Veterinario": {
-        history.push("/vet");
+        history.push("/vet/perfil");
         break;
       }
       default: {
