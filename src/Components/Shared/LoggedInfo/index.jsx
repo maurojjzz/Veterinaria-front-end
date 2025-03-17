@@ -43,7 +43,7 @@ const LoggedInfo = () => {
 
   useEffect(() => {
     if (user.id) {
-      setVocals(`${user?.nombre[0]} ${user?.apellido[0]}`);
+      setVocals(`${user?.nombre[0]}${user?.apellido[0]}`);
     }
   }, [user]);
 
