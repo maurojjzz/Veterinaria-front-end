@@ -67,7 +67,7 @@ const AtencionForm = () => {
 
   const goBackToTable = (message, type = "Success") => {
     setTimeout(() => {
-      history.push("/admin/atenciones", { state: { message, type } });
+      history.push("/vet/atenciones", { state: { message, type } });
     }, 2000);
   };
 

@@ -5,8 +5,11 @@ import { handleDate } from "../../../../../Functions/utiities.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getRazas } from "../../../../../redux/razas/thunks.js";
 import { initUsers } from "../../../../../redux/users/thunks.js";
+import { addPago } from "../../../../../redux/pagos/thunks.js";
+import { getAtenciones } from "../../../../../redux/atenciones/thunks.js";
+import { useHistory } from "react-router-dom";
 
-const ModalCalendario = ({ onClose, selectedEvent }) => {
+const ModalCalendario = ({ onClose, selectedEvent, setToastType, setToastMessage, setShowToast }) => {
   // eslint-disable-next-line no-unused-vars
   const [data, setData] = useState(selectedEvent?.extendedProps?.atencionData || {});
   const [owner, setOwner] = useState({});
@@ -14,11 +17,10 @@ const ModalCalendario = ({ onClose, selectedEvent }) => {
 
   const dispatch = useDispatch();
 
+  const history = useHistory();
+
   const { razas } = useSelector((state) => state.razas);
   const { users } = useSelector((state) => state.users);
-
-  // console.log(razas);
-  // console.log(users);
 
   useEffect(() => {
     dispatch(getRazas());
@@ -42,11 +44,33 @@ const ModalCalendario = ({ onClose, selectedEvent }) => {
 
   if (!selectedEvent) return null;
 
-  //   console.log(owner)
+  const handleEdit = (ate) => {
+    history.push(`/vet/atenciones/form/${ate.id}`, { params: { ...ate } });
+  };
 
-  // console.log(pet)
-
-  //   console.log(data, "data");
+  const handleAddPago = async () => {
+    const pago = {
+      atencion: data?.id,
+      importe: data?.importe,
+      fecha_hora_pago: new Date().toISOString(),
+      forma_de_pago: data?.forma_de_pago,
+      cuotas: 1,
+      nro_cuota: 1,
+    };
+    try {
+      await dispatch(addPago(pago));
+      setShowToast(true);
+      setToastMessage("Pago registrado exitosamente");
+      setToastType("Success");
+    } catch (error) {
+      setShowToast(true);
+      setToastMessage("Hubo un error al registrar el pago");
+      setToastType("Error");
+    } finally {
+      await dispatch(getAtenciones());
+      onClose();
+    }
+  };
 
   return (
     <Box
@@ -131,19 +155,17 @@ const ModalCalendario = ({ onClose, selectedEvent }) => {
                 {practica?.descripcion}
               </Typography>
             ))}
-            {data?.pagos.length > 0 ? (
+            {data?.pagos[0]?.fecha_hora_pago ? (
               <Typography variant="body1" sx={{ mb: 1 }}>
                 <strong>Importe:</strong> ${data?.pagos[0]?.importe}
               </Typography>
             ) : (
-              <Box
-                
-              >
+              <Box>
                 <Typography variant="h6" color="error" sx={{ mb: 1 }}>
                   No ha sido pagado
                 </Typography>
 
-                <Button variant="outlined" sx={{ mt: 2 }} color="success" onClick={() => console.log("pagar atencion")}>
+                <Button variant="outlined" sx={{ mt: 2 }} color="success" onClick={() => handleAddPago()}>
                   Informar pago
                 </Button>
               </Box>
@@ -155,7 +177,7 @@ const ModalCalendario = ({ onClose, selectedEvent }) => {
           </Typography>
         )}
 
-        <Button variant="outlined" sx={{ mt: 2 }} color="info" onClick={() => console.log("redirigir")}>
+        <Button variant="outlined" sx={{ mt: 2 }} color="info" onClick={() => handleEdit(data)}>
           Completar atencion
         </Button>
       </Box>
