@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/users/thunks.js";
 import { Toast } from "../../Shared";
+import { ModalAlert } from "../../Shared";
 import DetalleCliente from "../Modal/modalCliente";
 
 const TablaCliente = ({ data, setData }) => {
@@ -105,6 +106,12 @@ const TablaCliente = ({ data, setData }) => {
           </tbody>
         </table>
       </div>
+      <ModalAlert
+        text="¿Desea eliminar al usuario?"
+        clickAction={() => handleDelete(idUser)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       {selectedUser && showModal && (
         <DetalleCliente 
           user={selectedUser} 

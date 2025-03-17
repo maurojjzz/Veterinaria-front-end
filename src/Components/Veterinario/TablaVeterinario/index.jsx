@@ -8,6 +8,7 @@ import DetalleVeterinario from "../Modal/modalVeterinario.jsx";
 
 const TablaVeterinario = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
+  const [idVet, setIdVet] = useState(null);
   const [selectedVet, setSelectedVet] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -68,7 +69,9 @@ const TablaVeterinario = ({ data, setData }) => {
                 <td>{vet.email}</td>
                 <td className="d-none d-sm-table-cell">{vet.nombre}</td>
                 <td className="d-none d-sm-table-cell">{vet.apellido}</td>
-                <td className="d-none d-sm-table-cell">{vet.telefono}</td>
+                <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>
+                  {vet.telefono}
+                </td>
                 <td className="d-none d-md-table-cell">{vet.nro_doc}</td>
                 <td>
                   <div
@@ -92,8 +95,8 @@ const TablaVeterinario = ({ data, setData }) => {
                     <img
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedVet(vet);
-                        setShowModal(true);
+                        setIdVet(vet.id); 
+                        setShowModal(true); 
                       }}
                       className={styles.tableIcon}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
@@ -107,6 +110,20 @@ const TablaVeterinario = ({ data, setData }) => {
         </table>
       </div>
 
+      <ModalAlert
+        text="¿Desea eliminar el veterinario?"
+        clickAction={() => handleDelete(idVet)}
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
+      {showToast && (
+        <Toast
+          title={toastType}
+          message={toastMessage}
+          setError={setShowToast}
+        />
+      )}
+
       {selectedVet && showModal && (
         <DetalleVeterinario
           vet={selectedVet}
@@ -118,11 +135,14 @@ const TablaVeterinario = ({ data, setData }) => {
       )}
 
       {showToast && (
-        <Toast title={toastType} message={toastMessage} setError={setShowToast} />
+        <Toast
+          title={toastType}
+          message={toastMessage}
+          setError={setShowToast}
+        />
       )}
     </div>
   );
 };
 
 export default TablaVeterinario;
-
