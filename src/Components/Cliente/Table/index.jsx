@@ -9,6 +9,7 @@ import DetalleCliente from "../Modal/modalCliente";
 
 const TablaCliente = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [idUser, setIdUser] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -22,10 +23,10 @@ const TablaCliente = ({ data, setData }) => {
     history.push(`/admin/usuarios/form/${user.id}`, { params: { ...user } });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await dispatch(deleteUser(id));
-      setData((prevData) => prevData.filter((usuario) => usuario.id !== id));
+      await dispatch(deleteUser(idUser));
+      setData((prevData) => prevData.filter((usuario) => usuario.id !== idUser));
       setToastMessage("Usuario eliminado correctamente");
       setToastType("Info");
     } catch (error) {
@@ -35,7 +36,7 @@ const TablaCliente = ({ data, setData }) => {
     } finally {
       setShowToast(true);
       setIdUser(null);
-      setShowModal(false);
+      setShowDeleteModal(false);
     }
   };
 
@@ -49,37 +50,34 @@ const TablaCliente = ({ data, setData }) => {
               <th>Nombre</th>
               <th className={`d-none d-sm-table-cell `}>Apellido</th>
               <th className={`d-none d-sm-table-cell `}>DNI</th>
-              <th className={`d-none d-md-table-cell `}>Direccion</th>
-              <th className={`d-none d-md-table-cell `}>Telefono</th>
+              <th className={`d-none d-md-table-cell `}>Dirección</th>
+              <th className={`d-none d-md-table-cell `}>Teléfono</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.map((use, index) => (
+            {data.map((user, index) => (
               <tr 
                 key={index} 
                 className={`${styles.fila}`} 
                 onClick={() => {
-                  if (use) {
-                    setIdUser(use.id);
-                    setSelectedUser(use);
-                    setShowModal(true);
-                  } 
+                  setSelectedUser(user);
+                  setShowModal(true);
                 }}
               >
-                <td>{use?.email}</td>
-                <td>{use?.nombre}</td>
-                <td className={`d-none d-sm-table-cell `}>{use?.apellido}</td>
-                <td className={`d-none d-sm-table-cell`}>{use?.nro_doc}</td>
-                <td className={`d-none d-md-table-cell`}>{use?.direccion}</td>
-                <td className={`d-none d-md-table-cell`}>{use?.telefono}</td>
+                <td>{user?.email}</td>
+                <td>{user?.nombre}</td>
+                <td className={`d-none d-sm-table-cell `}>{user?.apellido}</td>
+                <td className={`d-none d-sm-table-cell`}>{user?.nro_doc}</td>
+                <td className={`d-none d-md-table-cell`}>{user?.direccion}</td>
+                <td className={`d-none d-md-table-cell`}>{user?.telefono}</td>
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEdit(use);
+                        handleEdit(user);
                       }}
                       className={`${styles.tableIcon}`}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
@@ -93,8 +91,8 @@ const TablaCliente = ({ data, setData }) => {
                       className={`${styles.tableIcon}`}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIdUser(use.id);
-                        setShowModal(true);
+                        setIdUser(user.id);
+                        setShowDeleteModal(true);
                       }}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
@@ -108,16 +106,15 @@ const TablaCliente = ({ data, setData }) => {
       </div>
       <ModalAlert
         text="¿Desea eliminar al usuario?"
-        clickAction={() => handleDelete(idUser)}
-        showModal={showModal}
-        setShowModal={setShowModal}
+        clickAction={handleDelete}
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
       />
       {selectedUser && showModal && (
         <DetalleCliente 
           user={selectedUser} 
           onClose={() => setShowModal(false)} 
           onEdit={handleEdit} 
-          onDelete={handleDelete}
           setToastMessage={setToastMessage}
           setToastType={setToastType} 
         />
@@ -133,3 +130,4 @@ const TablaCliente = ({ data, setData }) => {
 };
 
 export default TablaCliente;
+

@@ -78,7 +78,7 @@ const DetalleMascota = ({ mascota, setData, onClose, setToastMessage, setToastTy
         <p><strong>Dueño:</strong> {mascota?.owner?.nombre} {mascota?.owner?.apellido}</p>
         <p><strong>Email del Dueño:</strong> {mascota?.owner?.email}</p>
 
-        <div>
+        <div style={{ display: "flex", gap: "10px" }}>
           <Button variant="contained" color="info" onClick={handleEdit}>
             Editar
           </Button>

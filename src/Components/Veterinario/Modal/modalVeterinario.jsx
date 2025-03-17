@@ -6,7 +6,13 @@ import { ModalAlert, Toast } from "../../Shared/index.js";
 import { Box, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const DetalleVeterinario = ({ vet, setData, onClose, setToastMessage, setToastType }) => {
+const DetalleVeterinario = ({
+  vet,
+  setData,
+  onClose,
+  setToastMessage,
+  setToastType,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -27,7 +33,7 @@ const DetalleVeterinario = ({ vet, setData, onClose, setToastMessage, setToastTy
       setToastType("Error");
     } finally {
       setShowModal(false);
-      onClose();
+      setTimeout(() => onClose(), 300);
     }
   };
 
@@ -82,11 +88,15 @@ const DetalleVeterinario = ({ vet, setData, onClose, setToastMessage, setToastTy
         <p>
           <strong>Matrícula:</strong> {vet?.matricula}
         </p>
-        <div>
+        <div style={{ display: "flex", gap: "10px" }}>
           <Button variant="contained" color="info" onClick={handleEdit}>
             Editar
           </Button>
-          <Button variant="contained" color="error" onClick={() => setShowModal(true)}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setShowModal(true)}
+          >
             Eliminar
           </Button>
         </div>

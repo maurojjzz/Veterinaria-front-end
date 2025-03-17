@@ -35,7 +35,6 @@ const TablaVeterinario = ({ data, setData }) => {
       setToastType("Error");
     } finally {
       setShowToast(true);
-      setShowModal(false);
     }
   };
 
@@ -49,7 +48,9 @@ const TablaVeterinario = ({ data, setData }) => {
               <th>Email</th>
               <th className="d-none d-sm-table-cell">Nombre</th>
               <th className="d-none d-sm-table-cell">Apellido</th>
-              <th className="d-none d-sm-table-cell">Teléfono</th>
+              <th className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>
+                Teléfono
+              </th>
               <th className="d-none d-md-table-cell">DNI</th>
               <th></th>
               <th></th>
@@ -95,8 +96,8 @@ const TablaVeterinario = ({ data, setData }) => {
                     <img
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIdVet(vet.id); 
-                        setShowModal(true); 
+                        setIdVet(vet.id);
+                        setShowModal(true);
                       }}
                       className={styles.tableIcon}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
@@ -110,20 +111,6 @@ const TablaVeterinario = ({ data, setData }) => {
         </table>
       </div>
 
-      <ModalAlert
-        text="¿Desea eliminar el veterinario?"
-        clickAction={() => handleDelete(idVet)}
-        showModal={showModal}
-        setShowModal={setShowModal}
-      />
-      {showToast && (
-        <Toast
-          title={toastType}
-          message={toastMessage}
-          setError={setShowToast}
-        />
-      )}
-
       {selectedVet && showModal && (
         <DetalleVeterinario
           vet={selectedVet}
@@ -133,6 +120,13 @@ const TablaVeterinario = ({ data, setData }) => {
           setToastType={setToastType}
         />
       )}
+
+      <ModalAlert
+        text="¿Desea eliminar el veterinario?"
+        clickAction={() => handleDelete(idVet)}
+        showModal={idVet !== null}
+        setShowModal={() => setIdVet(null)}
+      />
 
       {showToast && (
         <Toast
