@@ -8,11 +8,15 @@ import timeGridWeek from "@fullcalendar/timegrid";
 import { useDispatch, useSelector } from "react-redux";
 import { getAtenciones } from "../../../../redux/atenciones/thunks.js";
 import ModalCalendario from "./ModalCalendario/ModalCalendario";
+import { Toast } from "../../../Shared";
 
 const Calendario = () => {
   const [eventos, setEventos] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState("");
 
   const dispatch = useDispatch();
 
@@ -26,14 +30,12 @@ const Calendario = () => {
 
   useEffect(() => {
     if (atenciones.length > 0) {
-      console.log(atenciones);
       const eventosFormateados = atenciones.map((turno) => ({
         id: turno?.id,
         title: `Atención - ${turno?.mascota?.nombre}`,
         start: turno?.fecha_hora_atencion,
         color: turno?.veterinario ? "#1BBCB6" : "#bc331b",
         atencionData: turno,
-
       }));
       setEventos(eventosFormateados);
     }
@@ -137,10 +139,16 @@ const Calendario = () => {
           <Typography variant="h6">Sin atender</Typography>
         </Box>
       </Box>
-      {openModal && (
-         <ModalCalendario  onClose={() => setOpenModal(false)}  selectedEvent={selectedEvent} /> 
-      )}
-      
+      {openModal && 
+        <ModalCalendario 
+          onClose={() => setOpenModal(false)} 
+          selectedEvent={selectedEvent} 
+          setShowToast={setShowToast}
+          setToastMessage={setToastMessage}
+          setToastType={setToastType}
+        />
+      }
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </Box>
   );
 };
