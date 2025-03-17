@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./tabla-especie.module.css";
 import { Toast, ModalAlert } from "../../Shared";
 import { useDispatch, useSelector } from "react-redux";
-import { getEspecie, addEspecie, updateEspecie, deleteEspecie } from "../../../redux/especies/thunks.js";
+import { getEspecie, addEspecie, updateEspecie } from "../../../redux/especies/thunks.js";
 import { addRaza } from "../../../redux/razas/thunks.js";
 
 const TablaEspecies = () => {
@@ -85,7 +85,7 @@ const TablaEspecies = () => {
 
   const eliminarEspecie = async () => {
     try {
-      await dispatch(deleteEspecie(idToEliminate));
+      await dispatch(updateEspecie({id : idToEliminate, isActive: false}));
       mostrarToast("Especie eliminada correctamente", "Success");
       dispatch(getEspecie());
     } catch (error) {
@@ -127,7 +127,9 @@ const TablaEspecies = () => {
             </tr>
           </thead>
           <tbody>
-            {especies.map((especie) => (
+            {especies
+            .filter((especie) => especie.isActive)
+            .map((especie) => (
               <tr key={especie.id}>
                 <td>
                   {editandoEspecie === especie.id ? (

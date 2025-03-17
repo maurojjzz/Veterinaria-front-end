@@ -25,7 +25,7 @@ const SelectUser = ({ labelText, placeholder, error, register, name, defaultValu
 
   return (
     <Autocomplete
-      options={users}
+      options={users.filter((u) => u.isActive)}
       getOptionLabel={(option) => option?.email || ""}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       value={selectedUser}

@@ -4,7 +4,7 @@ const razaSchema = Joi.object({
   descripcion: Joi.string()
     .min(3)
     .max(80)
-    .regex(/^[a-zA-Z ]+$/)
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚäëïöüÄËÏÖÜñÑ0-9 ]*$/)
     .messages({
       "string.base": "Descripcion debe ser una cadena de texto",
       "string.empty": "Este es un campo requerido",

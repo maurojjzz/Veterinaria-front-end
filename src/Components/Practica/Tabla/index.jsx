@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./table-practica.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deletePract } from "../../../redux/practicas/thunks.js";
+import { updatePract } from "../../../redux/practicas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 
 const TablaPractica = ({ data, setData }) => {
@@ -23,7 +23,8 @@ const TablaPractica = ({ data, setData }) => {
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deletePract(id));
+      console.log(id);
+      await dispatch(updatePract({ id: id, isActive: false }));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
           return prevData.filter((raza) => raza.id !== id);
@@ -45,13 +46,13 @@ const TablaPractica = ({ data, setData }) => {
 
   const getNearestPrice = (precios) => {
     if (!precios || precios.length === 0) return "Sin precio";
-  
+
     const today = new Date();
-    
+
     const nearest = precios
       .map((p) => ({ ...p, fecha: new Date(p.fecha) }))
       .sort((a, b) => Math.abs(a.fecha - today) - Math.abs(b.fecha - today))[0];
-  
+
     return nearest ? nearest.valor : "Sin precio";
   };
 
@@ -68,7 +69,9 @@ const TablaPractica = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((pra, index) => (
+            {data
+              .filter((pra) => pra.isActive)
+              .map((pra, index) => (
                 <tr key={index} className={`${styles.fila}`}>
                   <td>{pra?.descripcion}</td>
                   <td>$ {getNearestPrice(pra.precios)}</td>

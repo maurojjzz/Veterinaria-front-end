@@ -15,7 +15,7 @@ const veterinarioSchema = Joi.object({
     nombre: Joi.string()
     .min(3)
     .max(25)
-    .regex(/^[a-zA-Z ]+$/)
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚäëïöüÄËÏÖÜñÑ ]*$/)
     .messages({
       "string.base": "Nombre debe ser una cadena de texto",
       "string.empty": "Este es un campo requerido",
@@ -28,7 +28,7 @@ const veterinarioSchema = Joi.object({
     apellido: Joi.string()
     .min(3)
     .max(25)
-    .regex(/^[a-zA-Z ]+$/)
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚäëïöüÄËÏÖÜñÑ ]*$/)
     .messages({
       "string.base": "Apellido debe ser una cadena de texto",
       "string.empty": "Este es un campo requerido",

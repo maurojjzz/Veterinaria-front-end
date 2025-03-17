@@ -75,7 +75,7 @@ const SelectRaza = ({ onChangeEspecie, onChangeRaza, errorRaza, register, defaul
       sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
     >
       <Autocomplete
-        options={especies}
+        options={especies.filter((eso)=> eso.isActive)}
         getOptionLabel={(option) => option.descripcion}
         value={selectedEspecie}
         onChange={(event, newValue) => {

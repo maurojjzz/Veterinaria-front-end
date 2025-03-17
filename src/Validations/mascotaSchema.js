@@ -4,7 +4,7 @@ const mascotaSchema = Joi.object({
   nombre: Joi.string()
     .min(1)
     .max(30)
-    .regex(/^[a-zA-Z ]+$/)
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚäëïöüÄËÏÖÜñÑ0-9 ]*$/)
     .messages({
       "string.base": "Nombre debe ser una cadena de texto",
       "string.empty": "Este es un campo requerido",

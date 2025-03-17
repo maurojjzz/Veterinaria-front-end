@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./tabla-mascota.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteMascota } from "../../../redux/mascotas/thunks.js";
+import { updateMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import { justFecha } from "../../../Functions/utiities.js";
 
@@ -26,7 +26,7 @@ const TablaMascota = ({ data, setData, especies }) => {
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteMascota(id));
+      await dispatch(updateMascota({id: id, isActive: false}));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
           return prevData.filter((masco) => masco.id !== id);
@@ -66,6 +66,7 @@ const TablaMascota = ({ data, setData, especies }) => {
           <tbody>
             {data
               .filter((mas) => mas?.owner && typeof mas?.owner === "object")
+              .filter((mas) => mas?.isActive)
               .map((mas, index) => (
                 <tr key={index} className={`${styles.fila}`}>
                   <td>{mas?.nombre}</td>

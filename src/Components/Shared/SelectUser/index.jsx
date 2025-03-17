@@ -36,7 +36,7 @@ const SelectUser = ({ labelText, placeholder, type, register, name, error, setUs
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
       <Autocomplete
-        options={users}
+        options={users.filter((u)=> u.isActive)}
         getOptionLabel={(option) => option?.email || ""}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         value={selectedUser}

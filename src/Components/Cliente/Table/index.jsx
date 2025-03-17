@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./table-cliente.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../../redux/users/thunks.js";
+import { updateUser } from "../../../redux/users/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 
 const TablaCliente = ({ data, setData }) => {
@@ -21,7 +21,7 @@ const TablaCliente = ({ data, setData }) => {
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteUser(id));
+      await dispatch(updateUser({id: id, isActive: false}));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
           return prevData.filter((usuario) => usuario.id !== id);
@@ -58,7 +58,9 @@ const TablaCliente = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((use, index) => (
+            {data
+            .filter((user) => user.isActive)
+            .map((use, index) => (
               <tr key={index} className={`${styles.fila}`}>
                 <td>{use.email}</td>
                 <td>{use.nombre}</td>

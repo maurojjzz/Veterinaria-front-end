@@ -36,7 +36,7 @@ const SelectVet = ({ labelText, placeholder, type, register, name, error, setVal
   return (
     <div className={`d-flex flex-column form-floating mb-3 ${styles.goodCont}`}>
       <Autocomplete
-        options={veterinarios}
+        options={veterinarios.filter((v) => v.isActive)}
         getOptionLabel={(option) => option?.email || ""}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         value={selectedVet}
