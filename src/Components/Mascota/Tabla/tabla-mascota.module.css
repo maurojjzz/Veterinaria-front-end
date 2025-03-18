@@ -1,12 +1,15 @@
 .tablaContainer {
   max-width: 950px;
   overflow-x: auto;
+  height: 450px;
 }
 
 .tabla {
   border-collapse: collapse;
   overflow: hidden;
   box-shadow: 0px 6px 20px -7px rgba(0, 0, 0, 0.75);
+  min-width: 320px;
+  
 }
 
 .tabla tr th,

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { updateMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import { justFecha } from "../../../Functions/utiities.js";
+import { Box, Typography } from "@mui/material";
 
 const TablaMascota = ({ data, setData, especies }) => {
   const [showModal, setShowModal] = useState(false);
@@ -23,10 +24,9 @@ const TablaMascota = ({ data, setData, especies }) => {
     });
   };
 
-
   const handleDelete = async (id) => {
     try {
-      await dispatch(updateMascota({id: id, isActive: false}));
+      await dispatch(updateMascota({ id: id, isActive: false }));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
           return prevData.filter((masco) => masco.id !== id);
@@ -64,45 +64,71 @@ const TablaMascota = ({ data, setData, especies }) => {
             </tr>
           </thead>
           <tbody>
-            {data
-              .filter((mas) => mas?.owner && typeof mas?.owner === "object")
-              .filter((mas) => mas?.isActive)
-              .map((mas, index) => (
-                <tr key={index} className={`${styles.fila}`}>
-                  <td>{mas?.nombre}</td>
-                  <td>{mas?.sexo}</td>
-                  <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
-                  <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
-                  <td className={`d-none d-sm-table-cell`}>{justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
-                  <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>
-                    {mas?.owner?.nombre} {mas?.owner?.apellido}
-                  </td>
-                  <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
-                  <td>
-                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                      <img
-                        onClick={() => handleEdit(mas)}
-                        className={`${styles.tableIcon}`}
-                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                        alt="update icon button"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                      <img
-                        className={`${styles.tableIcon}`}
-                        onClick={() => {
-                          setShowModal(true);
-                          setIdMas(mas.id);
-                        }}
-                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                        alt="delete icon button"
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            {data.filter((mas) => mas?.owner && typeof mas?.owner === "object").filter((mas) => mas?.isActive)
+              .length === 0 ? (
+              <Box
+                component={"tr"}
+                sx={{
+                  height: "350px",
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "60%",
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography variant="h6" color="error">
+                    No hay mascotas cargadas
+                  </Typography>
+                </Box>
+              </Box>
+            ) : (
+              data
+                .filter((mas) => mas?.owner && typeof mas?.owner === "object")
+                .filter((mas) => mas?.isActive)
+                .map((mas, index) => (
+                  <tr key={index} className={`${styles.fila}`}>
+                    <td>{mas?.nombre}</td>
+                    <td>{mas?.sexo}</td>
+                    <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
+                    <td className={`d-none d-sm-table-cell`}>{mas?.raza?.descripcion}</td>
+                    <td className={`d-none d-sm-table-cell`}>{justFecha(mas?.fecha_nacimiento) || "tbd"}</td>
+                    <td className={`d-none d-lg-table-cell ${styles.hiddenOnSm}`}>
+                      {mas?.owner?.nombre} {mas?.owner?.apellido}
+                    </td>
+                    <td className={`d-none d-lg-table-cell`}>{mas?.owner?.email}</td>
+                    <td>
+                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                        <img
+                          onClick={() => handleEdit(mas)}
+                          className={`${styles.tableIcon}`}
+                          src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                          alt="update icon button"
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                        <img
+                          className={`${styles.tableIcon}`}
+                          onClick={() => {
+                            setShowModal(true);
+                            setIdMas(mas.id);
+                          }}
+                          src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                          alt="delete icon button"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+            )}
           </tbody>
         </table>
       </div>
