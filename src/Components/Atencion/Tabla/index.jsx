@@ -8,6 +8,7 @@ import { getAtenciones, deleteAtencion } from "../../../redux/atenciones/thunks.
 import { initUsers } from "../../../redux/users/thunks.js";
 import { getEspecie } from "../../../redux/especies/thunks.js";
 import { getRazas } from "../../../redux/razas/thunks.js";
+import {Pagination} from "@mui/material";
 
 const TablaAtencion = () => {
   const [modal, setModal] = useState(false);
@@ -17,6 +18,9 @@ const TablaAtencion = () => {
   const [toastType, setToastType] = useState("");
   const [showModalAlert, setShowModalAlert] = useState(false);
   const [idToEliminate, setIdToEliminate] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -66,6 +70,10 @@ const TablaAtencion = () => {
     return raz ? raz.especies?.descripcion : "Especie no encontrada";
   };
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const atencionesPaginadas = atenciones.slice(startIndex, endIndex);
+
   return (
     <div className={`d-flex justify-content-center`}>
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
@@ -86,7 +94,7 @@ const TablaAtencion = () => {
             </tr>
           </thead>
           <tbody>
-            {atenciones.map((ate, index) => (
+          {atencionesPaginadas.map((ate, index) => (
               <tr
                 key={index}
                 className={`${styles.fila}`}
@@ -141,6 +149,13 @@ const TablaAtencion = () => {
             ))}
           </tbody>
         </table>
+        <Pagination
+        count={Math.ceil(atenciones.length / itemsPerPage)}
+        page={currentPage}
+        onChange={(event, value) => setCurrentPage(value)}
+        color="primary"
+        sx={{ marginTop: "20px" }}
+      />
       </div>
       {modal && (
         <ModalAtencion

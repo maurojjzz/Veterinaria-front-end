@@ -1,6 +1,7 @@
 .pagosContainer {
   padding: 20px;
   margin-left: 80px;
+  margin-top: 75px;
   width: calc(100% - 80px);
   transition: all 0.3s ease;
   background: linear-gradient(to bottom right, #f0f9ff, #ffffff);
