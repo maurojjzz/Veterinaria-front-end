@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateVet } from "../../../redux/veterinarios/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
+import DetalleVeterinario from "../Modal/modalVeterinario.jsx";
 
 const TablaVeterinario = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,10 @@ const TablaVeterinario = ({ data, setData }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+
+  const [selectedVet, setSelectedVet] = useState(null);
+
+  const [modalMobile, setModalMobile] = useState(false);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -34,76 +39,99 @@ const TablaVeterinario = ({ data, setData }) => {
       setToastType("Info");
     } catch (error) {
       console.log(error);
-      setToastMessage("Error al eliminar Veterinario");
+      setToastMessage("Error al eliminar veterinario");
       setToastType("Error");
+      setShowModal(false);
+      setModalMobile(false);
     } finally {
       setShowToast(true);
-      setIdVet(null);
       setShowModal(false);
+      setModalMobile(false);
     }
   };
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className="d-flex justify-content-center">
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
               <th>Matrícula</th>
               <th>Email</th>
-              <th className={`d-none d-sm-table-cell`}>Nombre</th>
-              <th className={`d-none d-sm-table-cell`}>Apellido</th>
+              <th className="d-none d-sm-table-cell">Nombre</th>
+              <th className="d-none d-sm-table-cell">Apellido</th>
               <th className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>Teléfono</th>
-              <th className={`d-none d-md-table-cell`}>DNI</th>
+              <th className="d-none d-md-table-cell">DNI</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {data
-              ?.filter((vet) => vet.isActive)
-              .map((vet, index) => (
-                <tr key={index} className={`${styles.fila}`}>
-                  <td>{vet.matricula}</td>
-                  <td>{vet.email}</td>
-                  <td className={`d-none d-sm-table-cell`}>{vet.nombre}</td>
-                  <td className={`d-none d-sm-table-cell`}>{vet.apellido}</td>
-                  <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
-                  <td className={`d-none d-md-table-cell`}>{vet.nro_doc}</td>
-                  <td>
-                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                      <img
-                        onClick={() => handleEdit(vet)}
-                        className={`${styles.tableIcon}`}
-                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                        alt="update icon button"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                      <img
-                        className={`${styles.tableIcon}`}
-                        onClick={() => {
-                          setShowModal(true);
-                          setIdVet(vet.id);
-                        }}
-                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                        alt="delete icon button"
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+             ?.filter((vet) => vet.isActive)
+            .map((vet, index) => (
+              <tr
+                key={index}
+                className={styles.fila}
+                onClick={() => {
+                  setSelectedVet(vet);
+                  setModalMobile(true);
+                }}
+              >
+                <td>{vet.matricula}</td>
+                <td>{vet.email}</td>
+                <td className="d-none d-sm-table-cell">{vet.nombre}</td>
+                <td className="d-none d-sm-table-cell">{vet.apellido}</td>
+                <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
+                <td className="d-none d-md-table-cell">{vet.nro_doc}</td>
+                <td>
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                    <img
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleEdit(vet);
+                      }}
+                      className={styles.tableIcon}
+                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                      alt="Editar"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                    <img
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setIdVet(vet.id);
+                        setShowModal(true);
+                      }}
+                      className={styles.tableIcon}
+                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                      alt="Eliminar"
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
+
+      {modalMobile && (
+        <DetalleVeterinario
+          vet={selectedVet}
+          onClose={() => setModalMobile(false)}
+          onDelete={()=> handleDelete(selectedVet?.id)}
+        />
+      )}
+
       <ModalAlert
         text="¿Desea eliminar el veterinario?"
         clickAction={() => handleDelete(idVet)}
         showModal={showModal}
         setShowModal={setShowModal}
       />
+
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );

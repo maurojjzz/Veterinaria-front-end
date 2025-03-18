@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { updateMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import { justFecha } from "../../../Functions/utiities.js";
+import DetalleMascota from "../Modal/modalMascota.jsx";
 import { Box, Typography } from "@mui/material";
 
 const TablaMascota = ({ data, setData, especies }) => {
@@ -13,6 +14,9 @@ const TablaMascota = ({ data, setData, especies }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+
+  const [showDetalleModal, setShowDetalleModal] = useState(false);
+  const [selectedMascota, setSelectedMascota] = useState(null);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -36,13 +40,14 @@ const TablaMascota = ({ data, setData, especies }) => {
       setToastMessage("Mascota eliminada correctamente");
       setToastType("Info");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setToastMessage("Error al eliminar mascota");
       setToastType("Error");
     } finally {
       setShowToast(true);
       setIdMas(null);
       setShowModal(false);
+      setShowDetalleModal(false);
     }
   };
 
@@ -93,7 +98,14 @@ const TablaMascota = ({ data, setData, especies }) => {
                 .filter((mas) => mas?.owner && typeof mas?.owner === "object")
                 .filter((mas) => mas?.isActive)
                 .map((mas, index) => (
-                  <tr key={index} className={`${styles.fila}`}>
+                  <tr
+                  key={index}
+                  className={`${styles.fila}`}
+                  onClick={() => {
+                    setSelectedMascota(mas);
+                    setShowDetalleModal(true);
+                  }}
+                >
                     <td>{mas?.nombre}</td>
                     <td>{mas?.sexo}</td>
                     <td>{especies.find((especie) => especie.id === mas?.raza?.especie)?.descripcion}</td>
@@ -106,7 +118,10 @@ const TablaMascota = ({ data, setData, especies }) => {
                     <td>
                       <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                         <img
-                          onClick={() => handleEdit(mas)}
+                          onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(mas);
+                        }}
                           className={`${styles.tableIcon}`}
                           src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                           alt="update icon button"
@@ -117,8 +132,9 @@ const TablaMascota = ({ data, setData, especies }) => {
                       <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                         <img
                           className={`${styles.tableIcon}`}
-                          onClick={() => {
-                            setShowModal(true);
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          setShowModal(true);
                             setIdMas(mas.id);
                           }}
                           src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
@@ -133,12 +149,26 @@ const TablaMascota = ({ data, setData, especies }) => {
         </table>
       </div>
       <ModalAlert
-        text="¿Desea eliminar el veterinario?"
+        text="¿Desea eliminar la mascota?"
         clickAction={() => handleDelete(idVMas)}
         showModal={showModal}
         setShowModal={setShowModal}
       />
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
+
+      {showDetalleModal && (
+        <DetalleMascota
+          mascota={selectedMascota}
+          onClose={() => {
+            setShowDetalleModal(false);
+            setIdMas(null);
+          }}
+          especies={especies}
+          onDelete={() => handleDelete(idVMas)}
+          idVMas={idVMas}
+          setIdMas={setIdMas}
+        />
+      )}
     </div>
   );
 };
