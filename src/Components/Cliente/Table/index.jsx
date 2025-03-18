@@ -16,6 +16,8 @@ const TablaCliente = ({ data, setData }) => {
   const [toastType, setToastType] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
 
+  const [modalMobile, setModalMobile] = useState(false);
+
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -37,6 +39,7 @@ const TablaCliente = ({ data, setData }) => {
       setShowToast(true);
       setIdUser(null);
       setShowDeleteModal(false);
+      setModalMobile(false);
     }
   };
 
@@ -58,12 +61,12 @@ const TablaCliente = ({ data, setData }) => {
           </thead>
           <tbody>
             {data.map((user, index) => (
-              <tr 
-                key={index} 
-                className={`${styles.fila}`} 
+              <tr
+                key={index}
+                className={`${styles.fila}`}
                 onClick={() => {
                   setSelectedUser(user);
-                  setShowModal(true);
+                  setModalMobile(true);
                 }}
               >
                 <td>{user?.email}</td>
@@ -110,24 +113,21 @@ const TablaCliente = ({ data, setData }) => {
         showModal={showDeleteModal}
         setShowModal={setShowDeleteModal}
       />
-      {selectedUser && showModal && (
-        <DetalleCliente 
-          user={selectedUser} 
-          onClose={() => setShowModal(false)} 
-          onEdit={handleEdit} 
-          setToastMessage={setToastMessage}
-          setToastType={setToastType} 
+      {modalMobile && (
+        <DetalleCliente
+          user={selectedUser}
+          idUser={idUser}
+          setIdUser={setIdUser}
+          onClose={() => {
+            setModalMobile(false);
+            setIdUser(null);
+          }}
+          onDelete={handleDelete}
         />
       )}
-      {showToast && 
-        <Toast 
-          title={toastType} 
-          message={toastMessage} 
-          setError={setShowToast} 
-        />}
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
 
 export default TablaCliente;
-

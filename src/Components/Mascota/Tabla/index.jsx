@@ -41,6 +41,7 @@ const TablaMascota = ({ data, setData, especies }) => {
       setShowToast(true);
       setIdMas(null);
       setShowModal(false);
+      setShowDetalleModal(false);
     }
   };
 
@@ -122,14 +123,17 @@ const TablaMascota = ({ data, setData, especies }) => {
       />
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
 
-      {selectedMascota && showDetalleModal && (
+      {showDetalleModal && (
         <DetalleMascota
           mascota={selectedMascota}
-          setData={setData}
-          onClose={() => setShowDetalleModal(false)}
-          setToastMessage={setToastMessage}
-          setToastType={setToastType}
+          onClose={() => {
+            setShowDetalleModal(false);
+            setIdMas(null);
+          }}
           especies={especies}
+          onDelete={() => handleDelete(idVMas)}
+          idVMas={idVMas}
+          setIdMas={setIdMas}
         />
       )}
     </div>

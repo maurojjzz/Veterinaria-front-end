@@ -9,10 +9,13 @@ import DetalleVeterinario from "../Modal/modalVeterinario.jsx";
 const TablaVeterinario = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
   const [idVet, setIdVet] = useState(null);
-  const [selectedVet, setSelectedVet] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+
+  const [selectedVet, setSelectedVet] = useState(null);
+
+  const [modalMobile, setModalMobile] = useState(false);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -26,15 +29,24 @@ const TablaVeterinario = ({ data, setData }) => {
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteVet(id));
-      setData((prevData) => prevData.filter((vet) => vet.id !== id));
+      setData((prevData) => {
+        if (Array.isArray(prevData)) {
+          return prevData.filter((veterinario) => veterinario.id !== id);
+        }
+        return [];
+      });
       setToastMessage("Veterinario eliminado correctamente");
       setToastType("Info");
     } catch (error) {
       console.log(error);
       setToastMessage("Error al eliminar veterinario");
       setToastType("Error");
+      setShowModal(false);
+      setModalMobile(false);
     } finally {
       setShowToast(true);
+      setShowModal(false);
+      setModalMobile(false);
     }
   };
 
@@ -48,9 +60,7 @@ const TablaVeterinario = ({ data, setData }) => {
               <th>Email</th>
               <th className="d-none d-sm-table-cell">Nombre</th>
               <th className="d-none d-sm-table-cell">Apellido</th>
-              <th className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>
-                Teléfono
-              </th>
+              <th className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>Teléfono</th>
               <th className="d-none d-md-table-cell">DNI</th>
               <th></th>
               <th></th>
@@ -63,24 +73,20 @@ const TablaVeterinario = ({ data, setData }) => {
                 className={styles.fila}
                 onClick={() => {
                   setSelectedVet(vet);
-                  setShowModal(true);
+                  setModalMobile(true);
                 }}
               >
                 <td>{vet.matricula}</td>
                 <td>{vet.email}</td>
                 <td className="d-none d-sm-table-cell">{vet.nombre}</td>
                 <td className="d-none d-sm-table-cell">{vet.apellido}</td>
-                <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>
-                  {vet.telefono}
-                </td>
+                <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
                 <td className="d-none d-md-table-cell">{vet.nro_doc}</td>
                 <td>
-                  <div
-                    className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}
-                  >
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={(event) => {
+                        event.stopPropagation();
                         handleEdit(vet);
                       }}
                       className={styles.tableIcon}
@@ -90,12 +96,10 @@ const TablaVeterinario = ({ data, setData }) => {
                   </div>
                 </td>
                 <td>
-                  <div
-                    className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}
-                  >
+                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={(event) => {
+                        event.stopPropagation();
                         setIdVet(vet.id);
                         setShowModal(true);
                       }}
@@ -111,30 +115,22 @@ const TablaVeterinario = ({ data, setData }) => {
         </table>
       </div>
 
-      {selectedVet && showModal && (
+      {modalMobile && (
         <DetalleVeterinario
           vet={selectedVet}
-          onClose={() => setShowModal(false)}
-          onDelete={handleDelete}
-          setToastMessage={setToastMessage}
-          setToastType={setToastType}
+          onClose={() => setModalMobile(false)}
+          onDelete={()=> handleDelete(selectedVet?.id)}
         />
       )}
 
       <ModalAlert
         text="¿Desea eliminar el veterinario?"
         clickAction={() => handleDelete(idVet)}
-        showModal={idVet !== null}
-        setShowModal={() => setIdVet(null)}
+        showModal={showModal}
+        setShowModal={setShowModal}
       />
 
-      {showToast && (
-        <Toast
-          title={toastType}
-          message={toastMessage}
-          setError={setShowToast}
-        />
-      )}
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };

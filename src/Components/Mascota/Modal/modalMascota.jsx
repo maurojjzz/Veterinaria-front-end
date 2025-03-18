@@ -1,37 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { deleteMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert } from "../../Shared/index.js";
 import { Box, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { justFecha } from "../../../Functions/utiities.js";
 
-const DetalleMascota = ({ mascota, setData, onClose, setToastMessage, setToastType, especies }) => {
+const DetalleMascota = ({ mascota, onClose, especies, onDelete, setIdMas }) => {
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
-  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    if (mascota?.id) {
+      setIdMas(mascota.id);
+    }
+  }, [ mascota.id, setIdMas]);
+
 
   const handleEdit = () => {
     history.push(`/admin/mascota/form/${mascota.id}`, {
       params: { ...mascota, fecha_nacimiento: justFecha(mascota.fecha_nacimiento) },
     });
-  };
-
-  const handleDelete = async () => {
-    try {
-      await dispatch(deleteMascota(mascota.id));
-      setData((prevData) => prevData.filter((m) => m.id !== mascota.id));
-      setToastMessage("Mascota eliminada correctamente");
-      setToastType("Info");
-    } catch (error) {
-      console.error(error);
-      setToastMessage("Error al eliminar mascota");
-      setToastType("Error");
-    } finally {
-      setShowModal(false);
-      onClose();
-    }
   };
 
   return (
@@ -90,7 +79,7 @@ const DetalleMascota = ({ mascota, setData, onClose, setToastMessage, setToastTy
 
       <ModalAlert
         text="¿Desea eliminar la mascota?"
-        clickAction={handleDelete}
+        clickAction={onDelete}
         showModal={showModal}
         setShowModal={setShowModal}
       />

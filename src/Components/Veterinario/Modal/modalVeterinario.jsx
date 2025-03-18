@@ -1,41 +1,17 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { deleteVet } from "../../../redux/veterinarios/thunks.js";
-import { ModalAlert, Toast } from "../../Shared/index.js";
+import { ModalAlert } from "../../Shared/index.js";
 import { Box, IconButton, Button } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const DetalleVeterinario = ({
-  vet,
-  setData,
-  onClose,
-  setToastMessage,
-  setToastType,
-}) => {
+const DetalleVeterinario = ({ vet, onDelete, onClose  }) => {
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
-  const dispatch = useDispatch();
 
   const handleEdit = () => {
     history.push(`/admin/veterinarios/form/${vet.id}`, { params: { ...vet } });
   };
 
-  const handleDelete = async () => {
-    try {
-      await dispatch(deleteVet(vet.id));
-      setData((prevData) => prevData.filter((v) => v.id !== vet.id));
-      setToastMessage("Veterinario eliminado correctamente");
-      setToastType("Info");
-    } catch (error) {
-      console.log(error);
-      setToastMessage("Error al eliminar veterinario");
-      setToastType("Error");
-    } finally {
-      setShowModal(false);
-      setTimeout(() => onClose(), 300);
-    }
-  };
 
   return (
     <Box
@@ -92,18 +68,14 @@ const DetalleVeterinario = ({
           <Button variant="contained" color="info" onClick={handleEdit}>
             Editar
           </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => setShowModal(true)}
-          >
+          <Button variant="contained" color="error" onClick={() => setShowModal(true)}>
             Eliminar
           </Button>
         </div>
       </Box>
       <ModalAlert
         text="¿Desea eliminar al veterinario?"
-        clickAction={handleDelete}
+        clickAction={onDelete}
         showModal={showModal}
         setShowModal={setShowModal}
       />
