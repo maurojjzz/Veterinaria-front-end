@@ -17,7 +17,7 @@ const SelectEspecie = ({ labelText, placeholder, error, register, name, defaultV
         minWidth: "180px",
         width: "100%",
       }}
-      options={especies}
+      options={especies.filter((esp)=> esp.isActive)}
       getOptionLabel={(option) => option?.descripcion || ""}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       value={defaultValue}

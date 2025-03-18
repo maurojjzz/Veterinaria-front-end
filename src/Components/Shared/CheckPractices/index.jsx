@@ -52,7 +52,7 @@ const CheckPractices = ({ register, name, error, labelText, placeholder, setValu
         multiple
         id="tags-standard"
         limitTags={2}
-        options={practicas}
+        options={practicas.filter((p) => p.isActive)}
         getOptionLabel={(option) => option.descripcion}
         value={selectedPrac}
         onChange={handleChange}

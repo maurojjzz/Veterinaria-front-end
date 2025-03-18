@@ -19,13 +19,13 @@ const SelectRaza = ({ onChangeEspecie, onChangeRaza, errorRaza, register, defaul
 
   useEffect(() => {
     if (selectedEspecie) {
-      setRazasFiltradas(selectedEspecie.razas);
+      setRazasFiltradas(selectedEspecie.razas.filter((raza) => raza.isActive));
     } else {
       setRazasFiltradas([]);
       setSelectedRaza(null);
     }
   }, [selectedEspecie]);
-
+  
   useEffect(() => {
     if (defaultValue) {
       const razaEncontrada = razas.find((raza) => raza.id === defaultValue);
@@ -85,7 +85,7 @@ const SelectRaza = ({ onChangeEspecie, onChangeRaza, errorRaza, register, defaul
       sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
     >
       <Autocomplete
-        options={especies}
+        options={especies.filter((esp) => esp.isActive)}
         getOptionLabel={(option) => option.descripcion}
         value={selectedEspecie}
         onChange={(event, newValue) => {

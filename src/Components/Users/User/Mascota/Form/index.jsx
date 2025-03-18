@@ -65,8 +65,13 @@ const MascotasForm = () => {
   };
 
   const handleRazaChange = (raza) => {
-    setRazaElegida(raza);
-    setValue("raza", raza.id);
+    if (raza) {
+      setRazaElegida(raza);
+      setValue("raza", raza.id);
+    } else {
+      setRazaElegida(null);
+      setValue("raza", ""); 
+    }
   };
 
   useEffect(() => {

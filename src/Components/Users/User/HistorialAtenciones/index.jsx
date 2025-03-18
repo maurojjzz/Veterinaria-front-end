@@ -107,7 +107,7 @@ const HistorialAtenciones = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Historial de Atenciones por Fecha</h1>
+      <h2 className={styles.title}>Atenciones</h2>
       <div className={styles.filterContainer}>
         <input
           type="date"

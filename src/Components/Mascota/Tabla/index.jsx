@@ -2,10 +2,11 @@ import { useState } from "react";
 import styles from "./tabla-mascota.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteMascota } from "../../../redux/mascotas/thunks.js";
+import { updateMascota } from "../../../redux/mascotas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import { justFecha } from "../../../Functions/utiities.js";
 import DetalleMascota from "../Modal/modalMascota.jsx";
+import { Typography, Pagination, CircularProgress } from "@mui/material";
 
 const TablaMascota = ({ data, setData, especies }) => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +17,9 @@ const TablaMascota = ({ data, setData, especies }) => {
 
   const [showDetalleModal, setShowDetalleModal] = useState(false);
   const [selectedMascota, setSelectedMascota] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -29,8 +33,13 @@ const TablaMascota = ({ data, setData, especies }) => {
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteMascota(id));
-      setData((prevData) => prevData.filter((masco) => masco.id !== id));
+      await dispatch(updateMascota({ id: id, isActive: false }));
+      setData((prevData) => {
+        if (Array.isArray(prevData)) {
+          return prevData.filter((masco) => masco.id !== id);
+        }
+        return [];
+      });
       setToastMessage("Mascota eliminada correctamente");
       setToastType("Info");
     } catch (error) {
@@ -44,6 +53,14 @@ const TablaMascota = ({ data, setData, especies }) => {
       setShowDetalleModal(false);
     }
   };
+
+  const filteredData = data
+    .filter((mas) => mas?.owner && typeof mas?.owner === "object")
+    .filter((mas) => mas?.isActive);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className={`d-flex justify-content-center`}>
@@ -63,9 +80,17 @@ const TablaMascota = ({ data, setData, especies }) => {
             </tr>
           </thead>
           <tbody>
-            {data
-              .filter((mas) => mas?.owner && typeof mas?.owner === "object")
-              .map((mas, index) => (
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  <Typography variant="h6" color="error">
+                    No hay mascotas cargadas
+                  </Typography>
+                  <CircularProgress />
+                </td>
+              </tr>
+            ) : (
+              paginatedData.map((mas, index) => (
                 <tr
                   key={index}
                   className={`${styles.fila}`}
@@ -111,10 +136,21 @@ const TablaMascota = ({ data, setData, especies }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+            )}
           </tbody>
         </table>
+        {totalPages > 1 && (
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, page) => setCurrentPage(page)}
+            color="primary"
+            sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
+          />
+        )}
       </div>
+
       <ModalAlert
         text="¿Desea eliminar la mascota?"
         clickAction={() => handleDelete(idVMas)}

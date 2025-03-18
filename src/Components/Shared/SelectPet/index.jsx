@@ -20,7 +20,7 @@ const SelectPet = ({ mascotas, error, register, name, defaultValue}) => {
             Selecciona una mascota
           </option>
           {mascotas?.length > 0 ? (
-            mascotas?.map((pet) => (
+            mascotas?.filter((pet)=> pet.isActive).map((pet) => (
               <option key={pet.id} value={pet.id}>
                 {pet.nombre}
               </option>

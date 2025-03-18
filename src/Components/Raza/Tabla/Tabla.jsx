@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteRaza } from "../../../redux/razas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
+import { Typography, Pagination, CircularProgress } from "@mui/material";
 
 const TablaRaza = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,9 @@ const TablaRaza = ({ data, setData }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -43,6 +47,11 @@ const TablaRaza = ({ data, setData }) => {
     }
   };
 
+  const filteredData = data.filter((mas) => mas?.isActive);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className={`d-flex justify-content-center`}>
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
@@ -56,7 +65,17 @@ const TablaRaza = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((raz, index) => (
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  <Typography variant="h6" color="error">
+                    No hay razas cargadas
+                  </Typography>
+                  <CircularProgress />
+                </td>
+              </tr>
+            ) : (
+              paginatedData.map((raz, index) => (
                 <tr key={index} className={`${styles.fila}`}>
                   <td>{raz?.especie?.descripcion}</td>
                   <td>{raz?.descripcion}</td>
@@ -84,9 +103,19 @@ const TablaRaza = ({ data, setData }) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+            )}
           </tbody>
         </table>
+        {totalPages > 1 && (
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, page) => setCurrentPage(page)}
+            color="primary"
+            sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
+          />
+        )}
       </div>
       <ModalAlert
         text="¿Desea eliminar la raza?"

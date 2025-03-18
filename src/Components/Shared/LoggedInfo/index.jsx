@@ -51,15 +51,15 @@ const LoggedInfo = () => {
     const role = localStorage.getItem("role");
     switch (role) {
       case "Admin": {
-        history.push("/admin/perfil");
+        history.push("/admin");
         break;
       }
       case "Usuario": {
-        history.push("/user/perfil");
+        history.push("/user");
         break;
       }
       case "Veterinario": {
-        history.push("/vet/perfil");
+        history.push("/vet");
         break;
       }
       default: {

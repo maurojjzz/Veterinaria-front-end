@@ -28,10 +28,11 @@ const BloqueoMascota = () => {
   useEffect(() => {
     if (token) {
       const user = users.find((user) => user?.id === me?.id);
-      setMascotas(user?.mascotas || []);
+      setMascotas(user?.mascotas.filter((m)=> m.isActive) || []);
       setLoading(false);
     }
   }, [me?.id, token, users]);
+
 
   if (mascotas.length !== 0) {
     return null;

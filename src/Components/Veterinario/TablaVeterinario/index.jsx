@@ -2,9 +2,10 @@ import { useState } from "react";
 import styles from "./tabla-veterinarios.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { deleteVet } from "../../../redux/veterinarios/thunks.js";
+import { updateVet } from "../../../redux/veterinarios/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import DetalleVeterinario from "../Modal/modalVeterinario.jsx";
+import { Pagination, Typography, CircularProgress } from "@mui/material";
 
 const TablaVeterinario = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +18,9 @@ const TablaVeterinario = ({ data, setData }) => {
 
   const [modalMobile, setModalMobile] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -28,7 +32,7 @@ const TablaVeterinario = ({ data, setData }) => {
 
   const handleDelete = async (id) => {
     try {
-      await dispatch(deleteVet(id));
+      await dispatch(updateVet({ id: id, isActive: false }));
       setData((prevData) => {
         if (Array.isArray(prevData)) {
           return prevData.filter((veterinario) => veterinario.id !== id);
@@ -50,6 +54,12 @@ const TablaVeterinario = ({ data, setData }) => {
     }
   };
 
+  const filteredData = data.filter((mas) => mas?.isActive);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   return (
     <div className="d-flex justify-content-center">
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
@@ -67,59 +77,81 @@ const TablaVeterinario = ({ data, setData }) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((vet, index) => (
-              <tr
-                key={index}
-                className={styles.fila}
-                onClick={() => {
-                  setSelectedVet(vet);
-                  setModalMobile(true);
-                }}
-              >
-                <td>{vet.matricula}</td>
-                <td>{vet.email}</td>
-                <td className="d-none d-sm-table-cell">{vet.nombre}</td>
-                <td className="d-none d-sm-table-cell">{vet.apellido}</td>
-                <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
-                <td className="d-none d-md-table-cell">{vet.nro_doc}</td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleEdit(vet);
-                      }}
-                      className={styles.tableIcon}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                      alt="Editar"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setIdVet(vet.id);
-                        setShowModal(true);
-                      }}
-                      className={styles.tableIcon}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="Eliminar"
-                    />
-                  </div>
+            {paginatedData.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  <Typography variant="h6" color="error">
+                    No hay veterinarios cargados
+                  </Typography>
+                  <CircularProgress />
                 </td>
               </tr>
-            ))}
+            ) : (
+              paginatedData
+                ?.filter((vet) => vet.isActive)
+                .map((vet, index) => (
+                  <tr
+                    key={index}
+                    className={styles.fila}
+                    onClick={() => {
+                      setSelectedVet(vet);
+                      setModalMobile(true);
+                    }}
+                  >
+                    <td>{vet.matricula}</td>
+                    <td>{vet.email}</td>
+                    <td className="d-none d-sm-table-cell">{vet.nombre}</td>
+                    <td className="d-none d-sm-table-cell">{vet.apellido}</td>
+                    <td className={`d-none d-sm-table-cell ${styles.hiddenOnSm}`}>{vet.telefono}</td>
+                    <td className="d-none d-md-table-cell">{vet.nro_doc}</td>
+                    <td>
+                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                        <img
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleEdit(vet);
+                          }}
+                          className={styles.tableIcon}
+                          src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                          alt="Editar"
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                        <img
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setIdVet(vet.id);
+                            setShowModal(true);
+                          }}
+                          className={styles.tableIcon}
+                          src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                          alt="Eliminar"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+            )}
           </tbody>
         </table>
+        {totalPages > 1 && (
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(event, page) => setCurrentPage(page)}
+            color="primary"
+            sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
+          />
+        )}
       </div>
 
       {modalMobile && (
         <DetalleVeterinario
           vet={selectedVet}
           onClose={() => setModalMobile(false)}
-          onDelete={()=> handleDelete(selectedVet?.id)}
+          onDelete={() => handleDelete(selectedVet?.id)}
         />
       )}
 
