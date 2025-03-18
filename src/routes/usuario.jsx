@@ -2,7 +2,6 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 import Layout from "../Components/Layout";
 import DasboardUser from "../Components/Users/User";
 import NotAllowed from "../Components/Auth/Not-Allowed";
-import Atencion from "../Components/Atencion";
 import AtencionesPendientesPago from "../Components/Users/User/AtencionesPendientesPago";
 import HistorialAtenciones from "../Components/Users/User/HistorialAtenciones";
 import Perfil from "../Components/Users/User/Perfil/Perfil";
@@ -21,12 +20,6 @@ const UsuarioRoutes = () => {
       alt: "home icon",
     },
     {
-      name: "Atenciones",
-      path: "/user/atencion",
-      image: "order-history.png",
-      alt: "atenciones icon",
-    },
-    {
       name: "Turno",
       path: "/user/turno",
       image: "order-history.png",
@@ -39,7 +32,7 @@ const UsuarioRoutes = () => {
       alt: "pending payments icon",
     },
     {
-      name: "Historial de Atenciones",
+      name: "Atenciones",
       path: "/user/historial-atenciones",
       image: "practica2.png",
       alt: "history icon",
@@ -62,7 +55,6 @@ const UsuarioRoutes = () => {
     <Layout routes={routes}>
       <Switch>
         <Route exact path={`${url}/dash`} component={DasboardUser} />
-        <Route exact path={`${url}/atencion`} component={Atencion} />
         <Route exact path={`${url}/atenciones-pendientes`} component={AtencionesPendientesPago} />
         <Route exact path={`${url}/historial-atenciones`} component={HistorialAtenciones} />
         <Route exact path={`${url}/mascotas`} component={Mascotas} />

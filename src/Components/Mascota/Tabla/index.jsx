@@ -19,7 +19,7 @@ const TablaMascota = ({ data, setData, especies }) => {
   const [selectedMascota, setSelectedMascota] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   const history = useHistory();
   const dispatch = useDispatch();

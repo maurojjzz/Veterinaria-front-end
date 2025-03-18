@@ -31,7 +31,9 @@ const SelectPet = ({ error, register, name, defaultValue }) => {
         >
           <option disabled>Selecciona una mascota</option>
           {mascotas?.length > 0 ? (
-            mascotas.filter((pet) => pet?.owner?.id === id) 
+            mascotas
+            .filter((pet) => pet.isActive)
+            .filter((pet) => pet?.owner?.id === id) 
             ?.map((pet) => (
               <option key={pet.id} value={pet.id}>
                 {pet.nombre}

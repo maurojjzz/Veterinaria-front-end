@@ -23,7 +23,7 @@ const TablaPractica = ({ data, setData }) => {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   const handleDelete = async (id) => {
     try {

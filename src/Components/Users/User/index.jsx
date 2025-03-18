@@ -11,8 +11,7 @@ const Dashboard = () => {
       </header>
       <div className={styles.optionsGrid}>
         <DashboardOption icon="👤" text="Perfil" path="/user/perfil" />
-        <DashboardOption icon="📋" text="Atenciones" path="/user/atencion" />
-        <DashboardOption icon="📜" text="Historial de Atenciones" path="/user/historial-atenciones" />
+        <DashboardOption icon="📜" text="Atenciones" path="/user/historial-atenciones" />
         <DashboardOption icon="📅" text="Turnos" path="/user/turno" />
         <DashboardOption icon="💳" text="Atenciones pendientes" path="/user/atenciones-pendientes" />
         <DashboardOption icon="🐾" text="Mascotas" path="/user/mascotas" />

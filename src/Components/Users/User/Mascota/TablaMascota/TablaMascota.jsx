@@ -17,8 +17,8 @@ const TablaMascota = ({ data, setData }) => {
         boxShadow: "10px 7px 10px 1px rgba(27, 188, 182, 0.18)",
       }}
     >
-      {data.length > 0 ? (
-        data.map((item, index) => <Celda key={index} item={item} setData={setData} />)
+      {data.filter((mas)=>mas.isActive).length > 0 ? (
+        data.filter((mas)=>mas.isActive).map((item, index) => <Celda key={index} item={item} setData={setData} />)
       ) : (
         <Typography variant="h5" sx={{ width: "100%", textAlign: "center", color: "#1BBCB6" }}>
           No hay mascotas registradas. Ingrese una.
