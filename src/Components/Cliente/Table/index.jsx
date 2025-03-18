@@ -3,14 +3,20 @@ import styles from "./table-cliente.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../../redux/users/thunks.js";
-import { ModalAlert, Toast } from "../../Shared";
+import { Toast } from "../../Shared";
+import { ModalAlert } from "../../Shared";
+import DetalleCliente from "../Modal/modalCliente";
 
 const TablaCliente = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [idUser, setIdUser] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const [modalMobile, setModalMobile] = useState(false);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -19,15 +25,10 @@ const TablaCliente = ({ data, setData }) => {
     history.push(`/admin/usuarios/form/${user.id}`, { params: { ...user } });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await dispatch(deleteUser(id));
-      setData((prevData) => {
-        if (Array.isArray(prevData)) {
-          return prevData.filter((usuario) => usuario.id !== id);
-        }
-        return [];
-      });
+      await dispatch(deleteUser(idUser));
+      setData((prevData) => prevData.filter((usuario) => usuario.id !== idUser));
       setToastMessage("Usuario eliminado correctamente");
       setToastType("Info");
     } catch (error) {
@@ -37,7 +38,8 @@ const TablaCliente = ({ data, setData }) => {
     } finally {
       setShowToast(true);
       setIdUser(null);
-      setShowModal(false);
+      setShowDeleteModal(false);
+      setModalMobile(false);
     }
   };
 
@@ -51,25 +53,35 @@ const TablaCliente = ({ data, setData }) => {
               <th>Nombre</th>
               <th className={`d-none d-sm-table-cell `}>Apellido</th>
               <th className={`d-none d-sm-table-cell `}>DNI</th>
-              <th className={`d-none d-md-table-cell `}>Direccion</th>
-              <th className={`d-none d-md-table-cell `}>Telefono</th>
+              <th className={`d-none d-md-table-cell `}>Dirección</th>
+              <th className={`d-none d-md-table-cell `}>Teléfono</th>
               <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {data.map((use, index) => (
-              <tr key={index} className={`${styles.fila}`}>
-                <td>{use.email}</td>
-                <td>{use.nombre}</td>
-                <td className={`d-none d-sm-table-cell `}>{use.apellido}</td>
-                <td className={`d-none d-sm-table-cell`}>{use.nro_doc}</td>
-                <td className={`d-none d-md-table-cell`}>{use.direccion}</td>
-                <td className={`d-none d-md-table-cell`}>{use.telefono}</td>
+            {data.map((user, index) => (
+              <tr
+                key={index}
+                className={`${styles.fila}`}
+                onClick={() => {
+                  setSelectedUser(user);
+                  setModalMobile(true);
+                }}
+              >
+                <td>{user?.email}</td>
+                <td>{user?.nombre}</td>
+                <td className={`d-none d-sm-table-cell `}>{user?.apellido}</td>
+                <td className={`d-none d-sm-table-cell`}>{user?.nro_doc}</td>
+                <td className={`d-none d-md-table-cell`}>{user?.direccion}</td>
+                <td className={`d-none d-md-table-cell`}>{user?.telefono}</td>
                 <td>
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
-                      onClick={() => handleEdit(use)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(user);
+                      }}
                       className={`${styles.tableIcon}`}
                       src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
                       alt="update icon button"
@@ -80,9 +92,10 @@ const TablaCliente = ({ data, setData }) => {
                   <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                     <img
                       className={`${styles.tableIcon}`}
-                      onClick={() => {
-                        setShowModal(true);
-                        setIdUser(use.id);
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIdUser(user.id);
+                        setShowDeleteModal(true);
                       }}
                       src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
                       alt="delete icon button"
@@ -96,16 +109,23 @@ const TablaCliente = ({ data, setData }) => {
       </div>
       <ModalAlert
         text="¿Desea eliminar al usuario?"
-        clickAction={() => handleDelete(idUser)}
-        showModal={showModal}
-        setShowModal={setShowModal}
+        clickAction={handleDelete}
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
       />
-      {showToast && 
-        <Toast 
-          title={toastType} 
-          message={toastMessage} 
-          setError={setShowToast} 
-        />}
+      {modalMobile && (
+        <DetalleCliente
+          user={selectedUser}
+          idUser={idUser}
+          setIdUser={setIdUser}
+          onClose={() => {
+            setModalMobile(false);
+            setIdUser(null);
+          }}
+          onDelete={handleDelete}
+        />
+      )}
+      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
