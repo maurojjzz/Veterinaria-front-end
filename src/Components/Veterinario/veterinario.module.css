@@ -18,3 +18,9 @@
   color: white;
   transform: scale(1.05);
 }
+
+@media (min-width: 768px) {
+  .clienteContainer {
+      padding-left: 50px; 
+  }
+}
