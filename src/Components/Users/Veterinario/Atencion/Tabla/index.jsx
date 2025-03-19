@@ -8,7 +8,7 @@ import { getAtenciones, deleteAtencion } from "../../../../../redux/atenciones/t
 import { initUsers } from "../../../../../redux/users/thunks.js";
 import { getEspecie } from "../../../../../redux/especies/thunks.js";
 import { getRazas } from "../../../../../redux/razas/thunks.js";
-import { Pagination } from "@mui/material";
+import { Pagination, Typography, CircularProgress } from "@mui/material";
 
 
 const TablaAtencion = () => {
@@ -97,59 +97,57 @@ const TablaAtencion = () => {
             </tr>
           </thead>
           <tbody>
-            {atencionesPaginadas.map((ate, index) => (
-              <tr
-                key={index}
-                className={`${styles.fila}`}
-                onClick={() => {
-                  setDataFilaAtencion(ate);
-                  setModal(!modal);
-                }}
-              >
-                <td>{findOwner(ate?.mascota?.owner)}</td>
-                <td>{ate?.mascota?.nombre}</td>
-                <td className={`d-none d-sm-table-cell `}>{findSpecie(ate?.mascota?.raza)}</td>
-                <td className={`d-none d-sm-table-cell `}>{handleDate(ate?.fecha_hora_atencion)}</td>
-                <td className={`d-none d-sm-table-cell `}>
-                  {ate?.veterinario?.apellido} {ate?.veterinario?.nombre}
-                </td>
-                <td className={`d-none d-md-flex gap-2 ${styles.practicas}`}>
-                  <p>{ate?.practicas[0]?.descripcion}</p>
-                  {ate?.practicas?.length > 1 ? (
-                    <p className={`${styles.masPracticas}`}> + {ate.practicas.length - 1}</p>
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className={`d-none d-lg-table-cell `}>$ {ate?.importe}</td>
-                <td className={`d-none d-lg-table-cell `}>{ate?.forma_de_pago}</td>
-                <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      onClick={() => handleEdit(ate)}
-                      className={`${styles.tableIcon}`}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                      alt="update icon button"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      className={`${styles.tableIcon}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIdToEliminate(ate.id);
-                        setShowModalAlert(true);
-                      }}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="delete icon button"
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {
+              atencionesPaginadas.length === 0 ?
+                (<tr>
+                  <td colSpan="8" className="text-center">
+                    <Typography variant="h6" color="error">
+                      No hay atenciones cargadas
+                    </Typography>
+                    <CircularProgress />
+                  </td>
+                </tr>)
+                :
+                (atencionesPaginadas.map((ate, index) => (
+                  <tr
+                    key={index}
+                    className={`${styles.fila}`}
+                    onClick={() => {
+                      setDataFilaAtencion(ate);
+                      setModal(!modal);
+                    }}
+                  >
+                    <td>{findOwner(ate?.mascota?.owner)}</td>
+                    <td>{ate?.mascota?.nombre}</td>
+                    <td className={`d-none d-sm-table-cell `}>{findSpecie(ate?.mascota?.raza)}</td>
+                    <td className={`d-none d-sm-table-cell `}>{handleDate(ate?.fecha_hora_atencion)}</td>
+                    <td className={`d-none d-sm-table-cell `}>
+                      {ate?.veterinario?.apellido} {ate?.veterinario?.nombre}
+                    </td>
+                    <td className={`d-none d-md-flex gap-2 ${styles.practicas}`}>
+                      <p>{ate?.practicas[0]?.descripcion}</p>
+                      {ate?.practicas?.length > 1 ? (
+                        <p className={`${styles.masPracticas}`}> + {ate.practicas.length - 1}</p>
+                      ) : (
+                        ""
+                      )}
+                    </td>
+                    <td className={`d-none d-lg-table-cell `}>$ {ate?.importe}</td>
+                    <td className={`d-none d-lg-table-cell `}>{ate?.forma_de_pago}</td>
+                    <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
+                    <td>
+                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                        <img
+                          onClick={() => handleEdit(ate)}
+                          className={`${styles.tableIcon}`}
+                          src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                          alt="update icon button"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                )))
+            }
           </tbody>
         </table>
         <Pagination
