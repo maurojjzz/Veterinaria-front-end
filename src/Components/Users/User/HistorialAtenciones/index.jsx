@@ -6,10 +6,15 @@ import { decodeToken } from "../../../../Functions/utiities.js";
 import styles from "./HistorialAtenciones.module.css";
 import BloqueoMascota from "../Mascota/BloqueoMascota/BloqueoMascota.jsx";
 import { Toast } from "../../../Shared";
+import { Box } from "@mui/material";
 
 const HistorialAtenciones = () => {
+  const [atencionesFiltradasYOrdenadas, setAtencionesFiltradasYOrdenadas] = useState([]);
+
+
+
   const dispatch = useDispatch();
-  const { atenciones = [] } = useSelector((state) => state.atenciones);
+  const { atenciones } = useSelector((state) => state.atenciones);
   const token = useSelector((state) => state.auth.token);
   const usuario = token ? decodeToken(token) : null;
 
@@ -92,21 +97,29 @@ const HistorialAtenciones = () => {
 
   const atencionesUsuario = atenciones.filter((atencion) => atencion.usuario_id === usuario?.id);
 
-  const atencionesFiltradasYOrdenadas = atencionesUsuario
-    .filter((atencion) => {
-      const atencionDate = new Date(atencion.fecha_hora_atencion);
-      const start = startDate ? new Date(startDate) : null;
-      const end = endDate ? addOneDay(new Date(endDate)) : null;
 
-      const isAfterStart = !start || atencionDate >= start;
-      const isBeforeEnd = !end || atencionDate < end;
 
-      return isAfterStart && isBeforeEnd;
-    })
-    .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime());
+
+
+  useEffect(() => {
+    setAtencionesFiltradasYOrdenadas(atencionesUsuario
+      .filter((atencion) => {
+        const atencionDate = new Date(atencion.fecha_hora_atencion);
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? addOneDay(new Date(endDate)) : null;
+
+        const isAfterStart = !start || atencionDate >= start;
+        const isBeforeEnd = !end || atencionDate < end;
+
+        return isAfterStart && isBeforeEnd;
+      })
+      .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime()))
+  }, [startDate, endDate ]);
+
+
 
   return (
-    <div className={styles.container}>
+    <Box className={styles.container}>
       <h2 className={styles.title}>Atenciones</h2>
       <div className={styles.filterContainer}>
         <input
@@ -165,7 +178,7 @@ const HistorialAtenciones = () => {
       )}
       <BloqueoMascota />
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
-    </div>
+    </Box>
   );
 };
 
