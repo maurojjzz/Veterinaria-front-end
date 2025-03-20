@@ -66,7 +66,6 @@ const HistorialAtenciones = () => {
         setIsModalOpen(true);
         return;
       }
-  
       setError("");
       setIsModalOpen(false);
       setEndDate(newEndDate);
