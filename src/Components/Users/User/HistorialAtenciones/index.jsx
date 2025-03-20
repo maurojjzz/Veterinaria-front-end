@@ -10,16 +10,7 @@ import { Box } from "@mui/material";
 
 const HistorialAtenciones = () => {
   const [atencionesFiltradasYOrdenadas, setAtencionesFiltradasYOrdenadas] = useState([]);
-
-
-
-  const dispatch = useDispatch();
-  const { atenciones } = useSelector((state) => state.atenciones);
-  const token = useSelector((state) => state.auth.token);
-  const usuario = token ? decodeToken(token) : null;
-
-  const history = useHistory();
-  const location = useLocation();
+  const [usuario, setUsuario] = useState(null);
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -29,9 +20,11 @@ const HistorialAtenciones = () => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
 
-  useEffect(() => {
-    dispatch(getAtenciones());
-  }, [dispatch]);
+  const dispatch = useDispatch();
+  const { atenciones } = useSelector((state) => state.atenciones);
+
+  const history = useHistory();
+  const location = useLocation();
 
   const addOneDay = (date) => {
     const newDate = new Date(date);
@@ -49,26 +42,17 @@ const HistorialAtenciones = () => {
   }, [location, history]);
 
   const handleDateChange = (type, value) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
     if (type === "start") {
       const newStartDate = value;
       const start = newStartDate ? new Date(newStartDate) : null;
       const end = endDate ? new Date(endDate) : null;
-
-      if (start && start > today) {
-        setError("No puede haber atenciones que hayan sido realizadas después del presente.");
-        setIsModalOpen(true);
-        return;
-      }
-
+  
       if (end && start > end) {
         setError("La fecha de inicio no puede ser posterior a la fecha de fin.");
         setIsModalOpen(true);
         return;
       }
-
+  
       setError("");
       setIsModalOpen(false);
       setStartDate(newStartDate);
@@ -76,47 +60,65 @@ const HistorialAtenciones = () => {
       const newEndDate = value;
       const start = startDate ? new Date(startDate) : null;
       const end = newEndDate ? new Date(newEndDate) : null;
-
-      if (end && end > today) {
-        setError("No puede haber atenciones que hayan sido realizadas después del presente.");
-        setIsModalOpen(true);
-        return;
-      }
-
+  
       if (start && end < start) {
         setError("La fecha de fin no puede ser anterior a la fecha de inicio.");
         setIsModalOpen(true);
         return;
       }
-
+  
       setError("");
       setIsModalOpen(false);
       setEndDate(newEndDate);
     }
   };
-
-  const atencionesUsuario = atenciones.filter((atencion) => atencion.usuario_id === usuario?.id);
-
-
-
+  
 
 
   useEffect(() => {
-    setAtencionesFiltradasYOrdenadas(atencionesUsuario
+    dispatch(getAtenciones());
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    if (usuario && usuario.id) {
+      setAtencionesFiltradasYOrdenadas(atenciones.filter((atencion) => atencion?.mascota?.owner === usuario?.id))
+    }
+
+  }, [atenciones, usuario]);
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = decodeToken(token);
+        setUsuario({ id: decodedToken.id, nombre: decodedToken.name, email: decodedToken.email });
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+        setUsuario(null);
+      }
+    }
+  }, []);
+
+
+  useEffect(() => {
+    let atencionesFiltradas = atencionesFiltradasYOrdenadas
       .filter((atencion) => {
         const atencionDate = new Date(atencion.fecha_hora_atencion);
         const start = startDate ? new Date(startDate) : null;
         const end = endDate ? addOneDay(new Date(endDate)) : null;
-
+  
         const isAfterStart = !start || atencionDate >= start;
         const isBeforeEnd = !end || atencionDate < end;
-
+  
         return isAfterStart && isBeforeEnd;
       })
-      .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime()))
-  }, [startDate, endDate ]);
-
-
+      .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime());
+  
+    setAtencionesFiltradasYOrdenadas(atencionesFiltradas);
+  }, [startDate, endDate]);
+  
 
   return (
     <Box className={styles.container}>
@@ -142,7 +144,7 @@ const HistorialAtenciones = () => {
           <div className={styles.modal}>
             <h2>Advertencia</h2>
             <p>{error}</p>
-            <button onClick={() => setIsModalOpen(false)}>Cerrar</button>
+            <button onClick={() => setIsModalOpen(false)}>Entendido</button>
           </div>
         </div>
       )}
@@ -159,14 +161,14 @@ const HistorialAtenciones = () => {
                   <strong>Fecha de Atención:</strong> {new Date(atencion.fecha_hora_atencion).toLocaleDateString()}
                 </p>
                 <p>
-                  <strong>Mascota:</strong> {atencion.mascota.nombre}
+                  <strong>Mascota:</strong> {atencion?.mascota?.nombre}
                 </p>
                 <p>
-                  <strong>Monto:</strong> ${atencion.importe}
+                  <strong>Monto:</strong> ${atencion?.importe}
                 </p>
                 {atencion.descripcion && (
                   <p>
-                    <strong>Descripción:</strong> {atencion.descripcion}
+                    <strong>Descripción:</strong> {atencion?.descripcion}
                   </p>
                 )}
               </div>
