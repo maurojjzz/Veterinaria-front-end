@@ -9,6 +9,7 @@ import { Toast } from "../../../Shared";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import FechaFiltro from "./FechaFiltro/FechaFiltro";
 import SwitchFiltro from "./Switch/Switch";
+import SelectPet from "./SelectMascota/SelectMascota";
 
 const HistorialAtenciones = () => {
   const [atencionesFiltradasYOrdenadas, setAtencionesFiltradasYOrdenadas] = useState([]);
@@ -22,6 +23,7 @@ const HistorialAtenciones = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+  const [selectedPet, setSelectedPet] = useState(null);
 
   const dispatch = useDispatch();
   const { atenciones } = useSelector((state) => state.atenciones);
@@ -91,7 +93,7 @@ const HistorialAtenciones = () => {
     if (usuario && usuario.id) {
       setAtencionesFiltradasYOrdenadas(atenciones.filter((atencion) => atencion?.mascota?.owner === usuario?.id));
     }
-  }, [atenciones, usuario, isPending]);
+  }, [atenciones, usuario, isPending, selectedPet]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -118,7 +120,9 @@ const HistorialAtenciones = () => {
 
         const isPendingFilter = isPending ? atencion.pagos.length === 0 : true;
 
-        return isAfterStart && isBeforeEnd && isPendingFilter;
+        const isSelectedPetFilter = !selectedPet || atencion.mascota?.id === selectedPet?.id;
+
+        return isAfterStart && isBeforeEnd && isPendingFilter && isSelectedPetFilter;
       })
       .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime());
 
@@ -128,7 +132,11 @@ const HistorialAtenciones = () => {
       }
       setIsLoading(false);
     }, 700);
-  }, [startDate, endDate, atencionesFiltradasYOrdenadas, isPending]);
+  }, [startDate, endDate, atencionesFiltradasYOrdenadas, isPending, selectedPet]);
+
+  const handlePetSelection = (newValue) => {
+    setSelectedPet(newValue);
+  };
 
   return (
     <Box className={styles.container}>
@@ -146,7 +154,6 @@ const HistorialAtenciones = () => {
         <h2 className={styles.title}>Atenciones</h2>
         <Box
           sx={{
-            mb: 4,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -157,6 +164,8 @@ const HistorialAtenciones = () => {
           <FechaFiltro startDate={startDate} endDate={endDate} handleDateChange={handleDateChange} />
 
           <SwitchFiltro checked={isPending} onChange={handleSwitchChange} />
+
+          <SelectPet onPetSelect={handlePetSelection} />
         </Box>
 
         {isModalOpen && (
@@ -214,11 +223,8 @@ const HistorialAtenciones = () => {
                       <strong>Descripción:</strong> {atencion?.descripcion}
                     </p>
                   )}
-                  <Typography
-                    variant="p"
-                    sx={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <strong>Practica:</strong>
+                  <Typography variant="p" sx={{ display: "flex", justifyContent: "center" }}>
+                    <strong>Practicas</strong>
                   </Typography>
                   {atencion?.practicas?.length > 0 ? (
                     atencion?.practicas?.map((practica) => (
