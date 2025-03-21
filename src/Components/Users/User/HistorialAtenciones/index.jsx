@@ -6,12 +6,15 @@ import { decodeToken } from "../../../../Functions/utiities.js";
 import styles from "./HistorialAtenciones.module.css";
 import BloqueoMascota from "../Mascota/BloqueoMascota/BloqueoMascota.jsx";
 import { Toast } from "../../../Shared";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import FechaFiltro from "./FechaFiltro/FechaFiltro";
+import SwitchFiltro from "./Switch/Switch";
 
 const HistorialAtenciones = () => {
   const [atencionesFiltradasYOrdenadas, setAtencionesFiltradasYOrdenadas] = useState([]);
   const [usuario, setUsuario] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
@@ -46,13 +49,15 @@ const HistorialAtenciones = () => {
       const newStartDate = value;
       const start = newStartDate ? new Date(newStartDate) : null;
       const end = endDate ? new Date(endDate) : null;
-  
+
       if (end && start > end) {
         setError("La fecha de inicio no puede ser posterior a la fecha de fin.");
         setIsModalOpen(true);
+        setStartDate("");
+        setEndDate("");
         return;
       }
-  
+
       setError("");
       setIsModalOpen(false);
       setStartDate(newStartDate);
@@ -60,10 +65,12 @@ const HistorialAtenciones = () => {
       const newEndDate = value;
       const start = startDate ? new Date(startDate) : null;
       const end = newEndDate ? new Date(newEndDate) : null;
-  
+
       if (start && end < start) {
         setError("La fecha de fin no puede ser anterior a la fecha de inicio.");
         setIsModalOpen(true);
+        setStartDate("");
+        setEndDate("");
         return;
       }
       setError("");
@@ -71,21 +78,20 @@ const HistorialAtenciones = () => {
       setEndDate(newEndDate);
     }
   };
-  
 
+  const handleSwitchChange = (event) => {
+    setIsPending(event.target.checked);
+  };
 
   useEffect(() => {
     dispatch(getAtenciones());
   }, [dispatch]);
 
-
   useEffect(() => {
     if (usuario && usuario.id) {
-      setAtencionesFiltradasYOrdenadas(atenciones.filter((atencion) => atencion?.mascota?.owner === usuario?.id))
+      setAtencionesFiltradasYOrdenadas(atenciones.filter((atencion) => atencion?.mascota?.owner === usuario?.id));
     }
-
-  }, [atenciones, usuario]);
-
+  }, [atenciones, usuario, isPending]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -94,91 +100,148 @@ const HistorialAtenciones = () => {
         const decodedToken = decodeToken(token);
         setUsuario({ id: decodedToken.id, nombre: decodedToken.name, email: decodedToken.email });
       } catch (error) {
-        console.error("Error al decodificar el token:", error);
         setUsuario(null);
       }
     }
   }, []);
 
-
   useEffect(() => {
+    setIsLoading(true);
     let atencionesFiltradas = atencionesFiltradasYOrdenadas
       .filter((atencion) => {
         const atencionDate = new Date(atencion.fecha_hora_atencion);
         const start = startDate ? new Date(startDate) : null;
         const end = endDate ? addOneDay(new Date(endDate)) : null;
-  
+
         const isAfterStart = !start || atencionDate >= start;
         const isBeforeEnd = !end || atencionDate < end;
-  
-        return isAfterStart && isBeforeEnd;
+
+        const isPendingFilter = isPending ? atencion.pagos.length === 0 : true;
+
+        return isAfterStart && isBeforeEnd && isPendingFilter;
       })
       .sort((a, b) => new Date(b.fecha_hora_atencion).getTime() - new Date(a.fecha_hora_atencion).getTime());
-  
-    setAtencionesFiltradasYOrdenadas(atencionesFiltradas);
-  }, [startDate, endDate]);
-  
+
+    setTimeout(() => {
+      if (JSON.stringify(atencionesFiltradas) !== JSON.stringify(atencionesFiltradasYOrdenadas)) {
+        setAtencionesFiltradasYOrdenadas(atencionesFiltradas);
+      }
+      setIsLoading(false);
+    }, 700);
+  }, [startDate, endDate, atencionesFiltradasYOrdenadas, isPending]);
 
   return (
     <Box className={styles.container}>
-      <h2 className={styles.title}>Atenciones</h2>
-      <div className={styles.filterContainer}>
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => handleDateChange("start", e.target.value)}
-          className={styles.dateInput}
-        />
-        <span className={styles.separator}>a</span>
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => handleDateChange("end", e.target.value)}
-          className={styles.dateInput}
-        />
-      </div>
+      <Box
+        sx={{
+          maxWidth: "1100px",
+          width: "95%",
+          margin: "0 auto",
+          padding: "2rem",
+          background: " #f8f9fa",
+          borderRadius: "10px",
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <h2 className={styles.title}>Atenciones</h2>
+        <Box
+          sx={{
+            mb: 4,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <FechaFiltro startDate={startDate} endDate={endDate} handleDateChange={handleDateChange} />
 
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h2>Advertencia</h2>
-            <p>{error}</p>
-            <button onClick={() => setIsModalOpen(false)}>Entendido</button>
-          </div>
-        </div>
-      )}
+          <SwitchFiltro checked={isPending} onChange={handleSwitchChange} />
+        </Box>
 
-      {atencionesFiltradasYOrdenadas.length > 0 ? (
-        <div className={styles.grid}>
-          {atencionesFiltradasYOrdenadas.map((atencion) => (
-            <div key={atencion.id} className={styles.card}>
-              <div className={styles.cardHeader}>
-                <h3 className={styles.cardTitle}>Atención #{atencion.id}</h3>
-              </div>
-              <div className={styles.cardContent}>
-                <p>
-                  <strong>Fecha de Atención:</strong> {new Date(atencion.fecha_hora_atencion).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Mascota:</strong> {atencion?.mascota?.nombre}
-                </p>
-                <p>
-                  <strong>Monto:</strong> ${atencion?.importe}
-                </p>
-                {atencion.descripcion && (
-                  <p>
-                    <strong>Descripción:</strong> {atencion?.descripcion}
-                  </p>
-                )}
-              </div>
+        {isModalOpen && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modal}>
+              <h2>Advertencia</h2>
+              <p>{error}</p>
+              <button onClick={() => setIsModalOpen(false)}>Entendido</button>
             </div>
-          ))}
-        </div>
-      ) : (
-        !error && <p className={styles.noData}>No hay atenciones registradas en el período seleccionado.</p>
-      )}
-      <BloqueoMascota />
-      {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
+          </div>
+        )}
+
+        {isLoading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "20px 0",
+              height: "390px",
+            }}
+          >
+            <CircularProgress size={100} />
+          </Box>
+        ) : atencionesFiltradasYOrdenadas.length > 0 ? (
+          <div className={styles.grid}>
+            {atencionesFiltradasYOrdenadas.map((atencion) => (
+              <div key={atencion.id} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <h3>Atención </h3>
+                  <h3 className={styles.cardTitle}>#{atencion.id}</h3>
+                </div>
+                <div className={styles.cardContent}>
+                  <p>
+                    <strong>Fecha de Atención:</strong> {new Date(atencion.fecha_hora_atencion).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Mascota:</strong> {atencion?.mascota?.nombre}
+                  </p>
+                  <p>
+                    {atencion?.pagos?.length > 0 ? (
+                      <p>
+                        {" "}
+                        <strong>Monto:</strong>${atencion?.pagos[0]?.importe}{" "}
+                      </p>
+                    ) : (
+                      <Typography variant="body1" color="error">
+                        {" "}
+                        <strong>Estado:</strong> Pendiente de pago
+                      </Typography>
+                    )}
+                  </p>
+                  {atencion?.descripcion && (
+                    <p>
+                      <strong>Descripción:</strong> {atencion?.descripcion}
+                    </p>
+                  )}
+                  <Typography
+                    variant="p"
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <strong>Practica:</strong>
+                  </Typography>
+                  {atencion?.practicas?.length > 0 ? (
+                    atencion?.practicas?.map((practica) => (
+                      <Typography variant="body1" sx={{ display: "flex", justifyContent: "center" }} key={practica.id}>
+                        {practica?.descripcion}
+                      </Typography>
+                    ))
+                  ) : (
+                    <Typography variant="h6" color="error" sx={{ display: "flex", justifyContent: "center" }}>
+                      No ha sido atendido
+                    </Typography>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          !error && <p className={styles.noData}>No hay atenciones registradas en el período seleccionado.</p>
+        )}
+
+        <BloqueoMascota />
+        {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}
+      </Box>
     </Box>
   );
 };
