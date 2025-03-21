@@ -6,7 +6,7 @@ const BoxUser = ({ ownerId, owners }) => {
 
   useEffect(() => {
     const due = owners.find((owner) => owner.id === ownerId);
-    setVocals(`${due.nombre[0]} ${due.apellido[0]}`);
+    setVocals(`${due?.nombre[0]} ${due?.apellido[0]}`);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
