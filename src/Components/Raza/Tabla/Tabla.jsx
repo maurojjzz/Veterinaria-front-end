@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./table-practica.module.css";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteRaza } from "../../../redux/razas/thunks.js";
+import { getEspecie } from "../../../redux/especies/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
-import { Typography, Pagination, CircularProgress } from "@mui/material";
+import { Typography, Pagination, CircularProgress, Select, MenuItem, TextField, FormControl } from "@mui/material";
 
 const TablaRaza = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -12,28 +13,27 @@ const TablaRaza = ({ data, setData }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedEspecie, setSelectedEspecie] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 8;
 
   const history = useHistory();
   const dispatch = useDispatch();
+  const { especies } = useSelector((state) => state.especies);
+
+  useEffect(() => {
+    dispatch(getEspecie());
+  }, [dispatch]);
 
   const handleEdit = (raza) => {
-    history.push(`/admin/raza/form/${raza.id}`, {
-      params: { ...raza },
-    });
+    history.push(`/admin/raza/form/${raza.id}`, { params: { ...raza } });
   };
 
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteRaza(id));
-      setData((prevData) => {
-        if (Array.isArray(prevData)) {
-          return prevData.filter((raza) => raza.id !== id);
-        }
-        return [];
-      });
+      setData((prevData) => prevData.filter((raza) => raza.id !== id));
       setToastMessage("Raza eliminada correctamente");
       setToastType("Info");
     } catch (error) {
@@ -47,14 +47,50 @@ const TablaRaza = ({ data, setData }) => {
     }
   };
 
-  const filteredData = data.filter((mas) => mas?.isActive);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const filteredData = data
+    .filter((mas) => mas?.isActive)
+    .filter((raza) => (selectedEspecie ? raza?.especie?.id === selectedEspecie : true))
+    .filter((raza) => raza?.descripcion.toLowerCase().includes(searchTerm.toLowerCase()));
 
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className="d-flex flex-column align-items-center">
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
+        <h1 className="text-center mb-0">Raza</h1>
+
+        {/* Filtros alineados con MUI */}
+        <div className="d-flex flex-column flex-md-row gap-2 mt-3 mb-3">
+          <FormControl fullWidth sx={{ width: "48%" }}>
+            <Select
+              value={selectedEspecie}
+              onChange={(e) => setSelectedEspecie(e.target.value)}
+              displayEmpty
+              size="small"
+            >
+              <MenuItem value="">Todas las especies</MenuItem>
+              {especies
+                .filter((esp) => esp.isActive)
+                .map((especie) => (
+                  <MenuItem key={especie.id} value={especie.id}>
+                    {especie.descripcion}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ width: "48%" }}>
+            <TextField
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar raza"
+              size="small"
+            />
+          </FormControl>
+        </div>
+
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
@@ -107,6 +143,7 @@ const TablaRaza = ({ data, setData }) => {
             )}
           </tbody>
         </table>
+
         {totalPages > 1 && (
           <Pagination
             count={totalPages}
@@ -117,6 +154,7 @@ const TablaRaza = ({ data, setData }) => {
           />
         )}
       </div>
+
       <ModalAlert
         text="¿Desea eliminar la raza?"
         clickAction={() => handleDelete(idRaza)}
@@ -129,3 +167,10 @@ const TablaRaza = ({ data, setData }) => {
 };
 
 export default TablaRaza;
+
+
+
+
+
+
+
