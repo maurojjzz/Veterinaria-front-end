@@ -6,7 +6,7 @@ import { ModalAlert } from "../../Shared";
 import { useDispatch } from "react-redux";
 import { getPagos, addPago } from "../../../redux/pagos/thunks.js";
 import { getAtenciones } from "../../../redux/atenciones/thunks.js";
-import {Box, Typography, Button} from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { useHistory } from "react-router-dom";
 
 const ModalAtencion = ({
@@ -50,7 +50,9 @@ const ModalAtencion = ({
   };
 
   const handleEdit = (ate) => {
-    history.push(`/admin/atenciones/form/${ate.id}`, { params: { ...ate } });
+    const role = localStorage.getItem("role");
+    if (role === "Veterinario") history.push(`/vet/atenciones/form/${ate.id}`, { params: { ...ate } });
+    if (role === "Admin") history.push(`/admin/atenciones/form/${ate.id}`, { params: { ...ate } });
   };
 
   const handleAddPago = async () => {
@@ -286,16 +288,14 @@ const ModalAtencion = ({
             </div>
           </>
         ) : (
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            width={"100%"}
-          >
-            <Typography my={2} variant="h4" color="error" align="center" px={1} >Aún no fue atendido por un veterinario</Typography>
+          <Box display={"flex"} flexDirection={"column"} alignItems={"center"} justifyContent={"center"} width={"100%"}>
+            <Typography my={2} variant="h4" color="error" align="center" px={1}>
+              Aún no fue atendido por un veterinario
+            </Typography>
 
-            <Button variant="outlined" color="info" size="large"  onClick={() => handleEdit(dataFilaAtencion) }>Atender turno</Button>
+            <Button variant="outlined" color="info" size="large" onClick={() => handleEdit(dataFilaAtencion)}>
+              Atender turno
+            </Button>
           </Box>
         )}
 

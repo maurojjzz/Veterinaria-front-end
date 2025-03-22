@@ -8,7 +8,11 @@ import { getAtenciones, deleteAtencion } from "../../../redux/atenciones/thunks.
 import { initUsers } from "../../../redux/users/thunks.js";
 import { getEspecie } from "../../../redux/especies/thunks.js";
 import { getRazas } from "../../../redux/razas/thunks.js";
-import { Pagination, Typography, CircularProgress, useMediaQuery } from "@mui/material";
+import { Pagination, Typography, CircularProgress, useMediaQuery, Box, Button } from "@mui/material";
+import FiltroOwner from "./Filtros/FiltroOwner";
+import FechaFiltro from "../../Users/User/HistorialAtenciones/FechaFiltro/FechaFiltro";
+import SwitchFiltro from "./Filtros/SwitchFiltro";
+import FiltroVet from "./Filtros/FiltroVeterinario";
 
 const TablaAtencion = () => {
   const [modal, setModal] = useState(false);
@@ -18,6 +22,16 @@ const TablaAtencion = () => {
   const [toastType, setToastType] = useState("");
   const [showModalAlert, setShowModalAlert] = useState(false);
   const [idToEliminate, setIdToEliminate] = useState(null);
+  const [selectedOwner, setSelectedOwner] = useState(null);
+  const [selectedVet, setSelectedVet] = useState(null);
+  const [atencionesFiltradas, setAtencionesFiltradas] = useState([]);
+  const [isPending, setIsPending] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
@@ -67,10 +81,107 @@ const TablaAtencion = () => {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const atencionesPaginadas = atenciones.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    if (selectedOwner) {
+      setAtencionesFiltradas(atenciones.filter((ate) => ate?.mascota?.owner === selectedOwner.id));
+    } else {
+      setAtencionesFiltradas(atenciones);
+    }
+  }, [selectedOwner, atenciones]);
+
+  const handleDateChange = (type, value) => {
+    if (type === "start") {
+      const newStartDate = value;
+      const start = newStartDate ? new Date(newStartDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      if (end && start > end) {
+        setError("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        setIsModalOpen(true);
+        setStartDate("");
+        setEndDate("");
+        return;
+      }
+
+      setError("");
+      setIsModalOpen(false);
+      setStartDate(newStartDate);
+    } else if (type === "end") {
+      const newEndDate = value;
+      const start = startDate ? new Date(startDate) : null;
+      const end = newEndDate ? new Date(newEndDate) : null;
+
+      if (start && end < start) {
+        setError("La fecha de fin no puede ser anterior a la fecha de inicio.");
+        setIsModalOpen(true);
+        setStartDate("");
+        setEndDate("");
+        return;
+      }
+      setError("");
+      setIsModalOpen(false);
+      setEndDate(newEndDate);
+    }
+  };
+
+  const handleSwitchChange = (event) => {
+    setIsPending(event.target.checked);
+  };
+
+
+
+  useEffect(() => {
+    setIsLoading(true);
+    let filtradas = atenciones;
+
+    if (selectedOwner) {
+      filtradas = filtradas.filter((ate) => ate?.mascota?.owner === selectedOwner.id);
+    }
+
+    if (startDate) {
+      filtradas = filtradas.filter((ate) => new Date(ate.fecha_hora_atencion) >= new Date(startDate));
+    }
+
+    if (endDate) {
+      const endDateWithTime = new Date(endDate);
+      endDateWithTime.setHours(23, 59, 59, 999);
+      filtradas = filtradas.filter((ate) => new Date(ate.fecha_hora_atencion) <= endDateWithTime);
+    }
+
+    if (isPending) {
+      filtradas = filtradas.filter((ate) => ate?.veterinario === undefined);
+    }
+
+    if (selectedVet) {
+      filtradas = filtradas.filter((ate) => ate?.veterinario?.id === selectedVet.id);
+    }
+
+    setTimeout(() => {
+      setAtencionesFiltradas(filtradas);
+      setIsLoading(false);
+    }, 700);
+  }, [selectedOwner, atenciones, startDate, endDate, isPending, selectedVet]);
+
+  const atencionesPaginadas = atencionesFiltradas.slice(startIndex, endIndex);
 
   return (
-    <div className={`d-flex justify-content-center `}>
+    <div className={`d-flex flex-column justify-content-center`}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "20px",
+          mb: 2,
+        }}
+      >
+        <FiltroOwner onSelectOwner={setSelectedOwner} />
+        <FiltroVet onSelectVet={setSelectedVet} />
+        <FechaFiltro startDate={startDate} endDate={endDate} handleDateChange={handleDateChange} />
+        <SwitchFiltro checked={isPending} onChange={handleSwitchChange} />
+      </Box>
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
@@ -89,7 +200,16 @@ const TablaAtencion = () => {
             </tr>
           </thead>
           <tbody>
-            {atencionesPaginadas.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  <Typography variant="h6" color="error">
+                    Cargando atenciones...
+                  </Typography>
+                  <CircularProgress />
+                </td>
+              </tr>
+            ) : atencionesPaginadas.length === 0 ? (
               <tr>
                 <td colSpan="8" className="text-center">
                   <Typography variant="h6" color="error">
@@ -130,20 +250,19 @@ const TablaAtencion = () => {
                       </td>
                       <td className={`d-none d-lg-table-cell `}>$ {ate?.importe}</td>
                       <td className={`d-none d-lg-table-cell `}>{ate?.forma_de_pago}</td>
+                      <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
                     </>
                   ) : (
                     !isMobile && (
-                      
-                        <td colSpan={isSmallerScreen ? 1 : isSmallScreen ? 2 : 4}>
-                          <Typography variant="h5" color="error">
-                            Aún no ha sido atendido por un veterinario
-                          </Typography>
-                        </td>
-                      
+                      <td colSpan={isSmallerScreen ? 1 : isSmallScreen ? 2 : 5}>
+                        <Typography variant="h5" sx={{ fontSize: isSmallerScreen ? "0.9rem" : "1.2rem" }} color="error">
+                          Aún no ha sido atendido por un veterinario
+                        </Typography>
+                      </td>
                     )
                   )}
 
-                  <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
+                  
                   <td>
                     <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
                       <img
@@ -181,6 +300,28 @@ const TablaAtencion = () => {
           sx={{ marginTop: "20px" }}
         />
       </div>
+      {isModalOpen && (
+        <Box className={styles.modalOverlay}>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              maxWidth: "400px",
+              width: "100%",
+              textAlign: "center",
+            }}
+          >
+            <h2>Advertencia</h2>
+            <p>{error}</p>
+            <Button variant="contained" onClick={() => setIsModalOpen(false)}>
+              {" "}
+              Entendido{" "}
+            </Button>
+          </Box>
+        </Box>
+      )}
       {modal && (
         <ModalAtencion
           setModal={setModal}
