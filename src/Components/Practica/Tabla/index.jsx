@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updatePract } from "../../../redux/practicas/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
-import { Pagination, Typography, CircularProgress  } from "@mui/material";
+import { Pagination, Typography, CircularProgress, Slider } from "@mui/material";
 
 const TablaPractica = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -12,6 +12,7 @@ const TablaPractica = ({ data, setData }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 10000]);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -27,18 +28,11 @@ const TablaPractica = ({ data, setData }) => {
 
   const handleDelete = async (id) => {
     try {
-      console.log(id);
       await dispatch(updatePract({ id: id, isActive: false }));
-      setData((prevData) => {
-        if (Array.isArray(prevData)) {
-          return prevData.filter((raza) => raza.id !== id);
-        }
-        return [];
-      });
+      setData((prevData) => prevData.filter((pra) => pra.id !== id));
       setToastMessage("Practica eliminada correctamente");
       setToastType("Info");
     } catch (error) {
-      console.log(error);
       setToastMessage("Error al eliminar practica");
       setToastType("Error");
     } finally {
@@ -50,23 +44,32 @@ const TablaPractica = ({ data, setData }) => {
 
   const getNearestPrice = (precios) => {
     if (!precios || precios.length === 0) return "Sin precio";
-
     const today = new Date();
-
     const nearest = precios
       .map((p) => ({ ...p, fecha: new Date(p.fecha) }))
       .sort((a, b) => Math.abs(a.fecha - today) - Math.abs(b.fecha - today))[0];
-
     return nearest ? nearest.valor : "Sin precio";
   };
 
-  const filteredData = data.filter((mas) => mas?.isActive);
+  const filteredData = data.filter(
+    (pra) => pra?.isActive && getNearestPrice(pra.precios) >= priceRange[0] && getNearestPrice(pra.precios) <= priceRange[1]
+  );
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className="d-flex flex-column align-items-center">
+      <div className="w-100 d-flex flex-column align-items-center p-2">
+        <Typography variant="h6">Filtrar por precio</Typography>
+        <Slider
+          value={priceRange}
+          onChange={(event, newValue) => setPriceRange(newValue)}
+          valueLabelDisplay="auto"
+          min={0}
+          max={10000}
+          sx={{ width: "80%", maxWidth: 400 }}
+        />
+      </div>
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
@@ -80,7 +83,7 @@ const TablaPractica = ({ data, setData }) => {
           <tbody>
             {paginatedData.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center">
+                <td colSpan="4" className="text-center">
                   <Typography variant="h6" color="error">
                     No hay practicas cargadas
                   </Typography>
@@ -88,37 +91,35 @@ const TablaPractica = ({ data, setData }) => {
                 </td>
               </tr>
             ) : (
-              paginatedData
-                .filter((pra) => pra.isActive)
-                .map((pra, index) => (
-                  <tr key={index} className={`${styles.fila}`}>
-                    <td>{pra?.descripcion}</td>
-                    <td>$ {getNearestPrice(pra.precios)}</td>
-                    <td>
-                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                        <img
-                          onClick={() => handleEdit(pra)}
-                          className={`${styles.tableIcon}`}
-                          src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                          alt="update icon button"
-                        />
-                      </div>
-                    </td>
-                    <td>
-                      <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                        <img
-                          className={`${styles.tableIcon}`}
-                          onClick={() => {
-                            setShowModal(true);
-                            setIdPractica(pra.id);
-                          }}
-                          src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                          alt="delete icon button"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))
+              paginatedData.map((pra, index) => (
+                <tr key={index} className={`${styles.fila}`}>
+                  <td>{pra?.descripcion}</td>
+                  <td>$ {getNearestPrice(pra.precios)}</td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        onClick={() => handleEdit(pra)}
+                        className={`${styles.tableIcon}`}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                        alt="update icon button"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        className={`${styles.tableIcon}`}
+                        onClick={() => {
+                          setShowModal(true);
+                          setIdPractica(pra.id);
+                        }}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                        alt="delete icon button"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
