@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteRaza } from "../../../redux/razas/thunks.js";
 import { getEspecie } from "../../../redux/especies/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
-import { Typography, Pagination, CircularProgress, Select, MenuItem, TextField } from "@mui/material";
+import { Typography, Pagination, CircularProgress, Select, MenuItem, TextField, FormControl } from "@mui/material";
 
 const TablaRaza = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -17,7 +17,7 @@ const TablaRaza = ({ data, setData }) => {
   const [selectedEspecie, setSelectedEspecie] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 8;
-  
+
   const history = useHistory();
   const dispatch = useDispatch();
   const { especies } = useSelector((state) => state.especies);
@@ -56,34 +56,41 @@ const TablaRaza = ({ data, setData }) => {
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className={`d-flex justify-content-center`}>      
+    <div className="d-flex flex-column align-items-center">
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
-        <h1 className="text-center">Razas</h1>
-        
-        <div className="d-flex mb-3">
-          <Select
-            value={selectedEspecie}
-            onChange={(e) => setSelectedEspecie(e.target.value)}
-            displayEmpty
-            className="form-control me-2"
-          >
-            <MenuItem value="">Todas las especies</MenuItem>
-            {especies.map((especie) => (
-              <MenuItem key={especie.id} value={especie.id}>
-                {especie.descripcion}
-              </MenuItem>
-            ))}
-          </Select>
+        <h1 className="text-center mb-0">Raza</h1>
 
-          <TextField
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Buscar raza"
-            className="form-control"
-          />
+        {/* Filtros alineados con MUI */}
+        <div className="d-flex flex-column flex-md-row gap-2 mt-3 mb-3">
+          <FormControl fullWidth sx={{ width: "48%" }}>
+            <Select
+              value={selectedEspecie}
+              onChange={(e) => setSelectedEspecie(e.target.value)}
+              displayEmpty
+              size="small"
+            >
+              <MenuItem value="">Todas las especies</MenuItem>
+              {especies
+                .filter((esp) => esp.isActive)
+                .map((especie) => (
+                  <MenuItem key={especie.id} value={especie.id}>
+                    {especie.descripcion}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ width: "48%" }}>
+            <TextField
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Buscar raza"
+              size="small"
+            />
+          </FormControl>
         </div>
-        
+
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
             <tr>
@@ -97,7 +104,9 @@ const TablaRaza = ({ data, setData }) => {
             {paginatedData.length === 0 ? (
               <tr>
                 <td colSpan="8" className="text-center">
-                  <Typography variant="h6" color="error">No hay razas cargadas</Typography>
+                  <Typography variant="h6" color="error">
+                    No hay razas cargadas
+                  </Typography>
                   <CircularProgress />
                 </td>
               </tr>
@@ -145,7 +154,7 @@ const TablaRaza = ({ data, setData }) => {
           />
         )}
       </div>
-      
+
       <ModalAlert
         text="¿Desea eliminar la raza?"
         clickAction={() => handleDelete(idRaza)}
@@ -158,4 +167,10 @@ const TablaRaza = ({ data, setData }) => {
 };
 
 export default TablaRaza;
+
+
+
+
+
+
 
