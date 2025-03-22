@@ -14,6 +14,7 @@ const TablaEspecies = () => {
   const [toastType, setToastType] = useState("");
   const [showModalAlert, setShowModalAlert] = useState(false);
   const [idToEliminate, setIdToEliminate] = useState(null);
+  const [filtro, setFiltro] = useState("");
 
   const dispatch = useDispatch();
   const { especies } = useSelector((state) => state.especies);
@@ -106,6 +107,14 @@ const TablaEspecies = () => {
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <h1 className="text-center">Especies</h1>
 
+        <input
+          type="text"
+          value={filtro}
+          onChange={(e) => setFiltro(e.target.value)}
+          placeholder="Filtrar especies"
+          className="form-control mb-3"
+        />
+
         <div className="d-flex mb-3">
           <input
             type="text"
@@ -128,47 +137,47 @@ const TablaEspecies = () => {
           </thead>
           <tbody>
             {especies
-            .filter((especie) => especie.isActive)
-            .map((especie) => (
-              <tr key={especie.id}>
-                <td>
-                  {editandoEspecie === especie.id ? (
-                    <input
-                      type="text"
-                      value={descripcionEditada}
-                      onChange={(e) => setDescripcionEditada(e.target.value)}
-                      className="form-control"
-                    />
-                  ) : (
-                    especie.descripcion
-                  )}
-                </td>
-                <td>
-                  {editandoEspecie === especie.id ? (
-                    <button onClick={() => guardarEdicion(especie.id)} className="btn btn-primary">
-                      💾 Guardar
-                    </button>
-                  ) : (
+              .filter((especie) => especie.isActive && especie.descripcion.toLowerCase().includes(filtro.toLowerCase()))
+              .map((especie) => (
+                <tr key={especie.id}>
+                  <td>
+                    {editandoEspecie === especie.id ? (
+                      <input
+                        type="text"
+                        value={descripcionEditada}
+                        onChange={(e) => setDescripcionEditada(e.target.value)}
+                        className="form-control"
+                      />
+                    ) : (
+                      especie.descripcion
+                    )}
+                  </td>
+                  <td>
+                    {editandoEspecie === especie.id ? (
+                      <button onClick={() => guardarEdicion(especie.id)} className="btn btn-primary">
+                        💾 Guardar
+                      </button>
+                    ) : (
+                      <div className={styles.iconCont}>
+                        <img
+                          src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                          alt="update icon button"
+                          className={styles.tableIcon}
+                          onClick={() => iniciarEdicion(especie)}
+                        />
+                      </div>
+                    )}
                     <div className={styles.iconCont}>
                       <img
-                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                        alt="update icon button"
+                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                        alt="delete icon button"
                         className={styles.tableIcon}
-                        onClick={() => iniciarEdicion(especie)}
+                        onClick={() => confirmarEliminacion(especie.id)}
                       />
                     </div>
-                  )}
-                  <div className={styles.iconCont}>
-                    <img
-                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="delete icon button"
-                      className={styles.tableIcon}
-                      onClick={() => confirmarEliminacion(especie.id)}
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -186,3 +195,5 @@ const TablaEspecies = () => {
 };
 
 export default TablaEspecies;
+
+
