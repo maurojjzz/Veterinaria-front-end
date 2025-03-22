@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./practica.module.css";
 import { Toast } from "../Shared";
 import TablaPracticas from "./Tabla";
-import {getPract} from "../../redux/practicas/thunks.js";
+import { getPract } from "../../redux/practicas/thunks.js";
+import { Typography, Box, Button } from "@mui/material";
 
 const Practica = () => {
   const [data, setData] = useState([]);
@@ -43,16 +44,23 @@ const Practica = () => {
 
   return (
     <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.clienteContainer}`}>
-      <h1 className={`mb-5 ms-2`}>Practicas</h1>
+      <Typography variant="h4" mb={4} ml={2}>
+        Practicas
+      </Typography>
       <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
-        <div
-          onClick={() => {
-            handlePractica();
-          }}
-          className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addPracticaBtn} `}
-        >
-          <h3>Agregar Practica</h3>
-        </div>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <Button
+            sx={{ width: "230px", border: "2px solid #1BBCB6", mr: 2 }}
+            size="large"
+            onClick={() => handlePractica()}
+            variant="outlined"
+            color="info"
+          >
+            <Typography fontWeight={600} fontSize={16} variant="button" color="#1BBCB6">
+              Agregar Practica
+            </Typography>
+          </Button>
+        </Box>
         <TablaPracticas data={data} setData={setData} />
       </div>
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}

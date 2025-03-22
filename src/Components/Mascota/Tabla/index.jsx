@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./tabla-mascota.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import { ModalAlert, Toast } from "../../Shared";
 import { justFecha } from "../../../Functions/utiities.js";
 import DetalleMascota from "../Modal/modalMascota.jsx";
 import { Typography, Pagination, CircularProgress } from "@mui/material";
+import FiltrosMascota from "./Filtros/FiltrosMascota";
 
 const TablaMascota = ({ data, setData, especies }) => {
   const [showModal, setShowModal] = useState(false);
@@ -14,6 +15,7 @@ const TablaMascota = ({ data, setData, especies }) => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
   const [showDetalleModal, setShowDetalleModal] = useState(false);
   const [selectedMascota, setSelectedMascota] = useState(null);
@@ -54,16 +56,52 @@ const TablaMascota = ({ data, setData, especies }) => {
     }
   };
 
-  const filteredData = data
-    .filter((mas) => mas?.owner && typeof mas?.owner === "object")
-    .filter((mas) => mas?.isActive);
+  useEffect(() => {
+    setFilteredData(data.filter((mas) => mas?.owner && typeof mas?.owner === "object").filter((mas) => mas?.isActive));
+  }, [data]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handleFilter = (value, type) => {
+    if (!value) {
+      setFilteredData(data.filter((mascota) => mascota?.isActive));
+      return;
+    }
+
+    const newFilteredData = data
+      .filter((mascota) => mascota?.isActive)
+      .filter((mascota) => {
+        let fieldValue = "";
+
+        switch (type) {
+          case "nombre":
+            fieldValue = mascota?.nombre || "";
+            break;
+          case "especie":
+            fieldValue = especies.find((especie) => especie.id === mascota?.raza?.especie)?.descripcion || "";
+            break;
+          case "dueño":
+            fieldValue = `${mascota?.owner?.nombre} ${mascota?.owner?.apellido}`.trim();
+            break;
+          case "email dueño":
+            fieldValue = mascota?.owner?.email || "";
+            break;
+          default:
+            fieldValue = "";
+        }
+
+        return fieldValue.toLowerCase().includes(value.toLowerCase());
+      });
+
+    setFilteredData(newFilteredData);
+  };
 
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className={`d-flex flex-column justify-content-center`}>
+      <FiltrosMascota onFilter={handleFilter} />
+
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
