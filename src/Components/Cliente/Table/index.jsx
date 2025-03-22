@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./table-cliente.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import { Toast } from "../../Shared";
 import { ModalAlert } from "../../Shared";
 import DetalleCliente from "../Modal/modalCliente";
 import { Pagination, Typography, CircularProgress } from "@mui/material";
+import FiltrosClientes from "./Filtros/FiltrosClientes"
 
 const TablaCliente = ({ data, setData }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -15,6 +16,7 @@ const TablaCliente = ({ data, setData }) => {
   const [toastMessage, setToastMessage] = useState("");
   const [toastType, setToastType] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
 
   const [modalMobile, setModalMobile] = useState(false);
 
@@ -51,14 +53,33 @@ const TablaCliente = ({ data, setData }) => {
     }
   };
 
-  const filteredData = data.filter((mas) => mas?.isActive);
+  useEffect(() => {
+    setFilteredData(data.filter((mas) => mas?.isActive));
+  }, [data]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handleFilter = (value, type) => {
+    if (!value) {
+      setFilteredData(data.filter((cliente) => cliente?.isActive)); 
+      return;
+    }
+
+    const newFilteredData = data
+      .filter((cliente) => cliente?.isActive)
+      .filter((cliente) => {
+        const fieldValue = cliente[type]?.toString().toLowerCase() || ""; 
+        return fieldValue.includes(value.toLowerCase());
+      });
+
+    setFilteredData(newFilteredData);
+  };
 
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className={`d-flex flex-column justify-content-center`}>
+      <FiltrosClientes onFilter={handleFilter} />
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>

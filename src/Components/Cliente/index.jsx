@@ -5,6 +5,7 @@ import styles from "./cliente.module.css";
 import TablaCliente from "./Table";
 import { initUsers } from "../../redux/users/thunks.js";
 import { Toast } from "../Shared";
+import { Typography, Box, Button } from "@mui/material";
 
 const Cliente = () => {
   const [data, setData] = useState([]);
@@ -55,16 +56,23 @@ const Cliente = () => {
 
   return (
     <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.clienteContainer}`}>
-      <h1 className={`mb-5 ms-2`}>Usuarios</h1>
-      <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
-        <div
-          onClick={() => {
-            handleUser();
-          }}
-          className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
+      <Typography variant="h4" mb={4} ml={2}>
+        Usuarios
+      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Button
+          sx={{ width: "230px", border: "2px solid #1BBCB6", mr: 2 }}
+          size="large"
+          onClick={() => handleUser()}
+          variant="outlined"
+          color="info"
         >
-          <h3>Agregar Usuario</h3>
-        </div>
+          <Typography fontWeight={600} fontSize={16} variant="button" color="#1BBCB6">
+            Agregar Usuario
+          </Typography>
+        </Button>
+      </Box>
+      <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
         <TablaCliente data={data} setData={setData} />
       </div>
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}

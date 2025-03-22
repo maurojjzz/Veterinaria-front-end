@@ -6,6 +6,7 @@ import { Toast } from "../Shared";
 import { getMascotas } from "../../redux/mascotas/thunks.js";
 import { getEspecie } from "../../redux/especies/thunks.js";
 import { useDispatch, useSelector } from "react-redux";
+import { Typography, Box, Button } from "@mui/material";
 
 const Mascotas = () => {
   const [data, setData] = useState([]);
@@ -46,17 +47,24 @@ const Mascotas = () => {
 
   return (
     <div className={`d-flex flex-column justify-content-center flex-grow-1  ${styles.clienteContainer}`}>
-      <h1 className={`mb-5 ms-2`}>Mascotas</h1>
+      <Typography variant="h4" mb={4} ml={2}>
+        Mascotas
+      </Typography>
       <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
-        <div
-          onClick={() => {
-            handleMascota();
-          }}
-          className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
-        >
-          <h3>Agregar Mascota</h3>
-        </div>
-        <MascotasTable data={data} setData={setData} especies={especies}/>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <Button
+            sx={{ width: "230px", border: "2px solid #1BBCB6", mr: 2 }}
+            size="large"
+            onClick={() => handleMascota()}
+            variant="outlined"
+            color="info"
+          >
+            <Typography fontWeight={600} fontSize={16} variant="button" color="#1BBCB6">
+              Agregar Mascota
+            </Typography>
+          </Button>
+        </Box>
+        <MascotasTable data={data} setData={setData} especies={especies} />
       </div>
 
       {showToast && <Toast title={toastType} message={toastMessage} setError={setShowToast} />}

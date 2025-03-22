@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./tabla-veterinarios.module.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,7 @@ import { updateVet } from "../../../redux/veterinarios/thunks.js";
 import { ModalAlert, Toast } from "../../Shared";
 import DetalleVeterinario from "../Modal/modalVeterinario.jsx";
 import { Pagination, Typography, CircularProgress } from "@mui/material";
+import FiltrosVeterinario from "./Filtros/FiltrosVeterinario";
 
 const TablaVeterinario = ({ data, setData }) => {
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +16,7 @@ const TablaVeterinario = ({ data, setData }) => {
   const [toastType, setToastType] = useState("");
 
   const [selectedVet, setSelectedVet] = useState(null);
+  const [filteredData, setFilteredData] = useState([]);
 
   const [modalMobile, setModalMobile] = useState(false);
 
@@ -54,14 +56,34 @@ const TablaVeterinario = ({ data, setData }) => {
     }
   };
 
-  const filteredData = data.filter((mas) => mas?.isActive);
+  useEffect(() => {
+    setFilteredData(data.filter((vet) => vet?.isActive));
+  }, [data]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const handleFilter = (value, type) => {
+    if (!value) {
+      setFilteredData(data.filter((veter) => veter?.isActive));
+      return;
+    }
+
+    const newFilteredData = data
+      .filter((veter) => veter?.isActive)
+      .filter((vet) => {
+        const fieldValue = vet[type]?.toString().toLowerCase() || "";
+        return fieldValue.includes(value.toLowerCase());
+      });
+
+    setFilteredData(newFilteredData);
+  };
 
   const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
-    <div className="d-flex justify-content-center">
+    <div className="d-flex flex-column justify-content-center">
+      <FiltrosVeterinario onFilter={handleFilter} />
+
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>

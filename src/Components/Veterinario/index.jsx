@@ -5,6 +5,7 @@ import TablaVeterinario from "./TablaVeterinario";
 import { Toast } from "../Shared";
 import { getVet } from "../../redux/veterinarios/thunks.js";
 import { useDispatch, useSelector } from "react-redux";
+import { Typography, Box, Button } from "@mui/material";
 
 const Veterinario = () => {
   const [data, setData] = useState([]);
@@ -28,8 +29,6 @@ const Veterinario = () => {
     }
   }, [veterinarios]);
 
-
-
   const handleVeterinario = () => {
     history.push("/admin/veterinarios/form");
   };
@@ -43,19 +42,25 @@ const Veterinario = () => {
     }
   }, [location, history]);
 
-
   return (
     <div className={`d-flex flex-column justify-content-center flex-grow-1 ${styles.clienteContainer}`}>
-      <h1 className={`mb-5 ms-2`}>Veterinarios</h1>
+      <Typography variant="h4" mb={4} ml={2}>
+        Veterinarios
+      </Typography>
       <div className={`container-xl d-flex flex-column ${styles.tableContainer} `}>
-        <div
-          onClick={() => {
-            handleVeterinario();
-          }}
-          className={` align-self-end me-3 me-md-4 mb-2 rounded px-1 ${styles.addUserBtn} `}
-        >
-          <h3>Agregar Veterinario</h3>
-        </div>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <Button
+            sx={{ width: "240px", border: "2px solid #1BBCB6", mr: 2 }}
+            size="large"
+            onClick={() => handleVeterinario()}
+            variant="outlined"
+            color="info"
+          >
+            <Typography fontWeight={600} fontSize={15} variant="button" color="#1BBCB6">
+              Agregar Veterinario
+            </Typography>
+          </Button>
+        </Box>
         <TablaVeterinario data={data} setData={setData} />
       </div>
 
