@@ -21,6 +21,14 @@
   width: 15px;
 }
 
+.tabla tr td:nth-child(6){
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  line-height: 0px;
+}
+
+
 .iconCont {
   border-radius: 30px;
   width: 35px;

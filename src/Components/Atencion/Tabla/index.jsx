@@ -8,7 +8,7 @@ import { getAtenciones, deleteAtencion } from "../../../redux/atenciones/thunks.
 import { initUsers } from "../../../redux/users/thunks.js";
 import { getEspecie } from "../../../redux/especies/thunks.js";
 import { getRazas } from "../../../redux/razas/thunks.js";
-import {Pagination} from "@mui/material";
+import { Pagination, Typography, CircularProgress, useMediaQuery } from "@mui/material";
 
 const TablaAtencion = () => {
   const [modal, setModal] = useState(false);
@@ -22,12 +22,15 @@ const TablaAtencion = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
+  const isSmallScreen = useMediaQuery("(max-width:991px)");
+  const isSmallerScreen = useMediaQuery("(max-width:767px)");
+  const isMobile = useMediaQuery("(max-width:575px)");
+
   const history = useHistory();
   const dispatch = useDispatch();
 
   const { atenciones } = useSelector((state) => state.atenciones);
   const { users } = useSelector((state) => state.users);
-  const { especies } = useSelector((state) => state.especies);
   const { razas } = useSelector((state) => state.razas);
 
   const handleEdit = (ate) => {
@@ -62,20 +65,12 @@ const TablaAtencion = () => {
     return `${due?.nombre} ${due?.apellido}`;
   };
 
-  const findSpecie = (id) => {
-    if (!especies || especies.length === 0) {
-      return "Especie no encontrada";
-    }
-    const raz = especies.find((spe) => spe.id === id);
-    return raz ? raz.especies?.descripcion : "Especie no encontrada";
-  };
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const atencionesPaginadas = atenciones.slice(startIndex, endIndex);
 
   return (
-    <div className={`d-flex justify-content-center`}>
+    <div className={`d-flex justify-content-center `}>
       <div className={`table-responsive p-2 ${styles.tablaContainer}`}>
         <table className={`table table-hover ${styles.tabla}`}>
           <thead>
@@ -94,68 +89,97 @@ const TablaAtencion = () => {
             </tr>
           </thead>
           <tbody>
-          {atencionesPaginadas.map((ate, index) => (
-              <tr
-                key={index}
-                className={`${styles.fila}`}
-                onClick={() => {
-                  setDataFilaAtencion(ate);
-                  setModal(!modal);
-                }}
-              >
-                <td>{findOwner(ate?.mascota?.owner)}</td>
-                <td>{ate?.mascota?.nombre}</td>
-                <td className={`d-none d-sm-table-cell `}>{findSpecie(ate?.mascota?.raza)}</td>
-                <td className={`d-none d-sm-table-cell `}>{handleDate(ate?.fecha_hora_atencion)}</td>
-                <td className={`d-none d-sm-table-cell `}>
-                  {ate?.veterinario?.apellido} {ate?.veterinario?.nombre}
-                </td>
-                <td className={`d-none d-md-flex gap-2 ${styles.practicas}`}>
-                  <p>{ate?.practicas[0]?.descripcion}</p>
-                  {ate?.practicas?.length > 1 ? (
-                    <p className={`${styles.masPracticas}`}> + {ate.practicas.length - 1}</p>
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className={`d-none d-lg-table-cell `}>$ {ate?.importe}</td>
-                <td className={`d-none d-lg-table-cell `}>{ate?.forma_de_pago}</td>
-                <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      onClick={() => handleEdit(ate)}
-                      className={`${styles.tableIcon}`}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
-                      alt="update icon button"
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
-                    <img
-                      className={`${styles.tableIcon}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIdToEliminate(ate.id);
-                        setShowModalAlert(true);
-                      }}
-                      src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
-                      alt="delete icon button"
-                    />
-                  </div>
+            {atencionesPaginadas.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  <Typography variant="h6" color="error">
+                    No hay atenciones cargadas
+                  </Typography>
+                  <CircularProgress />
                 </td>
               </tr>
-            ))}
+            ) : (
+              atencionesPaginadas.map((ate, index) => (
+                <tr
+                  key={index}
+                  className={`${styles.fila}`}
+                  onClick={() => {
+                    setDataFilaAtencion(ate);
+                    setModal(!modal);
+                  }}
+                >
+                  <td>{findOwner(ate?.mascota?.owner)}</td>
+                  <td>{ate?.mascota?.nombre}</td>
+                  <td className={`d-none d-sm-table-cell `}>
+                    {razas.find((ra) => ra.id === ate?.mascota?.raza)?.especie?.descripcion}
+                  </td>
+                  <td className={`d-none d-sm-table-cell `}>{handleDate(ate?.fecha_hora_atencion)}</td>
+
+                  {ate?.veterinario ? (
+                    <>
+                      <td className={`d-none d-sm-table-cell `}>
+                        {ate?.veterinario?.apellido} {ate?.veterinario?.nombre}
+                      </td>
+                      <td className={`d-none d-md-flex gap-2 ${styles.practicas}`}>
+                        <p>{ate?.practicas[0]?.descripcion}</p>
+                        {ate?.practicas?.length > 1 ? (
+                          <p className={`${styles.masPracticas}`}> + {ate.practicas.length - 1}</p>
+                        ) : (
+                          ""
+                        )}
+                      </td>
+                      <td className={`d-none d-lg-table-cell `}>$ {ate?.importe}</td>
+                      <td className={`d-none d-lg-table-cell `}>{ate?.forma_de_pago}</td>
+                    </>
+                  ) : (
+                    !isMobile && (
+                      
+                        <td colSpan={isSmallerScreen ? 1 : isSmallScreen ? 2 : 4}>
+                          <Typography variant="h5" color="error">
+                            Aún no ha sido atendido por un veterinario
+                          </Typography>
+                        </td>
+                      
+                    )
+                  )}
+
+                  <td className={`d-none d-lg-table-cell `}>{handleDate(ate?.pagos[0]?.fecha_hora_pago)}</td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        onClick={() => handleEdit(ate)}
+                        className={`${styles.tableIcon}`}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/editar.png`}
+                        alt="update icon button"
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className={`d-flex align-items-center justify-content-center ${styles.iconCont}`}>
+                      <img
+                        className={`${styles.tableIcon}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIdToEliminate(ate.id);
+                          setShowModalAlert(true);
+                        }}
+                        src={`${process.env.PUBLIC_URL}/assets/icons/basura.png`}
+                        alt="delete icon button"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
         <Pagination
-        count={Math.ceil(atenciones.length / itemsPerPage)}
-        page={currentPage}
-        onChange={(event, value) => setCurrentPage(value)}
-        color="primary"
-        sx={{ marginTop: "20px" }}
-      />
+          count={Math.ceil(atenciones.length / itemsPerPage)}
+          page={currentPage}
+          onChange={(event, value) => setCurrentPage(value)}
+          color="primary"
+          sx={{ marginTop: "20px" }}
+        />
       </div>
       {modal && (
         <ModalAtencion

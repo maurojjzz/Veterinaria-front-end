@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./modal-atencion.module.css";
 import { BoxUserIcon, BoxPetIcon, BoxVetIcon } from "../";
 import { handleDate } from "../../../Functions/utiities.js";
-import { Button } from "@mui/material";
 import { ModalAlert } from "../../Shared";
 import { useDispatch } from "react-redux";
 import { getPagos, addPago } from "../../../redux/pagos/thunks.js";
 import { getAtenciones } from "../../../redux/atenciones/thunks.js";
+import {Box, Typography, Button} from "@mui/material";
+import { useHistory } from "react-router-dom";
 
 const ModalAtencion = ({
   setModal,
@@ -23,6 +24,7 @@ const ModalAtencion = ({
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     dispatch(getPagos());
@@ -45,6 +47,10 @@ const ModalAtencion = ({
       return edad - 1;
     }
     return edad;
+  };
+
+  const handleEdit = (ate) => {
+    history.push(`/admin/atenciones/form/${ate.id}`, { params: { ...ate } });
   };
 
   const handleAddPago = async () => {
@@ -183,97 +189,116 @@ const ModalAtencion = ({
             </div>
           </div>
         </div>
-        <h4>Veterinario</h4>
-        <div className={`d-flex flex-column rounded-3 border ${styles.boxUser}`}>
-          <div className={`d-flex `}>
-            <div
-              className={`d-flex flex-column align-items-center justify-content-center gap-2 p-3  border-end border-2`}
-            >
-              <BoxVetIcon
-                nombre={dataFilaAtencion?.veterinario?.nombre}
-                apellido={dataFilaAtencion?.veterinario?.apellido}
-              />
-              <div className={` text-center fs-5 ${styles.nameBox}`}>
-                <div>{dataFilaAtencion?.veterinario?.nombre}</div>
-                <div>{dataFilaAtencion?.veterinario?.apellido}</div>
-              </div>
-            </div>
-            <div className={`d-flex flex-column flex-grow-1  justify-content-center ${styles.boxVet}`}>
-              <div className={`d-flex flex-column align-items-center flex-sm-row justify-content-sm-evenly`}>
-                <div className={`d-none d-sm-block`}>
-                  <div className={`fw-medium text-center`}>Email</div>
-                  <div>{dataFilaAtencion?.veterinario?.email}</div>
+        {dataFilaAtencion?.veterinario ? (
+          <>
+            <h4>Veterinario</h4>
+            <div className={`d-flex flex-column rounded-3 border ${styles.boxUser}`}>
+              <div className={`d-flex `}>
+                <div
+                  className={`d-flex flex-column align-items-center justify-content-center gap-2 p-3  border-end border-2`}
+                >
+                  <BoxVetIcon
+                    nombre={dataFilaAtencion?.veterinario?.nombre}
+                    apellido={dataFilaAtencion?.veterinario?.apellido}
+                  />
+                  <div className={` text-center fs-5 ${styles.nameBox}`}>
+                    <div>{dataFilaAtencion?.veterinario?.nombre}</div>
+                    <div>{dataFilaAtencion?.veterinario?.apellido}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className={`fw-medium text-center`}>Matricula</div>
-                  <div>{dataFilaAtencion?.veterinario?.matricula}</div>
-                </div>
-              </div>
-              <div className={`d-flex flex-column align-items-center flex-sm-row justify-content-sm-evenly `}>
-                <div>
-                  <div className={`fw-medium text-center`}>DNI</div>
-                  <div>{dataFilaAtencion?.veterinario?.nro_doc}</div>
-                </div>
-                <div>
-                  <div className={`fw-medium text-center`}>Telefono</div>
-                  <div>{dataFilaAtencion?.veterinario?.telefono}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={`d-flex d-sm-none flex-column align-items-center p-1 border-top border-2`}>
-            <div className={`fw-medium`}>Email</div>
-            <div>{dataFilaAtencion?.veterinario?.email}</div>
-          </div>
-        </div>
-        <h4>Pago</h4>
-        <div className={`d-flex flex-column gap-2 rounded-3 border ${styles.boxUser}`}>
-          <div
-            className={`d-flex flex-column flex-sm-row justify-content-sm-evenly align-items-center text-center gap-2 pt-sm-3 pt-1`}
-          >
-            <div>
-              <div className={`fw-medium`}>Importe</div>
-              <div>${dataFilaAtencion?.importe}</div>
-            </div>
-            <div>
-              <div className={`fw-medium`}>Pagara/pago con</div>
-              <div>{dataFilaAtencion?.forma_de_pago}</div>
-            </div>
-            <div>
-              <div className={`fw-medium`}>Total cuotas</div>
-              <div>{dataFilaAtencion?.pagos[0]?.cuotas}</div>
-            </div>
-          </div>
-          <div className={`d-flex flex-column justify-content-center border gap-2  rounded-3 m-1 mb-3`}>
-            {dataFilaAtencion?.pagos?.length > 0 ? (
-              <div>
-                {dataFilaAtencion?.pagos.map((pag, index) => (
-                  <div
-                    key={index}
-                    className={`d-flex flex-column flex-sm-row justify-content-sm-evenly text-center align-items-center border bg-light`}
-                  >
-                    <div className={``}>
-                      <div className={`fw-medium`}>Cuota</div>
-                      <div>
-                        {pag?.nro_cuota}/{pag?.cuotas}
-                      </div>
+                <div className={`d-flex flex-column flex-grow-1  justify-content-center ${styles.boxVet}`}>
+                  <div className={`d-flex flex-column align-items-center flex-sm-row justify-content-sm-evenly`}>
+                    <div className={`d-none d-sm-block`}>
+                      <div className={`fw-medium text-center`}>Email</div>
+                      <div>{dataFilaAtencion?.veterinario?.email}</div>
                     </div>
                     <div>
-                      <div className={`fw-medium`}>Fecha pago</div>
-                      <div>{handleDate(pag?.fecha_hora_pago)}</div>
-                    </div>
-                    <div>
-                      <div className={`fw-medium`}>Monto</div>
-                      <div>${pag?.importe}</div>
+                      <div className={`fw-medium text-center`}>Matricula</div>
+                      <div>{dataFilaAtencion?.veterinario?.matricula}</div>
                     </div>
                   </div>
-                ))}
+                  <div className={`d-flex flex-column align-items-center flex-sm-row justify-content-sm-evenly `}>
+                    <div>
+                      <div className={`fw-medium text-center`}>DNI</div>
+                      <div>{dataFilaAtencion?.veterinario?.nro_doc}</div>
+                    </div>
+                    <div>
+                      <div className={`fw-medium text-center`}>Telefono</div>
+                      <div>{dataFilaAtencion?.veterinario?.telefono}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ) : (
-              <div className={`text-bold text-center text-danger bg-light`}>No ha sido abonado hasta el momento</div>
-            )}
-          </div>
-        </div>
+              <div className={`d-flex d-sm-none flex-column align-items-center p-1 border-top border-2`}>
+                <div className={`fw-medium`}>Email</div>
+                <div>{dataFilaAtencion?.veterinario?.email}</div>
+              </div>
+            </div>
+            <h4>Pago</h4>
+            <div className={`d-flex flex-column gap-2 rounded-3 border ${styles.boxUser}`}>
+              <div
+                className={`d-flex flex-column flex-sm-row justify-content-sm-evenly align-items-center text-center gap-2 pt-sm-3 pt-1`}
+              >
+                <div>
+                  <div className={`fw-medium`}>Importe</div>
+                  <div>${dataFilaAtencion?.importe}</div>
+                </div>
+                <div>
+                  <div className={`fw-medium`}>Pagara/pago con</div>
+                  <div>{dataFilaAtencion?.forma_de_pago}</div>
+                </div>
+                <div>
+                  <div className={`fw-medium`}>Total cuotas</div>
+                  <div>{dataFilaAtencion?.pagos[0]?.cuotas}</div>
+                </div>
+              </div>
+              <div className={`d-flex flex-column justify-content-center border gap-2  rounded-3 m-1 mb-3`}>
+                {dataFilaAtencion?.pagos?.length > 0 ? (
+                  <div>
+                    {dataFilaAtencion?.pagos.map((pag, index) => (
+                      <div
+                        key={index}
+                        className={`d-flex flex-column flex-sm-row justify-content-sm-evenly text-center align-items-center border bg-light`}
+                      >
+                        <div className={``}>
+                          <div className={`fw-medium`}>Cuota</div>
+                          <div>
+                            {pag?.nro_cuota}/{pag?.cuotas}
+                          </div>
+                        </div>
+                        <div>
+                          <div className={`fw-medium`}>Fecha pago</div>
+                          <div>{handleDate(pag?.fecha_hora_pago)}</div>
+                        </div>
+                        <div>
+                          <div className={`fw-medium`}>Monto</div>
+                          <div>${pag?.importe}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className={`text-bold text-center text-danger bg-light`}>
+                    No ha sido abonado hasta el momento
+                  </div>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            width={"100%"}
+          >
+            <Typography my={2} variant="h4" color="error" align="center" px={1} >Aún no fue atendido por un veterinario</Typography>
+
+            <Button variant="outlined" color="info" size="large"  onClick={() => handleEdit(dataFilaAtencion) }>Atender turno</Button>
+          </Box>
+        )}
+
         <ModalAlert
           text="¿Desea marcar esta atencion como pagada?"
           clickAction={() => handleAddPago()}
