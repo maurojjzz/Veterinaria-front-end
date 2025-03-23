@@ -193,7 +193,7 @@ const TablaAtencion = () => {
               <th className={`d-none d-sm-table-cell `}>Veterinario</th>
               <th className={`d-none d-md-table-cell `}>Practicas</th>
               <th className={`d-none d-lg-table-cell `}>Importe</th>
-              <th className={`d-none d-lg-table-cell `}>Abonó</th>
+              <th className={`d-none d-lg-table-cell `}>Forma de pago</th>
               <th className={`d-none d-lg-table-cell `}>Pago</th>
               <th></th>
               <th></th>
