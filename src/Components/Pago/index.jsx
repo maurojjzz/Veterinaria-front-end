@@ -6,7 +6,7 @@ import Toast from "../Shared/Toast";
 import ModalAlert from "../Shared/ModalAlert";
 import PagoDetalle from "../../Components/Pago/modal/modalPago.jsx";
 
-const mediosDePago = ["Efectivo", "Tarjeta de Crédito", "Tarjeta de Débito", "Transferencia"];
+const mediosDePago = ["Efectivo", "Tarjeta credito/debito", "Transferencia"];
 
 const Pagos = () => {
   const [loading, setLoading] = useState(true);
