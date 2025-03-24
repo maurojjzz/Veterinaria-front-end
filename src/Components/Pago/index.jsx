@@ -4,7 +4,9 @@ import { getPagos, deletePago } from "../../redux/pagos/thunks.js";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "../Shared/Toast";
 import ModalAlert from "../Shared/ModalAlert";
-import PagoDetalle from "../../Components/Pago/modal/modalPago.jsx"
+import PagoDetalle from "../../Components/Pago/modal/modalPago.jsx";
+
+const mediosDePago = ["Efectivo", "Tarjeta credito/debito", "Transferencia"];
 
 const Pagos = () => {
   const [loading, setLoading] = useState(true);
@@ -13,6 +15,7 @@ const Pagos = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pagoToDelete, setPagoToDelete] = useState(null);
   const [selectedPago, setSelectedPago] = useState(null);
+  const [filtroPago, setFiltroPago] = useState(""); 
   const dispatch = useDispatch();
   const { pagos } = useSelector((state) => state.pagos);
 
@@ -40,8 +43,14 @@ const Pagos = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setPagosLista(pagos.filter((pago) => pago?.atencion && typeof pago?.atencion === "object"));
-  }, [pagos]);
+    let pagosFiltrados = pagos.filter((pago) => pago?.atencion && typeof pago?.atencion === "object");
+
+    if (filtroPago) {
+      pagosFiltrados = pagosFiltrados.filter((pago) => pago.forma_de_pago === filtroPago);
+    }
+
+    setPagosLista(pagosFiltrados);
+  }, [pagos, filtroPago]);
 
   const handleDeletePago = (id) => {
     setPagoToDelete(id);
@@ -67,6 +76,24 @@ const Pagos = () => {
     <div className={styles.pagosContainer}>
       <h2 className={styles.pagosHeader}>Lista de Pagos</h2>
       {toast && <Toast {...toast} />}
+
+      <div className={styles.filtroContainer}>
+        <label htmlFor="filtroPago">Filtrar por medio de pago:</label>
+        <select
+          id="filtroPago"
+          className={styles.filtroSelect}
+          value={filtroPago}
+          onChange={(e) => setFiltroPago(e.target.value)}
+        >
+          <option value="">Todos</option>
+          {mediosDePago.map((forma, index) => (
+            <option key={index} value={forma}>
+              {forma}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {loading ? (
         <div className="d-flex justify-content-center">
           <div className="spinner-border" role="status">
@@ -135,4 +162,3 @@ const Pagos = () => {
 
 export default Pagos;
 
-  
