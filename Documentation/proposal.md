@@ -26,7 +26,6 @@ El sistema veterinaria permitirá al usuario loguearse y observar diferentes fun
 
 ### Alcance Mínimo
 
-*Nota*: el siguiente es un ejemplo para un grupo de 3 integrantes para un sistema de hotel. El 
 
 Regularidad:
 |Req|Detalle|
@@ -51,4 +50,3 @@ Adicionales para Aprobación
 |:-|:-|
 |Listados (Vista user)|1.  Listado de atenciones filtradas por rango de fechas, muestra id, fecha de atencion, mascota a la que se le realizo, practicas realizadas en la atencion y monto (si la atencion ya fue pagada) y estado: Pendiente de pago (si la atencion aun no fue pagada) <br>2. Listado de atenciones filtradas por mascota, muestra id, fecha de atencion, mascota a la que se le realizo, practicas realizadas en la atencion y monto (si la atencion ya fue pagada) y estado: Pendiente de pago (si la atencion aun no fue pagada) <br>3. Listado de atenciones filtradas por estado de pago, muestra id, fecha de atencion, mascota a la que se le realizo, practicas realizadas en la atencion y monto (si la atencion ya fue pagada) y estado: Pendiente de pago (si la atencion aun no fue pagada)
 |Listados (vista admin)|1. Listado de usuarios filtrados por email, nombre, direccion o telefono, muestra email, nombre, apellido, dni, direccion y telefono  <br>2.Listado de veterinarios filtrados por matricula, email, nombre, apellido, telefono o DNI, muestra matricula, email, nombre, apellido, telefono y DNI <br>3. Listado de practicas filtradas por rango de precio, muestra las practicas y sus respectivos precios. <br>4. Listado de pagos filtrado por forma de pago, muestra id de atencion, forma de pago, importe, cuotas, nro_cuota y fecha y hora de pago <br>5. Listado de razas filtrado por especie, muestra la especie y sus razas <br>6. Listado de especies filtrado por nombre, muestra las especies que coincidan parcialmente con el filtro de nombre
-
