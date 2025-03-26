@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# **Proyecto de Gestión de Veterinaria**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+***
 
-## Available Scripts
+## **Información**
+Este proyecto fue desarrollado por estudiantes de la Universidad Tecnológica Nacional Facultad Regional Rosario.
 
-In the project directory, you can run:
+## **Descripción**
+Esta aplicación web está diseñada para administración y gestión de veterinarias. Sus funcionalidades se centran en brindarle a los usuarios la posibilidad de gestionar sus mascotas y sacar turnos para las mismas, además de permitir a los veterinarios ver los turnos que se les han asignado y a un administrador gestionar todas las clases y componentes necesarios para el correcto funcionamiento de la veterinaria.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## **Instalación**
 
-### `npm test`
+### **Instalar Node.js**
+El gestor de paquetes NPM viene con Node.js y es necesario para este proyecto.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### **Windows:**
+1. Descarga el instalador desde [https://nodejs.org/en/download/](https://nodejs.org/en/download/).
+2. Ejecuta el archivo `.msi` y sigue las instrucciones de instalación.
+3. Verifica la instalación ejecutando los siguientes comandos en una nueva ventana de terminal:
+    ```sh
+    node -v
+    npm -v
+    ```
 
-### `npm run build`
+#### **Linux (Ubuntu):**
+1. Abre la terminal.
+2. Instala Node.js y NPM ejecutando:
+    ```sh
+    sudo apt update
+    sudo apt install nodejs npm
+    ```
+3. Verifica la instalación:
+    ```sh
+    node -v
+    npm -v
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### **Clonar el Repositorio**
+1. Abre la terminal.
+2. Navega hasta el directorio deseado.
+3. Ejecuta los siguientes comandos:
+    ```sh
+    git clone https://github.com/maurojjzz/Veterinaria-front-end.git
+    cd Veterinaria-front-end
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### **Configuración e instalación de dependencias** ###
+1. Instalar dependencias del Frontend:
+    ```sh
+    npm install
+    ```
+2. Crea un archivo `.env` con las siguientes variables de entorno:
+    ```sh
+    REACT_APP_API_KEY=http://localhost:3080/api
+    REACT_APP_USER_TYPE_ID=65334d8d48ec52ff5e08c85a
+    REACT_APP_VETE_TYPE_ID=65334db548ec52ff5e08c85b
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **Corriendo la aplicación** ###
+El Frontend utiliza por defecto el siguiente link: `http://localhost:3000/`
+Para iniciarlo, desde la carpeta `Veterinaria-front-end` que se creó en tu PC, ejecuta el siguiente comando en la terminal:
+```sh
+npm run start
+```
+Nota: para correr la aplicación completa, asegúrate de correr previamente el backend, para lo cual puedes guiarte con el instructivo ubicado en el READ.ME del siguiente repositorio `https://github.com/maurojjzz/back-end-Veterinaria`, de modo tal que tanto back como front estén corriendo al mismo tiempo. Si no, la aplicación no funcionará.
 
-### `npm run eject`
+### **Corriendo tests** ###
+Para correr los tests, ejecuta los siguientes comandos en tu terminal:
+``` npm run test
+    npm run e2e
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
