@@ -46,7 +46,7 @@ function Toast({ title, message, setError }) {
           </div>
         </div>
         <div className={` d-flex flex-column justify-content-center flex-grow-1 p-2 ${styles.TextoToast}`}>
-          <h1>{title}</h1>
+          <h2>{title}</h2>
           <div>{message}</div>
         </div>
         <div

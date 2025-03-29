@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input, ButtonSubmit } from "../../../Shared";
 import styles from "./login-form.module.css";
@@ -72,7 +72,7 @@ const LoginForm = () => {
 
   return (
     <div className={`d-flex flex-column align-items-center justify-content-center gap-4 ${styles.loginFormContainer}`}>
-      <h1 className={` ${styles.tituloForm}`}>Login</h1>
+      <h2 className={` ${styles.tituloForm}`}>Login</h2>
       <form onSubmit={handleSubmit(onSubmit)} className={`d-flex flex-column align-items-center w-100`}>
         <Input
           labelText={`Email`}
@@ -97,7 +97,7 @@ const LoginForm = () => {
         />
       </form>
       <div className={`w-100`}>
-        <p className={`${styles.forgotPass} ${styles.cursor} fw-medium text-center`}>¿Olvido su contraseña?</p>
+        {/* <p className={`${styles.forgotPass} ${styles.cursor} fw-medium text-center`}>¿Olvido su contraseña?</p> */}
         <p
           className={`${styles.cursor}  fw-normal text-center`}
           onClick={() => {
