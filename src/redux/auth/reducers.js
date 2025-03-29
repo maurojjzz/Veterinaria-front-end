@@ -28,6 +28,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         pending: action.payload,
+        sessionExpired: false,
       };
     case LOGIN_ERROR:
     case SIGN_UP_ERROR:
@@ -36,6 +37,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         pending: false,
         error: action.payload,
+        sessionExpired: false,
       };
     case LOGIN_SUCCESS:
       return {
