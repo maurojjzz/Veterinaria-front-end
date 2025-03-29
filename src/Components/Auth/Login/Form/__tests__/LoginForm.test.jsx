@@ -8,8 +8,6 @@ import LoginForm from "../index.jsx";
 import { useDispatch } from "react-redux";
 
 const mockStore = configureStore([]);
-// const mockDispatch = vi.fn();
-// let mockDispatch;
 
 vi.mock("react-redux", async () => {
   const actualRedux = await vi.importActual("react-redux");
