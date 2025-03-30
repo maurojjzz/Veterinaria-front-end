@@ -14,7 +14,6 @@ const Fecha = ({ labelText, placeholder, register, name, error }) => {
         placeholder={placeholder}
         autoComplete="off"
         min={today}
-        onFocus={(e) => e.target.showPicker?.()}
         {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
       />
       <label className={!error ? ` ${styles.formLoginLabel} text-info ` : `text-danger`} htmlFor={`floatingInput-${labelText}`}>

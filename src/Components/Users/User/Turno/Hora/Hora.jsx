@@ -11,7 +11,6 @@ const Hora = ({ labelText, placeholder, register, name, error }) => {
         id={`floatingInput-${labelText}`}
         placeholder={placeholder}
         autoComplete="off"
-        onFocus={(e) => e.target.showPicker?.()}
         {...register(name, { required: { value: true, message: "Este campo es requerido" } })}
       />
       <label className={!error ? ` ${styles.formLoginLabel} text-info ` : `text-danger`} htmlFor={`floatingInput-${labelText}`}>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./toast.module.css";
 import { Slide } from "@mui/material";
 
-function Toast({ title, message, setError }) {
+function Toast({ title, message, setError, dataTestId  }) {
   const [visible, setVisible] = useState(true);
 
   const handleClose = () => {
@@ -12,7 +12,7 @@ function Toast({ title, message, setError }) {
 
   return (
     <Slide in={visible} direction="down" timeout={500}>
-      <div className={`d-flex flex-row bg-light rounded-2 justify-content-between ${styles.container}`}>
+      <div data-testid={dataTestId} className={`d-flex flex-row bg-light rounded-2 justify-content-between ${styles.container}`}>
         <div className="d-flex flex-row ">
           <div
             className={` ${styles.borderStart} ${

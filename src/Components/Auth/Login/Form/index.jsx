@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input, ButtonSubmit } from "../../../Shared";
 import styles from "./login-form.module.css";
@@ -109,6 +109,7 @@ const LoginForm = () => {
       </div>
       {showToast && (
         <Toast
+          dataTestId="toast"
           message={toastMessage}
           title={"Error"}
           setError={() => {
