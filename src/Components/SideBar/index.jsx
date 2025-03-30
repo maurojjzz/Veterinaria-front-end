@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styles from "./sidebar.module.css";
-import LogOut from '../Auth/LogOut';
+import LogOut from "../Auth/LogOut";
 
 function SideBar({ routes, setClickHamb }) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
 
   return (
     <div
+      data-testid="sidebar"
       className={` d-flex flex-column ${styles.sidebar} ${isHovered ? styles.expanded : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -24,7 +25,7 @@ function SideBar({ routes, setClickHamb }) {
             {isHovered ? <a href={route.path}>{route.name}</a> : <></>}
           </li>
         ))}
-        {!!token && <LogOut isHovered={isHovered} setClickHamb={setClickHamb}/>}
+        {!!token && <LogOut isHovered={isHovered} setClickHamb={setClickHamb} />}
       </nav>
     </div>
   );
