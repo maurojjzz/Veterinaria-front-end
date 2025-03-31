@@ -65,10 +65,14 @@ Para iniciarlo, desde la carpeta `Veterinaria-front-end` que se creó en tu PC, 
 npm run start
 ```
 Nota: para correr la aplicación completa, asegúrate de correr previamente el backend, para lo cual puedes guiarte con el instructivo ubicado en el READ.ME del siguiente repositorio `https://github.com/maurojjzz/back-end-Veterinaria`, de modo tal que tanto back como front estén corriendo al mismo tiempo. Si no, la aplicación no funcionará.
+Nota 2: Para los tests, se debe ejecutar el siguiente comando:
+```sh
+npm run start:test
+```
 
 ### **Corriendo tests** ###
 Para correr los tests, ejecuta los siguientes comandos en tu terminal:
 ``` npm run test
-    npm run e2e
+    npm run cypress
 ```
 
