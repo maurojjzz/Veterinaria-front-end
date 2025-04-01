@@ -70,6 +70,10 @@ Nota 2: Para los tests, se debe ejecutar el siguiente comando:
 ```sh
 npm run start:test
 ```
+
+### **Deploy** ###
+Si en lugar de correr la aplicación en tu dispositivo de forma local deseas acceder a la misma de forma online, puedes hacerlo en el siguiente enlace: Veterinaria en Vercel.
+
 ### **Credenciales** ###
 Para tener acceso a las credenciales necesarias para acceder a las funcionalidades de la app en sus distintos roles, vaya al siguiente link: https://github.com/maurojjzz/Veterinaria-front-end/blob/master/Documentation/Credentials.md. Allí encontrará los datos de acceso para los 3 roles de la aplicación.
 
