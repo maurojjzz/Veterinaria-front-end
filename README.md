@@ -9,7 +9,7 @@ Este proyecto fue desarrollado por estudiantes de la Universidad Tecnológica Na
 Esta aplicación web está diseñada para administración y gestión de veterinarias. Sus funcionalidades se centran en brindarle a los usuarios la posibilidad de gestionar sus mascotas y sacar turnos para las mismas, además de permitir a los veterinarios ver los turnos que se les han asignado y a un administrador gestionar todas las clases y componentes necesarios para el correcto funcionamiento de la veterinaria.
 
 ## **Video** ##
-Si desea conocer el funcionamiento de la página para verificar que se ajuste a los requerimientos de su negocio antes de instalarla, puede hacerlo accediendo a este link: `https://www.youtube.com/watch?v=_UIGXiYF8HM`. Allí encontrará un video mostrando la web en funcionamiento.
+Si desea conocer el funcionamiento de la página para verificar que se ajuste a los requerimientos de su negocio antes de instalarla, puede hacerlo accediendo a este [LINK AL VIDEO](https://www.youtube.com/watch?v=_UIGXiYF8HM) . Allí encontrará un video mostrando la web en funcionamiento.
 
 ## **Instalación**
 
