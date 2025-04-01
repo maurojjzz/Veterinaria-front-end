@@ -8,7 +8,8 @@ Este proyecto fue desarrollado por estudiantes de la Universidad Tecnológica Na
 ## **Descripción**
 Esta aplicación web está diseñada para administración y gestión de veterinarias. Sus funcionalidades se centran en brindarle a los usuarios la posibilidad de gestionar sus mascotas y sacar turnos para las mismas, además de permitir a los veterinarios ver los turnos que se les han asignado y a un administrador gestionar todas las clases y componentes necesarios para el correcto funcionamiento de la veterinaria.
 
-
+## **Video** ##
+Si desea conocer el funcionamiento de la página para verificar que se ajuste a los requerimientos de su negocio antes de instalarla, puede hacerlo accediendo a este [LINK AL VIDEO](https://www.youtube.com/watch?v=_UIGXiYF8HM) . Allí encontrará un video mostrando la web en funcionamiento.
 
 ## **Instalación**
 
@@ -64,11 +65,17 @@ Para iniciarlo, desde la carpeta `Veterinaria-front-end` que se creó en tu PC, 
 ```sh
 npm run start
 ```
-Nota: para correr la aplicación completa, asegúrate de correr previamente el backend, para lo cual puedes guiarte con el instructivo ubicado en el READ.ME del siguiente repositorio `https://github.com/maurojjzz/back-end-Veterinaria`, de modo tal que tanto back como front estén corriendo al mismo tiempo. Si no, la aplicación no funcionará.
+Nota: para correr la aplicación completa, asegúrate de correr previamente el backend, para lo cual puedes guiarte con el instructivo ubicado en el README del siguiente repositorio `https://github.com/maurojjzz/back-end-Veterinaria`, de modo tal que tanto back como front estén corriendo al mismo tiempo. Si no, la aplicación no funcionará.
+Nota 2: Para los tests, se debe ejecutar el siguiente comando:
+```sh
+npm run start:test
+```
+### **Credenciales** ###
+Para tener acceso a las credenciales necesarias para acceder a las funcionalidades de la app en sus distintos roles, vaya al siguiente link: https://github.com/maurojjzz/Veterinaria-front-end/blob/master/Documentation/Credentials.md. Allí encontrará los datos de acceso para los 3 roles de la aplicación.
 
 ### **Corriendo tests** ###
 Para correr los tests, ejecuta los siguientes comandos en tu terminal:
-``` npm run test
-    npm run e2e
+```sh
+npm run test
+npm run cypress
 ```
-
