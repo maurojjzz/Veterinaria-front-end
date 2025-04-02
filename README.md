@@ -11,6 +11,10 @@ Esta aplicación web está diseñada para administración y gestión de veterina
 ## **Video** ##
 Si desea conocer el funcionamiento de la página para verificar que se ajuste a los requerimientos de su negocio antes de instalarla, puede hacerlo accediendo a este [LINK AL VIDEO](https://www.youtube.com/watch?v=_UIGXiYF8HM) . Allí encontrará un video mostrando la web en funcionamiento.
 
+### **Deploy** ###
+Si en lugar de correr la aplicación en tu dispositivo de forma local deseas acceder a la misma de forma online, puedes hacerlo en el siguiente enlace: [https://veterinaria-front-end.vercel.app/
+](https://veterinaria-front-end.vercel.app/)
+
 ## **Instalación**
 
 ### **Instalar Node.js**
@@ -71,11 +75,24 @@ Nota 2: Para los tests, se debe ejecutar el siguiente comando:
 npm run start:test
 ```
 
-### **Deploy** ###
-Si en lugar de correr la aplicación en tu dispositivo de forma local deseas acceder a la misma de forma online, puedes hacerlo en el siguiente enlace: Veterinaria en Vercel.
-
 ### **Credenciales** ###
-Para tener acceso a las credenciales necesarias para acceder a las funcionalidades de la app en sus distintos roles, vaya al siguiente link: https://github.com/maurojjzz/Veterinaria-front-end/blob/master/Documentation/Credentials.md. Allí encontrará los datos de acceso para los 3 roles de la aplicación.
+Para tener acceso a las credenciales necesarias para acceder a las funcionalidades de la app en sus distintos roles, vaya al siguiente link: https://github.com/maurojjzz/Veterinaria-front-end/blob/master/Documentation/Credentials.md. 
+
+- ### Admin
+     ```sh
+        email: admin@admin.com
+        password: Password1
+    ```
+- ### Usuario
+     ```sh
+        email: user@user.com
+        password: Password1
+    ```
+- ### Veterinario
+     ```sh
+        email: vet@vet.com
+        password: Password1
+    ```
 
 ### **Corriendo tests** ###
 Para correr los tests, ejecuta los siguientes comandos en tu terminal:
