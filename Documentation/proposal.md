@@ -14,7 +14,7 @@
 
 
 ### Repositorios
-* [frontend app](https://github.com/maurojjzz/front-end-Veterinaria)
+* [frontend app](https://github.com/maurojjzz/Veterinaria-front-end)
 * [backend app](https://github.com/maurojjzz/back-end-Veterinaria)
 
 
