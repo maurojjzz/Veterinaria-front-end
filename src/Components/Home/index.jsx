@@ -21,14 +21,31 @@ const Home = () => {
       case "Admin":
         history.push("/admin");
         break;
+      case "Veterinario":
+        history.push("/vet");
+        break;
       case "Usuario":
         history.push("/user");
+        break;
+      default:
+        history.push("/auth/login");
+        break;
+    }
+  };
+
+  const handleManageAppointments = () => {
+    switch (role) {
+      case "Admin":
+        history.push("/admin");
         break;
       case "Veterinario":
         history.push("/vet");
         break;
+      case "Usuario":
+        history.push("/user/turno");
+        break;
       default:
-        history.push("/");
+        history.push("/auth/login");
         break;
     }
   };
@@ -54,6 +71,9 @@ const Home = () => {
             <button className={styles.btnPrimary} onClick={handleViewServices}>
               Ver Servicios
             </button>
+            <button className={styles.btnSecondary} onClick={handleManageAppointments}>
+              Agendar Cita
+            </button>
           </div>
         </div>
       </div>
@@ -63,3 +83,4 @@ const Home = () => {
 };
 
 export default Home;
+
