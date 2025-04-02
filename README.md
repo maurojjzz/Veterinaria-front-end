@@ -3,7 +3,7 @@
 ***
 
 ## **Información**
-Este proyecto fue desarrollado por estudiantes de la Universidad Tecnológica Nacional Facultad Regional Rosario.
+Este proyecto fue desarrollado por Jimenez Mauro y Rodriguez Miguel, estudiantes de la Universidad Tecnológica Nacional Facultad Regional Rosario.
 
 ## **Descripción**
 Esta aplicación web está diseñada para administración y gestión de veterinarias. Sus funcionalidades se centran en brindarle a los usuarios la posibilidad de gestionar sus mascotas y sacar turnos para las mismas, además de permitir a los veterinarios ver los turnos que se les han asignado y a un administrador gestionar todas las clases y componentes necesarios para el correcto funcionamiento de la veterinaria.
