@@ -83,3 +83,4 @@ Para correr los tests, ejecuta los siguientes comandos en tu terminal:
 npm run test
 npm run cypress
 ```
+
