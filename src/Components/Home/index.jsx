@@ -1,10 +1,37 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import styles from "./home.module.css";
 import Footer from "../Footer";
+import { decodeToken } from "../../Functions/utiities.js";
+import { useHistory } from "react-router-dom";
 
 const Home = () => {
   const history = useHistory();
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = decodeToken(token);
+      setRole(decodedToken.role);
+    }
+  }, []);
+
+  const handleViewServices = () => {
+    switch (role) {
+      case "Admin":
+        history.push("/admin");
+        break;
+      case "Usuario":
+        history.push("/user");
+        break;
+      case "Veterinario":
+        history.push("/vet");
+        break;
+      default:
+        history.push("/");
+        break;
+    }
+  };
 
   return (
     <div>
@@ -12,18 +39,21 @@ const Home = () => {
         <div>
           <img
             src={`${process.env.PUBLIC_URL}/assets/images/Veterinary-bro.png`}
-            alt={`Veterinario atendiendo a un perrito`}
-            className={`img-fluid ${styles.heroImage} border-danger`}
+            alt="Veterinario atendiendo a un perrito"
+            className={`img-fluid ${styles.heroImage}`}
           />
         </div>
         <div className={styles.heroContent}>
-          <h2 className={styles.heroTitle}>Cuidamos a tus mascotas como parte de nuestra familia</h2>
-          <p className={styles.heroText}>Servicios veterinarios de calidad con atención personalizada.</p>
+          <h2 className={styles.heroTitle}>
+            Cuidamos a tus mascotas como parte de nuestra familia
+          </h2>
+          <p className={styles.heroText}>
+            Servicios veterinarios de calidad con atención personalizada.
+          </p>
           <div className={styles.heroButtons}>
-            <button className={styles.btnPrimary} onClick={() => history.push("/admin/usuarios")}>
+            <button className={styles.btnPrimary} onClick={handleViewServices}>
               Ver Servicios
             </button>
-            <button className={styles.btnSecondary}>Agendar Cita</button>
           </div>
         </div>
       </div>
