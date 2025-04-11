@@ -17,6 +17,7 @@ import { addAtencion } from "../../../../redux/atenciones/thunks.js";
 const Turno = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -43,6 +44,8 @@ const Turno = () => {
       await dispatch(addAtencion(data));
       goBackToTable("Se agendó correctamente el turno");
     } catch (error) {
+      const msg = error?.response?.data?.message || "Hubo un error al crear el turno. Intente más tarde nuevamente";
+      setToastMessage(msg);
       setShowToast(true);
     } finally {
       setTimeout(() => {
@@ -110,7 +113,13 @@ const Turno = () => {
           disabled={isLoading}
         />
       </Box>
-      {showToast && <Toast title={"Error"} message={"Hubo un error al crear el turno. Intente mas tarde nuevamente"} setError={setShowToast} />}
+      {showToast && (
+        <Toast
+          title={"Error"}
+          message={toastMessage}
+          setError={setShowToast}
+        />
+      )}
     </Box>
   );
 };

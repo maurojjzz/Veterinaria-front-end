@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { Input, ButtonSubmit, SelectUser, SelectPet, SelectVet, CheckPractices, PagosRadio } from "../../Shared";
+import { Input, ButtonSubmit, SelectUser, SelectPet, SelectVet, CheckPractices, PagosRadio, Toast } from "../../Shared";
 import styles from "./atencionesForm.module.css";
 import { atencionSchema } from "../../../Validations";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -17,6 +17,8 @@ import { TextField, Typography } from "@mui/material";
 const AtencionForm = () => {
   const [userPet, setUserPet] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const { id } = useParams();
   const location = useLocation();
@@ -78,6 +80,9 @@ const AtencionForm = () => {
       goBackToTable("Se creó correctamente");
     } catch (error) {
       console.error("Error al crear atención", error);
+      const msg = error?.response?.data?.message || "Hubo un error al crear atencion. Intente más tarde nuevamente";
+      setToastMessage(msg);
+      setShowToast(true);
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -92,6 +97,9 @@ const AtencionForm = () => {
       goBackToTable("Se actualizó correctamente");
     } catch (error) {
       console.error("Error al actualizar atención", error);
+      const msg = error?.response?.data?.message || "Hubo un error al actualizar atencion. Intente más tarde nuevamente";
+      setToastMessage(msg);
+      setShowToast(true);
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -235,6 +243,7 @@ const AtencionForm = () => {
           disabled={isLoading}
         />
       </form>
+      {showToast && <Toast title={"Error"} message={toastMessage} setError={setShowToast} />}
     </div>
   );
 };
